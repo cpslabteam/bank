@@ -53,34 +53,4 @@ public class Customer extends BaseDataObject {
 		this.city = city;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!(obj instanceof Customer))
-			return false;
-
-		final Customer customer = (Customer) obj;
-
-		if (!customer.getName().equals(getName()))
-			return false;
-
-		if (!customer.getStreet().equals(getStreet()))
-			return false;
-
-		if (!customer.getCity().equals(getCity()))
-			return false;
-
-		return true;
-	}
-
-	@Override
-	public int hashCode() {
-		int hashcode = 0;
-		hashcode += ((name == null) ? 0 : name.hashCode());
-		hashcode += ((street == null) ? 0 : street.hashCode());
-		hashcode += ((city == null) ? 0 : city.hashCode());
-		return hashcode;
-	}
-
 }

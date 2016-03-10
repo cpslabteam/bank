@@ -10,7 +10,7 @@ import javax.persistence.MappedSuperclass;
  * Superclass of all objects that represent a table in the database. This class
  * declares the Identifier field (id) that is required by Hibernate. This field
  * serves as the primary key value for the mapped tables, and is assigned
- * automatically by Hibernate when the entity is persisted.
+ * Sequentially by Hibernate when the entity is persisted.
  */
 @MappedSuperclass
 public abstract class BaseDataObject {
