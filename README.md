@@ -2,11 +2,13 @@
 
 This is a simple bank application using our technology stack, and will be used in comparisons with the NSX.
 
+[TODO's](TODO.md)
+
 ### Contents
-[**Techologies**](#technologies)  
+[**Technologies**](#technologies)  
 [**Documentation**](#documentation)
 
-## Techologies
+## Technologies
 
 * [AngularJS]
 * [Restlet]
