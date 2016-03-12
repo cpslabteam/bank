@@ -1,4 +1,4 @@
-package cpslabteam.bank.database.objects;
+package main.java.cpslabteam.bank.database.objects;
 
 import java.math.BigDecimal;
 
@@ -18,7 +18,7 @@ public class Loan extends BaseDataObject {
 	private String loanNumber;
 
 	@ManyToOne
-	@JoinColumn(name = "branch_id", nullable = false, foreignKey = @ForeignKey(name = "BRANCH_ID_FK"))
+	@JoinColumn(name = "branch_id", nullable = false)
 	private Branch branch;
 
 	@Column(name = "amount", precision = 20, scale = 2, columnDefinition = "NUMERIC(20,2)", nullable = false)

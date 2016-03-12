@@ -1,4 +1,4 @@
-package cpslabteam.bank;
+package test.java.cpslabteam.bank;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

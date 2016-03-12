@@ -1,4 +1,4 @@
-package cpslabteam.bank;
+package main.java.cpslabteam.bank;
 
 /**
  * Hello world!

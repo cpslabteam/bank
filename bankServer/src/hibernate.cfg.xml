@@ -1,0 +1,34 @@
+<!-- Defines Hibernate properties and declares Data Object mappings -->
+<hibernate-configuration>
+	<session-factory>
+
+		<!-- Database connection settings -->
+		<property name="connection.driver_class">org.postgresql.Driver</property>
+		<property name="connection.url">jdbc:postgresql://localhost:5432/bank
+		</property>
+		<property name="connection.username">postgres</property>
+		<property name="connection.password">root</property>
+		<property name="dialect">org.hibernate.dialect.PostgreSQLDialect
+		</property>
+
+		<!-- Echo all executed SQL to stdout -->
+		<property name="show_sql">true</property>
+		<property name="format_sql">true</property>
+
+		<!-- Drop and re-create the database schema on startup -->
+		<property name="hbm2ddl.auto">create</property>
+
+		<!-- One session per thread of execution -->
+		<property name="current_session_context_class">thread</property>
+
+		<!-- Mappings -->
+		<mapping class="main.java.cpslabteam.bank.database.objects.BaseDataObject"></mapping>
+		<mapping class="main.java.cpslabteam.bank.database.objects.Customer"></mapping>
+		<mapping class="main.java.cpslabteam.bank.database.objects.Depositor"></mapping>
+		<mapping class="main.java.cpslabteam.bank.database.objects.Borrower"></mapping>
+		<mapping class="main.java.cpslabteam.bank.database.objects.Account"></mapping>
+		<mapping class="main.java.cpslabteam.bank.database.objects.Loan"></mapping>
+		<mapping class="main.java.cpslabteam.bank.database.objects.Branch"></mapping>
+
+	</session-factory>
+</hibernate-configuration>

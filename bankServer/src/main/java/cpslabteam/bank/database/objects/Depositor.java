@@ -1,4 +1,4 @@
-package cpslabteam.bank.database.objects;
+package main.java.cpslabteam.bank.database.objects;
 
 import java.util.Set;
 

@@ -1,3 +1,3 @@
 ### Server TODO's
 
-  - [ ] Update SessionFactory build in SessionManager from legacy Configuration
+  - [x] Update SessionFactory build in SessionManager from legacy Configuration
