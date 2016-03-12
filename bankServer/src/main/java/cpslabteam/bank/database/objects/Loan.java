@@ -13,12 +13,12 @@ import org.hibernate.annotations.NaturalId;
 @Entity(name = "Loan")
 public class Loan extends BaseDataObject {
 
-	@Column(name = "loan_number", nullable = false)
+	@Column(name = "loan_number")
 	@NaturalId
 	private String loanNumber;
 
 	@ManyToOne
-	@JoinColumn(name = "branch_id", nullable = false)
+	@JoinColumn(name = "branch_id", nullable = false, foreignKey = @ForeignKey(name = "BRANCH_ID_FK"))
 	private Branch branch;
 
 	@Column(name = "amount", precision = 20, scale = 2, columnDefinition = "NUMERIC(20,2)", nullable = false)

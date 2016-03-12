@@ -11,7 +11,7 @@ import org.hibernate.annotations.NaturalId;
 public class Branch extends BaseDataObject {
 
 	@Column(name = "name", nullable = false)
-	@NaturalId
+	@NaturalId (mutable = true)
 	private String name;
 
 	@Column(name = "city", nullable = false)
