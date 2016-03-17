@@ -1,8 +1,8 @@
-package main.java.cpslabteam.bank.database.dao;
+package cpslabteam.bank.database.dao;
 
 import org.hibernate.Session;
 
-import main.java.cpslabteam.bank.database.utils.SessionManager;
+import cpslabteam.bank.database.utils.SessionManager;
 
 public class HibernateDAOFactory extends DAOFactory {
 

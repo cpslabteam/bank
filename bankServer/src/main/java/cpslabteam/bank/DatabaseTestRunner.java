@@ -1,4 +1,4 @@
-package main.java.cpslabteam.bank;
+package cpslabteam.bank;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -6,13 +6,13 @@ import java.math.BigDecimal;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
-import main.java.cpslabteam.bank.database.dao.BranchDAO;
-import main.java.cpslabteam.bank.database.dao.DAOFactory;
-import main.java.cpslabteam.bank.database.objects.Account;
-import main.java.cpslabteam.bank.database.objects.Branch;
-import main.java.cpslabteam.bank.database.objects.Depositor;
-import main.java.cpslabteam.bank.database.utils.SessionManager;
-import main.java.cpslabteam.bank.jsonserialization.JSONViews;
+import cpslabteam.bank.database.dao.BranchDAO;
+import cpslabteam.bank.database.dao.DAOFactory;
+import cpslabteam.bank.database.objects.Account;
+import cpslabteam.bank.database.objects.Branch;
+import cpslabteam.bank.database.objects.Depositor;
+import cpslabteam.bank.database.utils.SessionManager;
+import cpslabteam.bank.jsonserialization.JSONViews;
 
 public class DatabaseTestRunner {
 

@@ -1,6 +1,6 @@
-package main.java.cpslabteam.bank.database.dao;
+package cpslabteam.bank.database.dao;
 
-import main.java.cpslabteam.bank.database.objects.Depositor;
+import cpslabteam.bank.database.objects.Depositor;
 
 public interface DepositorDAO extends GenericDAO<Depositor, Long> {
 

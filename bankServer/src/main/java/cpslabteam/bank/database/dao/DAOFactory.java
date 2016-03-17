@@ -1,4 +1,4 @@
-package main.java.cpslabteam.bank.database.dao;
+package cpslabteam.bank.database.dao;
 
 public abstract class DAOFactory {
 
@@ -6,7 +6,7 @@ public abstract class DAOFactory {
 	 * Creates a standalone DAOFactory that returns unmanaged DAO for use in any
 	 * environment Hibernate has been configured for.
 	 */
-	public static final Class<HibernateDAOFactory> HIBERNATE = main.java.cpslabteam.bank.database.dao.HibernateDAOFactory.class;
+	public static final Class<HibernateDAOFactory> HIBERNATE = cpslabteam.bank.database.dao.HibernateDAOFactory.class;
 
 	/**
 	 * Factory method for instantiation of concrete factories.

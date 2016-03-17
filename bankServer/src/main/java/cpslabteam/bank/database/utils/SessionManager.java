@@ -1,4 +1,4 @@
-package main.java.cpslabteam.bank.database.utils;
+package cpslabteam.bank.database.utils;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;

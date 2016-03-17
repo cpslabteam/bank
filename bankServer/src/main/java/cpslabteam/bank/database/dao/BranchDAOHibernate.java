@@ -1,6 +1,6 @@
-package main.java.cpslabteam.bank.database.dao;
+package cpslabteam.bank.database.dao;
 
-import main.java.cpslabteam.bank.database.objects.Branch;
+import cpslabteam.bank.database.objects.Branch;
 
 public class BranchDAOHibernate extends GenericHibernateDAO<Branch, Long>implements BranchDAO {
 

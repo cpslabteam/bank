@@ -1,4 +1,4 @@
-package main.java.cpslabteam.bank.jsonserialization;
+package cpslabteam.bank.jsonserialization;
 
 public class JSONViews {
 

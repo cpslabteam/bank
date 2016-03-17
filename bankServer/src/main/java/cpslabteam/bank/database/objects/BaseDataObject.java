@@ -1,4 +1,4 @@
-package main.java.cpslabteam.bank.database.objects;
+package cpslabteam.bank.database.objects;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -8,7 +8,7 @@ import javax.persistence.MappedSuperclass;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import main.java.cpslabteam.bank.jsonserialization.JSONViews;
+import cpslabteam.bank.jsonserialization.JSONViews;
 
 /**
  * Superclass of all objects that represent a table in the database. This class

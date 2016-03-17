@@ -1,4 +1,4 @@
-package main.java.cpslabteam.bank.database.objects;
+package cpslabteam.bank.database.objects;
 
 import java.math.BigDecimal;
 
@@ -9,7 +9,7 @@ import org.hibernate.annotations.NaturalId;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import main.java.cpslabteam.bank.jsonserialization.JSONViews;
+import cpslabteam.bank.jsonserialization.JSONViews;
 
 @Entity(name = "Branch")
 public class Branch extends BaseDataObject {

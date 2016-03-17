@@ -1,4 +1,4 @@
-package main.java.cpslabteam.bank.database.dao;
+package cpslabteam.bank.database.dao;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;

@@ -1,4 +1,4 @@
-package main.java.cpslabteam.bank.database.objects;
+package cpslabteam.bank.database.objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,7 +7,7 @@ import javax.persistence.InheritanceType;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import main.java.cpslabteam.bank.jsonserialization.JSONViews;
+import cpslabteam.bank.jsonserialization.JSONViews;
 
 /**
  * Represents the Customer object and defines the mapping of it's table in the

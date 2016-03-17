@@ -1,4 +1,4 @@
-package main.java.cpslabteam.bank.database.objects;
+package cpslabteam.bank.database.objects;
 
 import java.util.Set;
 
@@ -9,8 +9,8 @@ import javax.persistence.ManyToMany;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import main.java.cpslabteam.bank.jsonserialization.InfoSerializer;
-import main.java.cpslabteam.bank.jsonserialization.JSONViews;
+import cpslabteam.bank.jsonserialization.InfoSerializer;
+import cpslabteam.bank.jsonserialization.JSONViews;
 
 @Entity(name = "Borrower")
 public class Borrower extends Customer {
