@@ -3,8 +3,8 @@ package main.java.cpslabteam.bank.database.dao;
 public abstract class DAOFactory {
 
 	/**
-	 * Creates a standalone DAOFactory that returns unmanaged DAO for use
-	 * in any environment Hibernate has been configured for. 
+	 * Creates a standalone DAOFactory that returns unmanaged DAO for use in any
+	 * environment Hibernate has been configured for.
 	 */
 	public static final Class<HibernateDAOFactory> HIBERNATE = main.java.cpslabteam.bank.database.dao.HibernateDAOFactory.class;
 
@@ -19,5 +19,15 @@ public abstract class DAOFactory {
 		}
 	}
 
+	public abstract AccountDAO getAccountDAO();
+
+	public abstract BorrowerDAO getBorrowerDAO();
+
 	public abstract BranchDAO getBranchDAO();
+
+	public abstract CustomerDAO getCustomerDAO();
+
+	public abstract DepositorDAO getDepositorDAO();
+
+	public abstract LoanDAO getLoanDAO();
 }

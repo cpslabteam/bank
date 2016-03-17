@@ -6,9 +6,17 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import main.java.cpslabteam.bank.jsonserialization.InfoSerializer;
+import main.java.cpslabteam.bank.jsonserialization.JSONViews;
+
 @Entity(name = "Borrower")
 public class Borrower extends Customer {
 
+	@JsonView(JSONViews.Details.class)
+	@JsonSerialize(using = InfoSerializer.class)
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	private Set<Loan> loans;
 

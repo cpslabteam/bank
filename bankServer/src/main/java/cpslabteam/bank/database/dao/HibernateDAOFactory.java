@@ -6,11 +6,37 @@ import main.java.cpslabteam.bank.database.utils.SessionManager;
 
 public class HibernateDAOFactory extends DAOFactory {
 
+	@Override
+	public AccountDAO getAccountDAO() {
+		return (AccountDAO) instantiateDAO(AccountDAOHibernate.class);
+	}
+
+	@Override
+	public BorrowerDAO getBorrowerDAO() {
+		return (BorrowerDAO) instantiateDAO(BorrowerDAOHibernate.class);
+	}
+
+	@Override
 	public BranchDAO getBranchDAO() {
 		return (BranchDAO) instantiateDAO(BranchDAOHibernate.class);
 	}
 
-	private GenericHibernateDAO<?, ?> instantiateDAO(Class<BranchDAOHibernate> daoClass) {
+	@Override
+	public CustomerDAO getCustomerDAO() {
+		return (CustomerDAO) instantiateDAO(CustomerDAOHibernate.class);
+	}
+
+	@Override
+	public DepositorDAO getDepositorDAO() {
+		return (DepositorDAO) instantiateDAO(DepositorDAOHibernate.class);
+	}
+
+	@Override
+	public LoanDAO getLoanDAO() {
+		return (LoanDAO) instantiateDAO(LoanDAOHibernate.class);
+	}
+
+	private GenericHibernateDAO<?, ?> instantiateDAO(Class<?> daoClass) {
 		try {
 			GenericHibernateDAO<?, ?> dao = (GenericHibernateDAO<?, ?>) daoClass.newInstance();
 			dao.setSession(getCurrentSession());

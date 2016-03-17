@@ -6,15 +6,21 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
+import main.java.cpslabteam.bank.jsonserialization.JSONViews;
+
 /**
  * Superclass of all objects that represent a table in the database. This class
- * declares the Identifier field (id) that is required by Hibernate. This field
+ * declares the Identifier field (id) used by all data objects. This field
  * serves as the primary key value for the mapped tables, and is assigned
- * Sequentially by Hibernate when the entity is persisted.
+ * Sequentially by when the entity is persisted.
  */
+
 @MappedSuperclass
 public abstract class BaseDataObject {
 
+	@JsonView(JSONViews.Info.class)
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	@Column(name = "id", nullable = false)

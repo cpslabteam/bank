@@ -4,23 +4,33 @@ import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.ForeignKey;
 
 import org.hibernate.annotations.NaturalId;
+
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import main.java.cpslabteam.bank.jsonserialization.InfoSerializer;
+import main.java.cpslabteam.bank.jsonserialization.JSONViews;
 
 @Entity(name = "Account")
 public class Account extends BaseDataObject {
 
-	@Column(name = "account_number")
+	@JsonView(JSONViews.Info.class)
 	@NaturalId
+	@Column(name = "account_number")
 	private String accountNumber;
 
+	@JsonView(JSONViews.Info.class)
+	@JsonSerialize(using = InfoSerializer.class)
 	@ManyToOne
-	@JoinColumn(name = "branch_id", nullable = false, foreignKey = @ForeignKey(name = "BRANCH_ID_FK"))
+	@JoinColumn(name = "branch_id", nullable = false, foreignKey = @ForeignKey(name = "BRANCH_ID_FK") )
 	private Branch branch;
 
+	@JsonView(JSONViews.Details.class)
 	@Column(name = "balance", precision = 20, scale = 2, columnDefinition = "NUMERIC(20,2)", nullable = false)
 	private BigDecimal balance;
 
