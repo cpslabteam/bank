@@ -1,3 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration SYSTEM 
+"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
 <!-- Defines Hibernate properties and declares Data Object mappings -->
 <hibernate-configuration>
 	<session-factory>
@@ -16,7 +20,7 @@
 		<property name="format_sql">true</property>
 
 		<!-- Drop and re-create the database schema on startup -->
-		<property name="hbm2ddl.auto">create-drop</property>
+		<property name="hbm2ddl.auto">validate</property>
 
 		<!-- One session per thread of execution -->
 		<property name="current_session_context_class">thread</property>
