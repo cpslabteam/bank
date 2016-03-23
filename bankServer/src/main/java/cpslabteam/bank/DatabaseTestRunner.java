@@ -42,5 +42,7 @@ public class DatabaseTestRunner {
 		System.out.println(objectWriter.writeValueAsString(depositor));
 		System.out.println(objectWriter.writeValueAsString(account));
 		System.out.println(objectWriter.writeValueAsString(branch));
+		
+		
 	}
 }
