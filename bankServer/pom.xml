@@ -1,16 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <groupId>cpslabteam</groupId>
-  <artifactId>bank</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
+	<groupId>cpslabteam</groupId>
+	<artifactId>bank</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 
-  <name>bank</name>
-  <url>http://maven.apache.org</url>
+	<name>bank</name>
+	<url>http://maven.apache.org</url>
 
-  <build>
+	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<testSourceDirectory>src/test/java</testSourceDirectory>
 	</build>
@@ -28,6 +28,8 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<restlet-version>2.3.6</restlet-version>
+		<jackson-core-version>2.7.2</jackson-core-version>
+		<jackson-datatype-hibernate-version>2.7.2</jackson-datatype-hibernate-version>
 		<junit-version>4.12</junit-version>
 		<hibernate-core-version>5.1.0.Final</hibernate-core-version>
 		<slf4j-api-version>1.7.12</slf4j-api-version>
@@ -42,13 +44,33 @@
 		</dependency>
 		<dependency>
 			<groupId>org.restlet.jse</groupId>
-			<artifactId>org.restlet.ext.jackson</artifactId>
+			<artifactId>org.restlet.ext.json</artifactId>
 			<version>${restlet-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.restlet.jse</groupId>
-			<artifactId>org.restlet.ext.json</artifactId>
+			<artifactId>org.restlet.ext.jackson</artifactId>
 			<version>${restlet-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${jackson-core-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>${jackson-core-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson-core-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-hibernate5</artifactId>
+			<version>${jackson-datatype-hibernate-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
