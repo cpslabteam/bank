@@ -14,23 +14,23 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import cpslabteam.bank.jsonserialization.InfoSerializer;
-import cpslabteam.bank.jsonserialization.JSONViews;
+import cpslabteam.bank.jsonserialization.JsonViews;
 
 @Entity(name = "Loan")
 public class Loan extends BaseDataObject {
 
-	@JsonView(JSONViews.Info.class)
+	@JsonView(JsonViews.Info.class)
 	@Column(name = "loan_number")
 	@NaturalId
 	private String loanNumber;
 
-	@JsonView(JSONViews.Info.class)
+	@JsonView(JsonViews.Info.class)
 	@JsonSerialize(using = InfoSerializer.class)
 	@ManyToOne
 	@JoinColumn(name = "branch_id", nullable = false, foreignKey = @ForeignKey(name = "BRANCH_ID_FK"))
 	private Branch branch;
 
-	@JsonView(JSONViews.Details.class)
+	@JsonView(JsonViews.Details.class)
 	@Column(name = "amount", precision = 20, scale = 2, columnDefinition = "NUMERIC(20,2)", nullable = false)
 	private BigDecimal amount;
 

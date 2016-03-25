@@ -10,12 +10,12 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import cpslabteam.bank.jsonserialization.InfoSerializer;
-import cpslabteam.bank.jsonserialization.JSONViews;
+import cpslabteam.bank.jsonserialization.JsonViews;
 
 @Entity(name = "Borrower")
 public class Borrower extends Customer {
 
-	@JsonView(JSONViews.Details.class)
+	@JsonView(JsonViews.Details.class)
 	@JsonSerialize(using = InfoSerializer.class)
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	private Set<Loan> loans;

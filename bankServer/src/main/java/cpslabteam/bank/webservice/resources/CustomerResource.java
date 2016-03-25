@@ -9,16 +9,11 @@ import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
-import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module.Feature;
-
 import cpslabteam.bank.database.dao.CustomerDAO;
 import cpslabteam.bank.database.dao.DAOFactory;
 import cpslabteam.bank.database.objects.Customer;
 import cpslabteam.bank.database.utils.SessionManager;
-import cpslabteam.bank.jsonserialization.JSONViews;
+import cpslabteam.bank.jsonserialization.BankJsonSerializer;
 
 public class CustomerResource extends ServerResource {
 
@@ -35,12 +30,8 @@ public class CustomerResource extends ServerResource {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
-			Customer customer = customerDAO.findById(new Long(customerID));
-			ObjectWriter objectWriter = new ObjectMapper()
-					.registerModule(
-							new Hibernate5Module(SessionManager.getSessionFactory()).enable(Feature.FORCE_LAZY_LOADING))
-					.writerWithView(JSONViews.Details.class);
-			String response = objectWriter.writeValueAsString(customer);
+			Customer customer = customerDAO.findById(Long.valueOf(customerID));
+			String response = BankJsonSerializer.serializeDetails(customer);
 			SessionManager.getSession().getTransaction().commit();
 			return response;
 		} catch (HibernateException e) {

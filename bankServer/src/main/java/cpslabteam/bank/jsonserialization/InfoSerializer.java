@@ -14,7 +14,7 @@ public class InfoSerializer extends JsonSerializer<Object> {
 	public void serialize(Object value, JsonGenerator jgen, SerializerProvider provider)
 			throws IOException, JsonGenerationException {
 		ObjectMapper objectMapper = new ObjectMapper();
-		objectMapper.writerWithView(JSONViews.Info.class).writeValue(jgen, value);
+		objectMapper.writerWithView(JsonViews.Info.class).writeValue(jgen, value);
 	}
 
 }

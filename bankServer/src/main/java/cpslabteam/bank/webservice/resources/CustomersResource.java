@@ -10,14 +10,11 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-
 import cpslabteam.bank.database.dao.CustomerDAO;
 import cpslabteam.bank.database.dao.DAOFactory;
 import cpslabteam.bank.database.objects.Customer;
 import cpslabteam.bank.database.utils.SessionManager;
-import cpslabteam.bank.jsonserialization.JSONViews;
+import cpslabteam.bank.jsonserialization.BankJsonSerializer;
 
 public class CustomersResource extends ServerResource {
 	
@@ -28,8 +25,7 @@ public class CustomersResource extends ServerResource {
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
 			List<Customer> customers = customerDAO.findAll();
-			ObjectWriter objectWriter = new ObjectMapper().writerWithView(JSONViews.Info.class);
-			String response = objectWriter.writeValueAsString(customers);
+			String response = BankJsonSerializer.serializeInfo(customers);
 			SessionManager.getSession().getTransaction().commit();
 			return response;
 		} catch (HibernateException e) {

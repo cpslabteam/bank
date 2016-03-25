@@ -8,7 +8,7 @@ import javax.persistence.MappedSuperclass;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import cpslabteam.bank.jsonserialization.JSONViews;
+import cpslabteam.bank.jsonserialization.JsonViews;
 
 /**
  * Superclass of all objects that represent a table in the database. This class
@@ -20,7 +20,7 @@ import cpslabteam.bank.jsonserialization.JSONViews;
 @MappedSuperclass
 public abstract class BaseDataObject {
 
-	@JsonView(JSONViews.Info.class)
+	@JsonView(JsonViews.Info.class)
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	@Column(name = "id", nullable = false)

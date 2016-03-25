@@ -12,7 +12,7 @@ import cpslabteam.bank.database.objects.Account;
 import cpslabteam.bank.database.objects.Branch;
 import cpslabteam.bank.database.objects.Depositor;
 import cpslabteam.bank.database.utils.SessionManager;
-import cpslabteam.bank.jsonserialization.JSONViews;
+import cpslabteam.bank.jsonserialization.JsonViews;
 
 public class DatabaseTestRunner {
 
@@ -38,7 +38,7 @@ public class DatabaseTestRunner {
 		daoFactory.getDepositorDAO().makePersistent(depositor);
 		SessionManager.getSession().getTransaction().commit();
 		
-		ObjectWriter objectWriter = new ObjectMapper().writerWithView(JSONViews.Details.class).withDefaultPrettyPrinter();
+		ObjectWriter objectWriter = new ObjectMapper().writerWithView(JsonViews.Details.class).withDefaultPrettyPrinter();
 		System.out.println(objectWriter.writeValueAsString(depositor));
 		System.out.println(objectWriter.writeValueAsString(account));
 		System.out.println(objectWriter.writeValueAsString(branch));
