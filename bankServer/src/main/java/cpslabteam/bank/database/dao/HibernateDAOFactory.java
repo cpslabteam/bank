@@ -2,7 +2,7 @@ package cpslabteam.bank.database.dao;
 
 import org.hibernate.Session;
 
-import cpslabteam.bank.database.utils.SessionManager;
+import cpslabteam.bank.database.SessionManager;
 
 public class HibernateDAOFactory extends DAOFactory {
 

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module.Feature;
 
-import cpslabteam.bank.database.utils.SessionManager;
+import cpslabteam.bank.database.SessionManager;
 
 public class BankJsonSerializer {
 

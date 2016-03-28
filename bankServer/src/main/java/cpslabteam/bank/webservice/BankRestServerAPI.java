@@ -98,6 +98,7 @@ public final class BankRestServerAPI extends Application {
 
 	private BankRestServerAPI() {
 		configureCorsService();
+		setStatusService(new BankStatusService());
 	}
 	
 	private void configureCorsService(){

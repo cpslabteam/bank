@@ -6,12 +6,12 @@ import java.math.BigDecimal;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
+import cpslabteam.bank.database.SessionManager;
 import cpslabteam.bank.database.dao.BranchDAO;
 import cpslabteam.bank.database.dao.DAOFactory;
 import cpslabteam.bank.database.objects.Account;
 import cpslabteam.bank.database.objects.Branch;
 import cpslabteam.bank.database.objects.Depositor;
-import cpslabteam.bank.database.utils.SessionManager;
 import cpslabteam.bank.jsonserialization.JsonViews;
 
 public class DatabaseTestRunner {

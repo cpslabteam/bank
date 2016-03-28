@@ -1,18 +1,16 @@
 package cpslabteam.bank.webservice.resources;
 
-import java.io.IOException;
-
 import org.hibernate.HibernateException;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import cpslabteam.bank.database.SessionManager;
 import cpslabteam.bank.database.dao.CustomerDAO;
 import cpslabteam.bank.database.dao.DAOFactory;
 import cpslabteam.bank.database.objects.Customer;
-import cpslabteam.bank.database.utils.SessionManager;
 import cpslabteam.bank.jsonserialization.BankJsonSerializer;
 
 public class CustomerResource extends ServerResource {
@@ -25,7 +23,7 @@ public class CustomerResource extends ServerResource {
 	}
 
 	@Get("application/json")
-	public String doGet() throws InterruptedException, IOException, JSONException {
+	public String doGet() throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
@@ -34,12 +32,10 @@ public class CustomerResource extends ServerResource {
 			String response = BankJsonSerializer.serializeDetails(customer);
 			SessionManager.getSession().getTransaction().commit();
 			return response;
-		} catch (HibernateException e) {
-			SessionManager.getSession().getTransaction().rollback();
-			throw e;
 		} catch (Exception e) {
-			e.printStackTrace();
-			return new JSONObject().put("error", e.getMessage()).toString();
+			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
+				SessionManager.getSession().getTransaction().rollback();
+			throw e;
 		}
 	}
 }
