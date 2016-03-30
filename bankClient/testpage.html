@@ -1,0 +1,27 @@
+<html>
+
+<head>
+  <script>
+  function myFunction() {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'http://localhost:9192/customers', true);
+    xhr.setRequestHeader('X-test', 'test');
+    xhr.onreadystatechange = function() {
+      if (this.readyState == 4) {
+        if (this.status == 200) {
+          alert('response: ' + this.responseText);
+        } else {
+          alert('error: ' + this.responseText);
+        }
+      }
+    };
+    xhr.send();
+  }
+  </script>
+</head>
+
+<body>
+  <button onclick="myFunction();">Click me</button>
+</body>
+
+</html>
