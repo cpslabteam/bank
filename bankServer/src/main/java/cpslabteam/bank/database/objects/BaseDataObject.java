@@ -29,4 +29,10 @@ public abstract class BaseDataObject {
 	public Long getId() {
 		return id;
 	}
+
+	@Override
+	public String toString() {
+		return "BaseDataObject [id=" + id + "]";
+	}
+
 }

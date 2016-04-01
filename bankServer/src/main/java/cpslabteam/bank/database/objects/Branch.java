@@ -16,7 +16,7 @@ public class Branch extends BaseDataObject {
 
 	@JsonView(JsonViews.Info.class)
 	@Column(name = "name", nullable = false)
-	@NaturalId (mutable = true)
+	@NaturalId(mutable = true)
 	private String name;
 
 	@JsonView(JsonViews.Info.class)
@@ -32,28 +32,33 @@ public class Branch extends BaseDataObject {
 		// TODO Auto-generated constructor stub
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
+	public BigDecimal getAssets() {
+		return assets;
 	}
 
 	public String getCity() {
 		return city;
 	}
 
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-	public BigDecimal getAssets() {
-		return assets;
+	public String getName() {
+		return name;
 	}
 
 	public void setAssets(BigDecimal assets) {
 		this.assets = assets;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@Override
+	public String toString() {
+		return "Branch [id=" + getId() + ", name=" + name + ", city=" + city + ", assets=" + assets + "]";
 	}
 
 }

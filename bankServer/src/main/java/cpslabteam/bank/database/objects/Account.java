@@ -85,4 +85,10 @@ public class Account extends BaseDataObject {
 		return hashcode;
 	}
 
+	@Override
+	public String toString() {
+		return "Account [id=" + getId() + ", accountNumber=" + accountNumber + ", branch=" + branch + ", balance="
+				+ balance + "]";
+	}
+
 }

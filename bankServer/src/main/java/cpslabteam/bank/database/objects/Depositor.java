@@ -29,4 +29,9 @@ public class Depositor extends Customer {
 	public Set<Account> getAccounts() {
 		return accounts;
 	}
+
+	@Override
+	public String toString() {
+		return "Depositor [id=" + getId() + ", accounts=" + accounts + "]";
+	}
 }

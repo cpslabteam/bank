@@ -3,10 +3,11 @@ package cpslabteam.bank.webservice;
 import org.hibernate.HibernateException;
 import org.hibernate.ObjectNotFoundException;
 import org.hibernate.exception.ConstraintViolationException;
-import org.restlet.data.MediaType;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.restlet.data.Status;
+import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
-import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Resource;
 import org.restlet.service.StatusService;
 
@@ -17,13 +18,20 @@ public class BankStatusService extends StatusService {
 
 	@Override
 	public Representation toRepresentation(Status status, Resource resource) {
-		String ret = null;
-		if (status.getDescription() != null) {
-			ret = status.getDescription();
-		} else {
-			ret = "unknown error";
+		String description = null;
+		JSONObject ret = new JSONObject();
+		if(status.getDescription() != null){
+			description = status.getDescription();
 		}
-		return new StringRepresentation(ret, MediaType.APPLICATION_JSON);
+		else {
+			description = "unknown error";
+		}
+		try {
+			ret.put("description", description);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return new JsonRepresentation(ret);
 	}
 
 	@Override
@@ -43,11 +51,13 @@ public class BankStatusService extends StatusService {
 
 	private Status handleHibernateException(Throwable throwable, Resource resource) {
 		if (throwable instanceof ObjectNotFoundException) {
-			return new Status(Status.CLIENT_ERROR_BAD_REQUEST, throwable, throwable.getLocalizedMessage(),
-					throwable.getMessage());
+			ObjectNotFoundException e = (ObjectNotFoundException) throwable;
+			return new Status(Status.CLIENT_ERROR_BAD_REQUEST, e, e.getLocalizedMessage(),
+					"Could not find entity " + e.getEntityName() + " with ID " + e.getIdentifier());
 		} else if (throwable instanceof ConstraintViolationException) {
-			return new Status(Status.CLIENT_ERROR_BAD_REQUEST, throwable, throwable.getLocalizedMessage(),
-					throwable.getMessage());
+			ConstraintViolationException e = (ConstraintViolationException) throwable;
+			return new Status(Status.CLIENT_ERROR_BAD_REQUEST, e, e.getLocalizedMessage(),
+					"Violated constraint: " + e.getConstraintName());
 		} else {
 			return handleUnknownException(throwable, resource);
 		}
@@ -59,7 +69,7 @@ public class BankStatusService extends StatusService {
 			if (cause == null) {
 				return handleUnknownException(throwable, resource);
 			} else if (cause instanceof HibernateException) {
-				return handleHibernateException(throwable, resource);
+				return handleHibernateException(cause, resource);
 			} else {
 				return handleUnknownException(cause, resource);
 			}

@@ -28,4 +28,9 @@ public class Borrower extends Customer {
 	public Set<Loan> getLoans() {
 		return loans;
 	}
+
+	@Override
+	public String toString() {
+		return "Borrower [id=" + getId() + ", loans=" + loans + "]";
+	}
 }

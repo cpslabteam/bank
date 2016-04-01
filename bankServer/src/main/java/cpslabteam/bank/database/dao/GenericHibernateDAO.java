@@ -53,7 +53,17 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable> implements
 		return crit.list();
 	}
 
-	public T makePersistent(T entity) {
+	public T update(T entity) {
+		getSession().update(entity);
+		return entity;
+	}
+	
+	public T persist(T entity) {
+		getSession().persist(entity);
+		return entity;
+	}
+	
+	public T saveOrUpdate(T entity) {
 		getSession().saveOrUpdate(entity);
 		return entity;
 	}

@@ -27,7 +27,7 @@ public class Loan extends BaseDataObject {
 	@JsonView(JsonViews.Info.class)
 	@JsonSerialize(using = InfoSerializer.class)
 	@ManyToOne
-	@JoinColumn(name = "branch_id", nullable = false, foreignKey = @ForeignKey(name = "BRANCH_ID_FK"))
+	@JoinColumn(name = "branch_id", nullable = false, foreignKey = @ForeignKey(name = "BRANCH_ID_FK") )
 	private Branch branch;
 
 	@JsonView(JsonViews.Details.class)
@@ -37,30 +37,6 @@ public class Loan extends BaseDataObject {
 	public Loan() {
 		super();
 		// TODO Auto-generated constructor stub
-	}
-
-	public String getLoanNumber() {
-		return loanNumber;
-	}
-
-	public void setLoanNumber(String loanNumber) {
-		this.loanNumber = loanNumber;
-	}
-
-	public Branch getBranch() {
-		return branch;
-	}
-
-	public void setBranch(Branch branch) {
-		this.branch = branch;
-	}
-
-	public BigDecimal getAmount() {
-		return amount;
-	}
-
-	public void setAmount(BigDecimal amount) {
-		this.amount = amount;
 	}
 
 	@Override
@@ -78,10 +54,39 @@ public class Loan extends BaseDataObject {
 		return true;
 	}
 
+	public BigDecimal getAmount() {
+		return amount;
+	}
+
+	public Branch getBranch() {
+		return branch;
+	}
+
+	public String getLoanNumber() {
+		return loanNumber;
+	}
+
 	@Override
 	public int hashCode() {
 		int hashcode = 0;
 		hashcode += ((loanNumber == null) ? 0 : loanNumber.hashCode());
 		return hashcode;
+	}
+
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
+	}
+
+	public void setBranch(Branch branch) {
+		this.branch = branch;
+	}
+
+	public void setLoanNumber(String loanNumber) {
+		this.loanNumber = loanNumber;
+	}
+
+	@Override
+	public String toString() {
+		return "Loan [id=" + getId() + ", loanNumber=" + loanNumber + ", branch=" + branch + ", amount=" + amount + "]";
 	}
 }

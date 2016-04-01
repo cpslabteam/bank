@@ -10,8 +10,12 @@ public interface GenericDAO<T, ID extends Serializable> {
 	List<T> findAll();
 
 	List<T> findByExample(T exampleInstance, String[] excludeProperty);
-
-	T makePersistent(T entity);
+	
+	T update(T entity);
+	
+	T persist(T entity);
+	
+	T saveOrUpdate(T entity);
 
 	void makeTransient(T entity);
 }

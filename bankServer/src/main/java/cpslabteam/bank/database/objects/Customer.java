@@ -36,28 +36,33 @@ public class Customer extends BaseDataObject {
 		// TODO Auto-generated constructor stub
 	}
 
-	public String getName() {
-		return name;
+	public String getCity() {
+		return city;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public String getName() {
+		return name;
 	}
 
 	public String getStreet() {
 		return street;
 	}
 
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public void setStreet(String street) {
 		this.street = street;
 	}
 
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
+	@Override
+	public String toString() {
+		return "Customer [id=" + getId() + ", name=" + name + ", street=" + street + ", city=" + city + "]";
 	}
 
 }
