@@ -3,7 +3,6 @@ package cpslabteam.bank.webservice.resources;
 import java.util.List;
 
 import org.hibernate.HibernateException;
-import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 
@@ -18,8 +17,7 @@ import cpslabteam.bank.jsonserialization.BankJsonSerializer;
 public class AccountsResource extends ServerResource {
 
 	@Get("application/json")
-	public String doGet(Representation entity)
-			throws InterruptedException, JsonProcessingException, HibernateException {
+	public String getAccount() throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
@@ -34,4 +32,5 @@ public class AccountsResource extends ServerResource {
 			throw e;
 		}
 	}
+
 }

@@ -24,7 +24,7 @@ public class Account extends BaseDataObject {
 	@Column(name = "account_number")
 	private String accountNumber;
 
-	@JsonView(JsonViews.Info.class)
+	@JsonView(JsonViews.Details.class)
 	@JsonSerialize(using = InfoSerializer.class)
 	@ManyToOne
 	@JoinColumn(name = "branch_id", nullable = false, foreignKey = @ForeignKey(name = "BRANCH_ID_FK") )

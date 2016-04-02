@@ -1,7 +1,9 @@
 package cpslabteam.bank.webservice.resources;
 
 import org.hibernate.HibernateException;
+import org.restlet.resource.Delete;
 import org.restlet.resource.Get;
+import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
@@ -23,7 +25,7 @@ public class BranchResource extends ServerResource {
 	}
 
 	@Get("application/json")
-	public String doGet() throws InterruptedException, JsonProcessingException, HibernateException {
+	public String getBranch() throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
@@ -32,6 +34,41 @@ public class BranchResource extends ServerResource {
 			String response = BankJsonSerializer.serializeDetails(branch);
 			SessionManager.getSession().getTransaction().commit();
 			return response;
+		} catch (Exception e) {
+			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
+				SessionManager.getSession().getTransaction().rollback();
+			throw e;
+		}
+	}
+
+	@Post("application/json")
+	public String updateBranch(Branch branchToUpdate)
+			throws InterruptedException, JsonProcessingException, HibernateException {
+		try {
+			SessionManager.getSession().beginTransaction();
+			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
+			BranchDAO branchDAO = daoFactory.getBranchDAO();
+			Branch updatedBranch = branchDAO.update(branchToUpdate);
+			String response = BankJsonSerializer.serializeDetails(updatedBranch);
+			SessionManager.getSession().getTransaction().commit();
+			return response;
+		} catch (Exception e) {
+			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
+				SessionManager.getSession().getTransaction().rollback();
+			throw e;
+		}
+	}
+
+	@Delete("application/json")
+	public void deleteBranch()
+			throws InterruptedException, JsonProcessingException, HibernateException {
+		try {
+			SessionManager.getSession().beginTransaction();
+			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
+			BranchDAO branchDAO = daoFactory.getBranchDAO();
+			Branch branch = branchDAO.findById(Long.valueOf(branchID));
+			branchDAO.makeTransient(branch);
+			SessionManager.getSession().getTransaction().commit();
 		} catch (Exception e) {
 			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
 				SessionManager.getSession().getTransaction().rollback();

@@ -1,7 +1,9 @@
 package cpslabteam.bank.webservice.resources;
 
 import org.hibernate.HibernateException;
+import org.restlet.resource.Delete;
 import org.restlet.resource.Get;
+import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
@@ -32,6 +34,40 @@ public class AccountResource extends ServerResource {
 			String response = BankJsonSerializer.serializeDetails(account);
 			SessionManager.getSession().getTransaction().commit();
 			return response;
+		} catch (Exception e) {
+			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
+				SessionManager.getSession().getTransaction().rollback();
+			throw e;
+		}
+	}
+
+	@Post("application/json")
+	public String updateAccount(Account accountToUpdate)
+			throws InterruptedException, JsonProcessingException, HibernateException {
+		try {
+			SessionManager.getSession().beginTransaction();
+			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
+			AccountDAO accountDAO = daoFactory.getAccountDAO();
+			Account updatedAccount = accountDAO.update(accountToUpdate);
+			String response = BankJsonSerializer.serializeDetails(updatedAccount);
+			SessionManager.getSession().getTransaction().commit();
+			return response;
+		} catch (Exception e) {
+			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
+				SessionManager.getSession().getTransaction().rollback();
+			throw e;
+		}
+	}
+
+	@Delete("application/json")
+	public void deleteAccount() throws InterruptedException, JsonProcessingException, HibernateException {
+		try {
+			SessionManager.getSession().beginTransaction();
+			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
+			AccountDAO accountDAO = daoFactory.getAccountDAO();
+			Account account = accountDAO.findById(Long.valueOf(accountID));
+			accountDAO.makeTransient(account);
+			SessionManager.getSession().getTransaction().commit();
 		} catch (Exception e) {
 			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
 				SessionManager.getSession().getTransaction().rollback();

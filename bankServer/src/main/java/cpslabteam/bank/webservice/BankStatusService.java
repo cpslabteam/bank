@@ -57,7 +57,7 @@ public class BankStatusService extends StatusService {
 		} else if (throwable instanceof ConstraintViolationException) {
 			ConstraintViolationException e = (ConstraintViolationException) throwable;
 			return new Status(Status.CLIENT_ERROR_BAD_REQUEST, e, e.getLocalizedMessage(),
-					"Violated constraint: " + e.getConstraintName());
+					e.getSQLException().getMessage());
 		} else {
 			return handleUnknownException(throwable, resource);
 		}
