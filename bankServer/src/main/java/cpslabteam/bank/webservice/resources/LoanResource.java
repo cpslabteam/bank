@@ -29,7 +29,7 @@ public class LoanResource extends ServerResource {
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			LoanDAO loanDAO = daoFactory.getLoanDAO();
 			Loan loan = loanDAO.findById(Long.valueOf(loanID));
-			String response = BankJsonSerializer.serializeDetails(loan);
+			String response = BankJsonSerializer.serialize(loan);
 			SessionManager.getSession().getTransaction().commit();
 			return response;
 		} catch (Exception e) {

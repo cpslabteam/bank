@@ -90,7 +90,8 @@ public final class BankRestServerAPI extends Application {
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
-				logError("Port " + SERVER_PORT + " is occupied! Trying again in 15 sec.");
+				logError("Port " + SERVER_PORT
+						+ " is occupied! Check if a server is running already. Trying again in 15 sec.");
 				Thread.sleep(15000);
 			}
 		}
@@ -100,8 +101,8 @@ public final class BankRestServerAPI extends Application {
 		configureCorsService();
 		setStatusService(new BankStatusService());
 	}
-	
-	private void configureCorsService(){
+
+	private void configureCorsService() {
 		CorsService corsService = new CorsService();
 		corsService.setAllowedCredentials(false);
 		corsService.setDefaultAllowedMethods(

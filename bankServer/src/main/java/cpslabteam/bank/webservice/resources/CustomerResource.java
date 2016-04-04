@@ -29,7 +29,7 @@ public class CustomerResource extends ServerResource {
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
 			Customer customer = customerDAO.findById(Long.valueOf(customerID));
-			String response = BankJsonSerializer.serializeDetails(customer);
+			String response = BankJsonSerializer.serialize(customer);
 			SessionManager.getSession().getTransaction().commit();
 			return response;
 		} catch (Exception e) {

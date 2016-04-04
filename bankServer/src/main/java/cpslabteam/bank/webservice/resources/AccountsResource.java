@@ -23,7 +23,7 @@ public class AccountsResource extends ServerResource {
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			AccountDAO accountDAO = daoFactory.getAccountDAO();
 			List<Account> accounts = accountDAO.findAll();
-			String response = BankJsonSerializer.serializeInfo(accounts);
+			String response = BankJsonSerializer.serialize(accounts);
 			SessionManager.getSession().getTransaction().commit();
 			return response;
 		} catch (Exception e) {

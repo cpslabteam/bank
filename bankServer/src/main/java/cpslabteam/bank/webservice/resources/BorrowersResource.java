@@ -25,7 +25,7 @@ public class BorrowersResource extends ServerResource {
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			BorrowerDAO borrowerDAO = daoFactory.getBorrowerDAO();
 			List<Borrower> borrowers = borrowerDAO.findAll();
-			String response = BankJsonSerializer.serializeInfo(borrowers);
+			String response = BankJsonSerializer.serialize(borrowers);
 			SessionManager.getSession().getTransaction().commit();
 			return response;
 		} catch (Exception e) {

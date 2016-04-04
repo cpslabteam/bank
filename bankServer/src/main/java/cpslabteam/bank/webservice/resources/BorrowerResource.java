@@ -29,7 +29,7 @@ public class BorrowerResource extends ServerResource {
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			BorrowerDAO borrowerDAO = daoFactory.getBorrowerDAO();
 			Borrower borrower = borrowerDAO.findById(Long.valueOf(borrowerID));
-			String response = BankJsonSerializer.serializeDetails(borrower);
+			String response = BankJsonSerializer.serialize(borrower);
 			SessionManager.getSession().getTransaction().commit();
 			return response;
 		} catch (Exception e) {

@@ -31,7 +31,7 @@ public class AccountResource extends ServerResource {
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			AccountDAO accountDAO = daoFactory.getAccountDAO();
 			Account account = accountDAO.findById(Long.valueOf(accountID));
-			String response = BankJsonSerializer.serializeDetails(account);
+			String response = BankJsonSerializer.serialize(account);
 			SessionManager.getSession().getTransaction().commit();
 			return response;
 		} catch (Exception e) {
@@ -49,7 +49,7 @@ public class AccountResource extends ServerResource {
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			AccountDAO accountDAO = daoFactory.getAccountDAO();
 			Account updatedAccount = accountDAO.update(accountToUpdate);
-			String response = BankJsonSerializer.serializeDetails(updatedAccount);
+			String response = BankJsonSerializer.serialize(updatedAccount);
 			SessionManager.getSession().getTransaction().commit();
 			return response;
 		} catch (Exception e) {

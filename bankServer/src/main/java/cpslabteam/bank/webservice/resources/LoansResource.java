@@ -25,7 +25,7 @@ public class LoansResource extends ServerResource {
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			LoanDAO loanDAO = daoFactory.getLoanDAO();
 			List<Loan> loans = loanDAO.findAll();
-			String response = BankJsonSerializer.serializeInfo(loans);
+			String response = BankJsonSerializer.serialize(loans);
 			SessionManager.getSession().getTransaction().commit();
 			return response;
 		} catch (Exception e) {

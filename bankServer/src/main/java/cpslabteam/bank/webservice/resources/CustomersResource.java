@@ -25,7 +25,7 @@ public class CustomersResource extends ServerResource {
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
 			List<Customer> customers = customerDAO.findAll();
-			String response = BankJsonSerializer.serializeInfo(customers);
+			String response = BankJsonSerializer.serialize(customers);
 			SessionManager.getSession().getTransaction().commit();
 			return response;
 		} catch (Exception e) {

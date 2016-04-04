@@ -5,10 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 
-import com.fasterxml.jackson.annotation.JsonView;
-
-import cpslabteam.bank.jsonserialization.JsonViews;
-
 /**
  * Represents the Customer object and defines the mapping of it's table in the
  * database. Contains Name, Street, and City.
@@ -19,15 +15,12 @@ import cpslabteam.bank.jsonserialization.JsonViews;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Customer extends BaseDataObject {
 
-	@JsonView(JsonViews.Info.class)
 	@Column(name = "name", nullable = false)
 	private String name;
 
-	@JsonView(JsonViews.Info.class)
 	@Column(name = "street", nullable = false)
 	private String street;
 
-	@JsonView(JsonViews.Info.class)
 	@Column(name = "city", nullable = false)
 	private String city;
 

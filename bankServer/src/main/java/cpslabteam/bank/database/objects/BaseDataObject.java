@@ -6,9 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
-import com.fasterxml.jackson.annotation.JsonView;
-
-import cpslabteam.bank.jsonserialization.JsonViews;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
  * Superclass of all objects that represent a table in the database. This class
@@ -18,9 +17,9 @@ import cpslabteam.bank.jsonserialization.JsonViews;
  */
 
 @MappedSuperclass
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
 public abstract class BaseDataObject {
 
-	@JsonView(JsonViews.Info.class)
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	@Column(name = "id", nullable = false)

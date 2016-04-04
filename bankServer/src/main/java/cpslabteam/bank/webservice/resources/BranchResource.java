@@ -31,7 +31,7 @@ public class BranchResource extends ServerResource {
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			BranchDAO branchDAO = daoFactory.getBranchDAO();
 			Branch branch = branchDAO.findById(Long.valueOf(branchID));
-			String response = BankJsonSerializer.serializeDetails(branch);
+			String response = BankJsonSerializer.serialize(branch);
 			SessionManager.getSession().getTransaction().commit();
 			return response;
 		} catch (Exception e) {
@@ -49,7 +49,7 @@ public class BranchResource extends ServerResource {
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			BranchDAO branchDAO = daoFactory.getBranchDAO();
 			Branch updatedBranch = branchDAO.update(branchToUpdate);
-			String response = BankJsonSerializer.serializeDetails(updatedBranch);
+			String response = BankJsonSerializer.serialize(updatedBranch);
 			SessionManager.getSession().getTransaction().commit();
 			return response;
 		} catch (Exception e) {

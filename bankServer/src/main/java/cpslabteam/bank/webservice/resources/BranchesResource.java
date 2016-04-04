@@ -24,7 +24,7 @@ public class BranchesResource extends ServerResource {
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			BranchDAO branchDAO = daoFactory.getBranchDAO();
 			List<Branch> branches = branchDAO.findAll();
-			String response = BankJsonSerializer.serializeInfo(branches);
+			String response = BankJsonSerializer.serialize(branches);
 			SessionManager.getSession().getTransaction().commit();
 			return response;
 		} catch (Exception e) {
@@ -42,7 +42,7 @@ public class BranchesResource extends ServerResource {
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			BranchDAO branchDAO = daoFactory.getBranchDAO();
 			Branch createdBranch = branchDAO.persist(branchToCreate);
-			String response = BankJsonSerializer.serializeDetails(createdBranch);
+			String response = BankJsonSerializer.serialize(createdBranch);
 			SessionManager.getSession().getTransaction().commit();
 			return response;
 		} catch (Exception e) {
