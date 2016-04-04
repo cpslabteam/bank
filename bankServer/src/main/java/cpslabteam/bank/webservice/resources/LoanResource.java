@@ -29,9 +29,8 @@ public class LoanResource extends ServerResource {
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			LoanDAO loanDAO = daoFactory.getLoanDAO();
 			Loan loan = loanDAO.findById(Long.valueOf(loanID));
-			String response = BankJsonSerializer.serialize(loan);
 			SessionManager.getSession().getTransaction().commit();
-			return response;
+			return BankJsonSerializer.serialize(loan);
 		} catch (Exception e) {
 			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
 				SessionManager.getSession().getTransaction().rollback();

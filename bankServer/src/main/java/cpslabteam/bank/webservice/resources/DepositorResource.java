@@ -29,9 +29,8 @@ public class DepositorResource extends ServerResource {
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			DepositorDAO depositorDAO = daoFactory.getDepositorDAO();
 			Depositor depositor = depositorDAO.findById(Long.valueOf(depositorID));
-			String response = BankJsonSerializer.serialize(depositor);
 			SessionManager.getSession().getTransaction().commit();
-			return response;
+			return BankJsonSerializer.serialize(depositor);
 		} catch (Exception e) {
 			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
 				SessionManager.getSession().getTransaction().rollback();
