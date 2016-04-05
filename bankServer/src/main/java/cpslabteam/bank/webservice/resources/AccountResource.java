@@ -25,7 +25,7 @@ public class AccountResource extends ServerResource {
 	}
 
 	@Get("application/json")
-	public String doGet() throws InterruptedException, JsonProcessingException, HibernateException {
+	public String getAccount() throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);

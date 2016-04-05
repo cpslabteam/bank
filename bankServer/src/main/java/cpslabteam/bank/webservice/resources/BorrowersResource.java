@@ -3,7 +3,6 @@ package cpslabteam.bank.webservice.resources;
 import java.util.List;
 
 import org.hibernate.HibernateException;
-import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 
@@ -18,7 +17,7 @@ import cpslabteam.bank.jsonserialization.BankJsonSerializer;
 public class BorrowersResource extends ServerResource {
 
 	@Get("application/json")
-	public String doGet(Representation entity)
+	public String getBorrowers()
 			throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();

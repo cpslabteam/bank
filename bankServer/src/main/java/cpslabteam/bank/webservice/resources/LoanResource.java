@@ -23,7 +23,7 @@ public class LoanResource extends ServerResource {
 	}
 
 	@Get("application/json")
-	public String doGet() throws InterruptedException, JsonProcessingException, HibernateException {
+	public String getLoan() throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);

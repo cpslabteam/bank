@@ -18,7 +18,7 @@ import cpslabteam.bank.jsonserialization.BankJsonSerializer;
 public class CustomersResource extends ServerResource {
 	
 	@Get("application/json")
-	public String doGet(Representation entity)
+	public String getCustomers(Representation entity)
 			throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();

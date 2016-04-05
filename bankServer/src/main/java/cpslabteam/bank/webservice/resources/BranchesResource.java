@@ -18,7 +18,7 @@ import cpslabteam.bank.jsonserialization.BankJsonSerializer;
 public class BranchesResource extends ServerResource {
 
 	@Get("application/json")
-	public String getListBranches() throws InterruptedException, JsonProcessingException, HibernateException {
+	public String getBranches() throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
@@ -34,7 +34,7 @@ public class BranchesResource extends ServerResource {
 	}
 
 	@Post("application/json")
-	public String createNewBranch(Branch branchToCreate)
+	public String createBranch(Branch branchToCreate)
 			throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
