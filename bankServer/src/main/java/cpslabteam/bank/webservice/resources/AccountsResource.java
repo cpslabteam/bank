@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.HibernateException;
 import org.restlet.resource.Get;
+import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,6 +27,24 @@ public class AccountsResource extends ServerResource {
 			SessionManager.getSession().getTransaction().commit();
 			return BankJsonSerializer.serialize(accounts);
 		} catch (Exception e) {
+			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
+				SessionManager.getSession().getTransaction().rollback();
+			throw e;
+		}
+	}
+
+	@Post("application/json")
+	public String createAccount(Account account)
+			throws InterruptedException, JsonProcessingException, HibernateException {
+		try {
+			SessionManager.getSession().beginTransaction();
+			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
+			AccountDAO accountDAO = daoFactory.getAccountDAO();
+			Account createdAccount = accountDAO.persist(account);
+			SessionManager.getSession().getTransaction().commit();
+			return BankJsonSerializer.serialize(createdAccount);
+		} catch (Exception e) {
+			System.out.println(e);
 			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
 				SessionManager.getSession().getTransaction().rollback();
 			throw e;

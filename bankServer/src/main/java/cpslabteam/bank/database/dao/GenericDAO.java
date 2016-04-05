@@ -6,6 +6,10 @@ import java.util.List;
 public interface GenericDAO<T, ID extends Serializable> {
 
 	T findById(ID id);
+	
+	T getById(ID id);
+	
+	void readIntoObject(T object, ID id);
 
 	List<T> findAll();
 

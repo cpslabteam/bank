@@ -13,6 +13,11 @@
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<testSourceDirectory>src/test/java</testSourceDirectory>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
 	</build>
 
 	<repositories>
@@ -50,6 +55,11 @@
 		<dependency>
 			<groupId>org.restlet.jse</groupId>
 			<artifactId>org.restlet.ext.jackson</artifactId>
+			<version>${restlet-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.restlet.jse</groupId>
+			<artifactId>org.restlet.ext.jetty</artifactId>
 			<version>${restlet-version}</version>
 		</dependency>
 		<dependency>

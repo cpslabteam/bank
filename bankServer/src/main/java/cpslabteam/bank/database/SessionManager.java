@@ -21,13 +21,14 @@ import org.hibernate.service.ServiceRegistry;
  * @see Sessions
  */
 public final class SessionManager {
+	private static final String CONFIGURATION_FILE_PATH = "hibernate/hibernate.cfg.xml";
 	private static final SessionFactory sessionFactory;
 
 	static {
 		sessionFactory = createSessionFactory();
 	}
-	
-	public static SessionFactory getSessionFactory(){
+
+	public static SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}
 
@@ -49,7 +50,8 @@ public final class SessionManager {
 	 * @throws HibernateException
 	 */
 	private static SessionFactory createSessionFactory() throws HibernateException {
-		ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().configure().build();
+		ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().configure(CONFIGURATION_FILE_PATH)
+				.build();
 		Metadata metadata = new MetadataSources(serviceRegistry).getMetadataBuilder().build();
 		return metadata.getSessionFactoryBuilder().build();
 	}

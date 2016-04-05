@@ -5,6 +5,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Example;
@@ -35,7 +36,19 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable> implements
 	}
 
 	public T findById(ID id) {
-		return (T) getSession().load(getPersistentClass(), id);
+		T object = (T) getSession().get(getPersistentClass(), id);
+		if (object != null)
+			return object;
+		else
+			throw new ObjectNotFoundException(id, getPersistentClass().getName());
+	}
+
+	public void readIntoObject(T object, ID id) {
+		getSession().load(object, id);
+	}
+
+	public T getById(ID id) {
+		return (T) getSession().get(getPersistentClass(), id);
 	}
 
 	public List<T> findAll() {
@@ -57,12 +70,12 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable> implements
 		getSession().update(entity);
 		return entity;
 	}
-	
+
 	public T persist(T entity) {
 		getSession().persist(entity);
 		return entity;
 	}
-	
+
 	public T saveOrUpdate(T entity) {
 		getSession().saveOrUpdate(entity);
 		return entity;

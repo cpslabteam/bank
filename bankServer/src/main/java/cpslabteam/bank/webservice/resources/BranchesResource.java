@@ -34,13 +34,13 @@ public class BranchesResource extends ServerResource {
 	}
 
 	@Post("application/json")
-	public String createBranch(Branch branchToCreate)
+	public String createBranch(Branch branch)
 			throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			BranchDAO branchDAO = daoFactory.getBranchDAO();
-			Branch createdBranch = branchDAO.persist(branchToCreate);
+			Branch createdBranch = branchDAO.persist(branch);
 			SessionManager.getSession().getTransaction().commit();
 			return BankJsonSerializer.serialize(createdBranch);
 		} catch (Exception e) {

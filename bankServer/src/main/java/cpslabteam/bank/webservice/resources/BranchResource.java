@@ -41,13 +41,13 @@ public class BranchResource extends ServerResource {
 	}
 
 	@Post("application/json")
-	public String updateBranch(Branch branchToUpdate)
+	public String updateBranch(Branch branch)
 			throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			BranchDAO branchDAO = daoFactory.getBranchDAO();
-			Branch updatedBranch = branchDAO.update(branchToUpdate);
+			Branch updatedBranch = branchDAO.update(branch);
 			SessionManager.getSession().getTransaction().commit();
 			return BankJsonSerializer.serialize(updatedBranch);
 		} catch (Exception e) {

@@ -41,13 +41,13 @@ public class AccountResource extends ServerResource {
 	}
 
 	@Post("application/json")
-	public String updateAccount(Account accountToUpdate)
+	public String updateAccount(Account account)
 			throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			AccountDAO accountDAO = daoFactory.getAccountDAO();
-			Account updatedAccount = accountDAO.update(accountToUpdate);
+			Account updatedAccount = accountDAO.update(account);
 			SessionManager.getSession().getTransaction().commit();
 			return BankJsonSerializer.serialize(updatedAccount);
 		} catch (Exception e) {
