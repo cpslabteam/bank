@@ -7,7 +7,7 @@ This is a simple bank application using our technology stack, and will be used i
 ### Contents
 [**Technologies**](#technologies)  
 [**Documentation**](#documentation)  
-[**Running Instructions**](#Running Instructions)
+[**Running Instructions**](#running-instructions)
 
 ## Technologies
 
