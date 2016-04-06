@@ -11,7 +11,6 @@ import cpslabteam.bank.database.SessionManager;
 import cpslabteam.bank.database.dao.CustomerDAO;
 import cpslabteam.bank.database.dao.DAOFactory;
 import cpslabteam.bank.database.objects.Customer;
-import cpslabteam.bank.jsonserialization.BankJsonSerializer;
 
 public class CustomerResource extends ServerResource {
 
@@ -23,14 +22,14 @@ public class CustomerResource extends ServerResource {
 	}
 
 	@Get("application/json")
-	public String getCustomer() throws InterruptedException, JsonProcessingException, HibernateException {
+	public Customer getCustomer() throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
 			Customer customer = customerDAO.findById(Long.valueOf(customerID));
 			SessionManager.getSession().getTransaction().commit();
-			return BankJsonSerializer.serialize(customer);
+			return customer;
 		} catch (Exception e) {
 			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
 				SessionManager.getSession().getTransaction().rollback();

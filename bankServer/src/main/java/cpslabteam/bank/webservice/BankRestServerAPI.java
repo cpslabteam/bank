@@ -2,14 +2,20 @@ package cpslabteam.bank.webservice;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 import org.restlet.Application;
 import org.restlet.Component;
 import org.restlet.Restlet;
 import org.restlet.data.Method;
 import org.restlet.data.Protocol;
+import org.restlet.engine.Engine;
+import org.restlet.engine.converter.ConverterHelper;
+import org.restlet.ext.jackson.JacksonConverter;
 import org.restlet.routing.Router;
 import org.restlet.service.CorsService;
+
+import cpslabteam.bank.jsonserialization.HibernateJacksonConverter;
 
 public final class BankRestServerAPI extends Application {
 
@@ -100,6 +106,22 @@ public final class BankRestServerAPI extends Application {
 	private BankRestServerAPI() {
 		configureCorsService();
 		setStatusService(new BankStatusService());
+		setHibernateJacksonConverter();
+	}
+	
+	private void setHibernateJacksonConverter(){
+		List<ConverterHelper> converters = Engine.getInstance().getRegisteredConverters();
+		JacksonConverter jacksonConverter = new JacksonConverter();
+		for (ConverterHelper converter : converters) {
+		    if (converter instanceof JacksonConverter) {
+		        jacksonConverter = (JacksonConverter) converter;
+		        break;
+		    }
+		}
+		if (jacksonConverter!=null) {
+		    converters.remove(jacksonConverter);
+		    converters.add(new HibernateJacksonConverter());
+		}
 	}
 
 	private void configureCorsService() {

@@ -13,7 +13,6 @@ import cpslabteam.bank.database.SessionManager;
 import cpslabteam.bank.database.dao.DAOFactory;
 import cpslabteam.bank.database.dao.LoanDAO;
 import cpslabteam.bank.database.objects.Loan;
-import cpslabteam.bank.jsonserialization.BankJsonSerializer;
 
 public class LoanResource extends ServerResource {
 
@@ -25,14 +24,14 @@ public class LoanResource extends ServerResource {
 	}
 
 	@Get("application/json")
-	public String getLoan() throws InterruptedException, JsonProcessingException, HibernateException {
+	public Loan getLoan() throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			LoanDAO loanDAO = daoFactory.getLoanDAO();
 			Loan loan = loanDAO.findById(Long.valueOf(loanID));
 			SessionManager.getSession().getTransaction().commit();
-			return BankJsonSerializer.serialize(loan);
+			return loan;
 		} catch (Exception e) {
 			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
 				SessionManager.getSession().getTransaction().rollback();
@@ -41,14 +40,14 @@ public class LoanResource extends ServerResource {
 	}
 
 	@Post("application/json")
-	public String updateLoan(Loan loan) throws InterruptedException, JsonProcessingException, HibernateException {
+	public Loan updateLoan(Loan loan) throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			LoanDAO loanDAO = daoFactory.getLoanDAO();
 			Loan updatedLoan = loanDAO.update(loan);
 			SessionManager.getSession().getTransaction().commit();
-			return BankJsonSerializer.serialize(updatedLoan);
+			return updatedLoan;
 		} catch (Exception e) {
 			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
 				SessionManager.getSession().getTransaction().rollback();

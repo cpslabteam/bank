@@ -14,12 +14,11 @@ import cpslabteam.bank.database.SessionManager;
 import cpslabteam.bank.database.dao.DAOFactory;
 import cpslabteam.bank.database.dao.LoanDAO;
 import cpslabteam.bank.database.objects.Loan;
-import cpslabteam.bank.jsonserialization.BankJsonSerializer;
 
 public class LoansResource extends ServerResource {
 
 	@Get("application/json")
-	public String getLoans(Representation entity)
+	public List<Loan> getLoans(Representation entity)
 			throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
@@ -27,7 +26,7 @@ public class LoansResource extends ServerResource {
 			LoanDAO loanDAO = daoFactory.getLoanDAO();
 			List<Loan> loans = loanDAO.findAll();
 			SessionManager.getSession().getTransaction().commit();
-			return BankJsonSerializer.serialize(loans);
+			return loans;
 		} catch (Exception e) {
 			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
 				SessionManager.getSession().getTransaction().rollback();
@@ -36,14 +35,14 @@ public class LoansResource extends ServerResource {
 	}
 
 	@Post("application/json")
-	public String createLoan(Loan loan) throws InterruptedException, JsonProcessingException, HibernateException {
+	public Loan createLoan(Loan loan) throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			LoanDAO loanDAO = daoFactory.getLoanDAO();
 			Loan createdLoan = loanDAO.persist(loan);
 			SessionManager.getSession().getTransaction().commit();
-			return BankJsonSerializer.serialize(createdLoan);
+			return createdLoan;
 		} catch (Exception e) {
 			System.out.println(e);
 			if (SessionManager.getSession().getTransaction().getStatus().canRollback())

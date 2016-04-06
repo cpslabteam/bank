@@ -13,7 +13,6 @@ import cpslabteam.bank.database.SessionManager;
 import cpslabteam.bank.database.dao.BranchDAO;
 import cpslabteam.bank.database.dao.DAOFactory;
 import cpslabteam.bank.database.objects.Branch;
-import cpslabteam.bank.jsonserialization.BankJsonSerializer;
 
 public class BranchResource extends ServerResource {
 
@@ -25,14 +24,14 @@ public class BranchResource extends ServerResource {
 	}
 
 	@Get("application/json")
-	public String getBranch() throws InterruptedException, JsonProcessingException, HibernateException {
+	public Branch getBranch() throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			BranchDAO branchDAO = daoFactory.getBranchDAO();
 			Branch branch = branchDAO.findById(Long.valueOf(branchID));
 			SessionManager.getSession().getTransaction().commit();
-			return BankJsonSerializer.serialize(branch);
+			return branch;
 		} catch (Exception e) {
 			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
 				SessionManager.getSession().getTransaction().rollback();
@@ -41,15 +40,14 @@ public class BranchResource extends ServerResource {
 	}
 
 	@Post("application/json")
-	public String updateBranch(Branch branch)
-			throws InterruptedException, JsonProcessingException, HibernateException {
+	public Branch updateBranch(Branch branch) throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			BranchDAO branchDAO = daoFactory.getBranchDAO();
 			Branch updatedBranch = branchDAO.update(branch);
 			SessionManager.getSession().getTransaction().commit();
-			return BankJsonSerializer.serialize(updatedBranch);
+			return updatedBranch;
 		} catch (Exception e) {
 			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
 				SessionManager.getSession().getTransaction().rollback();
@@ -58,8 +56,7 @@ public class BranchResource extends ServerResource {
 	}
 
 	@Delete("application/json")
-	public void deleteBranch()
-			throws InterruptedException, JsonProcessingException, HibernateException {
+	public void deleteBranch() throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);

@@ -13,7 +13,6 @@ import cpslabteam.bank.database.SessionManager;
 import cpslabteam.bank.database.dao.AccountDAO;
 import cpslabteam.bank.database.dao.DAOFactory;
 import cpslabteam.bank.database.objects.Account;
-import cpslabteam.bank.jsonserialization.BankJsonSerializer;
 
 public class AccountResource extends ServerResource {
 
@@ -25,14 +24,14 @@ public class AccountResource extends ServerResource {
 	}
 
 	@Get("application/json")
-	public String getAccount() throws InterruptedException, JsonProcessingException, HibernateException {
+	public Account getAccount() throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			AccountDAO accountDAO = daoFactory.getAccountDAO();
 			Account account = accountDAO.findById(Long.valueOf(accountID));
 			SessionManager.getSession().getTransaction().commit();
-			return BankJsonSerializer.serialize(account);
+			return account;
 		} catch (Exception e) {
 			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
 				SessionManager.getSession().getTransaction().rollback();
@@ -41,7 +40,7 @@ public class AccountResource extends ServerResource {
 	}
 
 	@Post("application/json")
-	public String updateAccount(Account account)
+	public Account updateAccount(Account account)
 			throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
@@ -49,7 +48,7 @@ public class AccountResource extends ServerResource {
 			AccountDAO accountDAO = daoFactory.getAccountDAO();
 			Account updatedAccount = accountDAO.update(account);
 			SessionManager.getSession().getTransaction().commit();
-			return BankJsonSerializer.serialize(updatedAccount);
+			return updatedAccount;
 		} catch (Exception e) {
 			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
 				SessionManager.getSession().getTransaction().rollback();

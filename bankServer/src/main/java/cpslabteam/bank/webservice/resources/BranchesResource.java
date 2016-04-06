@@ -13,19 +13,18 @@ import cpslabteam.bank.database.SessionManager;
 import cpslabteam.bank.database.dao.BranchDAO;
 import cpslabteam.bank.database.dao.DAOFactory;
 import cpslabteam.bank.database.objects.Branch;
-import cpslabteam.bank.jsonserialization.BankJsonSerializer;
 
 public class BranchesResource extends ServerResource {
 
 	@Get("application/json")
-	public String getBranches() throws InterruptedException, JsonProcessingException, HibernateException {
+	public List<Branch> getBranches() throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			BranchDAO branchDAO = daoFactory.getBranchDAO();
 			List<Branch> branches = branchDAO.findAll();
 			SessionManager.getSession().getTransaction().commit();
-			return BankJsonSerializer.serialize(branches);
+			return branches;
 		} catch (Exception e) {
 			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
 				SessionManager.getSession().getTransaction().rollback();
@@ -34,7 +33,7 @@ public class BranchesResource extends ServerResource {
 	}
 
 	@Post("application/json")
-	public String createBranch(Branch branch)
+	public Branch createBranch(Branch branch)
 			throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
@@ -42,7 +41,7 @@ public class BranchesResource extends ServerResource {
 			BranchDAO branchDAO = daoFactory.getBranchDAO();
 			Branch createdBranch = branchDAO.persist(branch);
 			SessionManager.getSession().getTransaction().commit();
-			return BankJsonSerializer.serialize(createdBranch);
+			return createdBranch;
 		} catch (Exception e) {
 			System.out.println(e);
 			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
