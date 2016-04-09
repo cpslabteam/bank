@@ -1,9 +1,14 @@
 package cpslabteam.bank.database.objects;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
+import javax.persistence.ManyToMany;
+
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 /**
  * Represents the Customer object and defines the mapping of it's table in the
@@ -12,7 +17,6 @@ import javax.persistence.InheritanceType;
  * @see BaseDataObject
  */
 @Entity(name = "Customer")
-@Inheritance(strategy = InheritanceType.JOINED)
 public class Customer extends BaseDataObject {
 
 	@Column(name = "name", nullable = false)
@@ -24,13 +28,29 @@ public class Customer extends BaseDataObject {
 	@Column(name = "city", nullable = false)
 	private String city;
 
+	@JsonSerialize(contentAs = BaseDataObject.class)
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	private Set<Account> accounts = new HashSet<>();
+
+	@JsonSerialize(contentAs = BaseDataObject.class)
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	private Set<Loan> loans = new HashSet<>();
+
 	public Customer() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
+	public Set<Account> getAccounts() {
+		return accounts;
+	}
+
 	public String getCity() {
 		return city;
+	}
+
+	public Set<Loan> getLoans() {
+		return loans;
 	}
 
 	public String getName() {

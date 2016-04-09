@@ -8,15 +8,10 @@ create table Account (
   primary key (id)
 );
 
-create table Borrower (
-  id int8 not null,
-  primary key (id)
-);
-
-create table Borrower_Loan (
-  borrower_id int8 not null,
+create table Customer_Loan (
+  customer_id int8 not null,
   loans_id int8 not null,
-  primary key (Borrower_id, loans_id)
+  primary key (Customer_id, loans_id)
 );
 
 create table Branch (
@@ -35,15 +30,10 @@ create table Customer (
   primary key (id)
 );
 
-create table Depositor (
-  id int8 not null,
-  primary key (id)
-);
-
-create table Depositor_Account (
-  depositor_id int8 not null,
+create table Customer_Account (
+  customer_id int8 not null,
   accounts_id int8 not null,
-  primary key (Depositor_id, accounts_id)
+  primary key (Customer_id, accounts_id)
 );
 
 create table Loan (
@@ -68,35 +58,25 @@ alter table Account
   foreign key (branch_id) 
   references Branch;
 
-alter table Borrower 
-  add constraint CUSTOMER_ID_FK 
-  foreign key (id) 
-  references Customer;
-
-alter table Borrower_Loan 
+alter table Customer_Loan 
   add constraint LOAN_ID_FK 
   foreign key (loans_id) 
   references Loan;
 
-alter table Borrower_Loan 
-  add constraint BORROWER_ID_FK 
-  foreign key (Borrower_id) 
-  references Borrower;
-
-alter table Depositor 
+alter table Customer_Loan 
   add constraint CUSTOMER_ID_FK 
-  foreign key (id) 
+  foreign key (Customer_id) 
   references Customer;
 
-alter table Depositor_Account 
+alter table Customer_Account 
   add constraint ACCOUNT_ID_FK 
   foreign key (accounts_id) 
   references Account;
 
-alter table Depositor_Account 
-  add constraint DEPOSITOR_ID_FK 
-  foreign key (Depositor_id) 
-  references Depositor;
+alter table Customer_Account 
+  add constraint CUSTOMER_ID_FK 
+  foreign key (Customer_id) 
+  references Customer;
 
 alter table Loan 
   add constraint BRANCH_ID_FK 

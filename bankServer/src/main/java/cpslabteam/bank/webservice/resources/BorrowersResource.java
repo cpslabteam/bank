@@ -9,19 +9,19 @@ import org.restlet.resource.ServerResource;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import cpslabteam.bank.database.SessionManager;
-import cpslabteam.bank.database.dao.BorrowerDAO;
+import cpslabteam.bank.database.dao.CustomerDAO;
 import cpslabteam.bank.database.dao.DAOFactory;
-import cpslabteam.bank.database.objects.Borrower;
+import cpslabteam.bank.database.objects.Customer;
 
 public class BorrowersResource extends ServerResource {
 
 	@Get("application/json")
-	public List<Borrower> getBorrowers() throws InterruptedException, JsonProcessingException, HibernateException {
+	public List<Customer> getBorrowers() throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			BorrowerDAO borrowerDAO = daoFactory.getBorrowerDAO();
-			List<Borrower> borrowers = borrowerDAO.findAll();
+			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
+			List<Customer> borrowers = customerDAO.findBorrowers();
 			SessionManager.getSession().getTransaction().commit();
 			return borrowers;
 		} catch (Exception e) {

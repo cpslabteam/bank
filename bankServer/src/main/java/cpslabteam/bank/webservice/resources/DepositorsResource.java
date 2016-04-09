@@ -10,20 +10,20 @@ import org.restlet.resource.ServerResource;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import cpslabteam.bank.database.SessionManager;
+import cpslabteam.bank.database.dao.CustomerDAO;
 import cpslabteam.bank.database.dao.DAOFactory;
-import cpslabteam.bank.database.dao.DepositorDAO;
-import cpslabteam.bank.database.objects.Depositor;
+import cpslabteam.bank.database.objects.Customer;
 
 public class DepositorsResource extends ServerResource {
 
 	@Get("application/json")
-	public List<Depositor> getDepositors(Representation entity)
+	public List<Customer> getDepositors(Representation entity)
 			throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			DepositorDAO depositorDAO = daoFactory.getDepositorDAO();
-			List<Depositor> depositors = depositorDAO.findAll();
+			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
+			List<Customer> depositors = customerDAO.findDepositors();
 			SessionManager.getSession().getTransaction().commit();
 			return depositors;
 		} catch (Exception e) {

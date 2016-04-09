@@ -21,13 +21,9 @@ public abstract class DAOFactory {
 
 	public abstract AccountDAO getAccountDAO();
 
-	public abstract BorrowerDAO getBorrowerDAO();
-
 	public abstract BranchDAO getBranchDAO();
 
 	public abstract CustomerDAO getCustomerDAO();
-
-	public abstract DepositorDAO getDepositorDAO();
 
 	public abstract LoanDAO getLoanDAO();
 }

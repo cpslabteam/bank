@@ -28,8 +28,6 @@
 		<!-- Mappings -->
 		<mapping class="cpslabteam.bank.database.objects.BaseDataObject"></mapping>
 		<mapping class="cpslabteam.bank.database.objects.Customer"></mapping>
-		<mapping class="cpslabteam.bank.database.objects.Depositor"></mapping>
-		<mapping class="cpslabteam.bank.database.objects.Borrower"></mapping>
 		<mapping class="cpslabteam.bank.database.objects.Account"></mapping>
 		<mapping class="cpslabteam.bank.database.objects.Loan"></mapping>
 		<mapping class="cpslabteam.bank.database.objects.Branch"></mapping>

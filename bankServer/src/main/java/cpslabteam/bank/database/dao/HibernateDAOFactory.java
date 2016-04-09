@@ -12,11 +12,6 @@ public class HibernateDAOFactory extends DAOFactory {
 	}
 
 	@Override
-	public BorrowerDAO getBorrowerDAO() {
-		return (BorrowerDAO) instantiateDAO(BorrowerDAOHibernate.class);
-	}
-
-	@Override
 	public BranchDAO getBranchDAO() {
 		return (BranchDAO) instantiateDAO(BranchDAOHibernate.class);
 	}
@@ -24,11 +19,6 @@ public class HibernateDAOFactory extends DAOFactory {
 	@Override
 	public CustomerDAO getCustomerDAO() {
 		return (CustomerDAO) instantiateDAO(CustomerDAOHibernate.class);
-	}
-
-	@Override
-	public DepositorDAO getDepositorDAO() {
-		return (DepositorDAO) instantiateDAO(DepositorDAOHibernate.class);
 	}
 
 	@Override
