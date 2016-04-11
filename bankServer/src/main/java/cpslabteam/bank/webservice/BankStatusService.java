@@ -52,11 +52,11 @@ public class BankStatusService extends StatusService {
 	private Status handleHibernateException(Throwable throwable, Resource resource) {
 		if (throwable instanceof ObjectNotFoundException) {
 			ObjectNotFoundException e = (ObjectNotFoundException) throwable;
-			return new Status(Status.CLIENT_ERROR_BAD_REQUEST, e, e.getLocalizedMessage(),
+			return new Status(Status.CLIENT_ERROR_NOT_FOUND, e, e.getLocalizedMessage(),
 					"Could not find entity " + e.getEntityName() + " with ID " + e.getIdentifier());
 		} else if (throwable instanceof ConstraintViolationException) {
 			ConstraintViolationException e = (ConstraintViolationException) throwable;
-			return new Status(Status.CLIENT_ERROR_BAD_REQUEST, e, e.getLocalizedMessage(),
+			return new Status(Status.CLIENT_ERROR_CONFLICT, e, e.getLocalizedMessage(),
 					e.getSQLException().getMessage());
 		} else {
 			return handleUnknownException(throwable, resource);

@@ -16,11 +16,11 @@ import cpslabteam.bank.database.objects.Branch;
 
 public class BranchResource extends ServerResource {
 
-	private String branchID;
+	private Long branchID;
 
 	@Override
 	protected void doInit() throws ResourceException {
-		branchID = getAttribute("branch");
+		branchID = Long.valueOf(getAttribute("branch"));
 	}
 
 	@Get("application/json")
@@ -29,7 +29,7 @@ public class BranchResource extends ServerResource {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			BranchDAO branchDAO = daoFactory.getBranchDAO();
-			Branch branch = branchDAO.findById(Long.valueOf(branchID));
+			Branch branch = branchDAO.findById(branchID);
 			SessionManager.getSession().getTransaction().commit();
 			return branch;
 		} catch (Exception e) {
@@ -61,7 +61,7 @@ public class BranchResource extends ServerResource {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			BranchDAO branchDAO = daoFactory.getBranchDAO();
-			Branch branch = branchDAO.findById(Long.valueOf(branchID));
+			Branch branch = branchDAO.findById(branchID);
 			branchDAO.makeTransient(branch);
 			SessionManager.getSession().getTransaction().commit();
 		} catch (Exception e) {

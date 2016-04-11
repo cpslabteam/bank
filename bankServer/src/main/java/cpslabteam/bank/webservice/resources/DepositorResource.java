@@ -16,11 +16,11 @@ import cpslabteam.bank.database.objects.Customer;
 
 public class DepositorResource extends ServerResource {
 
-	private String depositorID;
+	private Long depositorID;
 
 	@Override
 	protected void doInit() throws ResourceException {
-		depositorID = getAttribute("depositor");
+		depositorID = Long.valueOf(getAttribute("depositor"));
 	}
 
 	@Get("application/json")
@@ -29,7 +29,7 @@ public class DepositorResource extends ServerResource {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
-			Customer depositor = customerDAO.findById(Long.valueOf(depositorID));
+			Customer depositor = customerDAO.findById(depositorID);
 			SessionManager.getSession().getTransaction().commit();
 			return depositor;
 		} catch (Exception e) {
@@ -62,7 +62,7 @@ public class DepositorResource extends ServerResource {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			CustomerDAO depositorDAO = daoFactory.getCustomerDAO();
-			Customer depositor = depositorDAO.findById(Long.valueOf(depositorID));
+			Customer depositor = depositorDAO.findById(depositorID);
 			depositorDAO.makeTransient(depositor);
 			SessionManager.getSession().getTransaction().commit();
 		} catch (Exception e) {

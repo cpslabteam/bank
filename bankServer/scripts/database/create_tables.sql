@@ -9,9 +9,9 @@ create table Account (
 );
 
 create table Customer_Loan (
-  customer_id int8 not null,
+  owners_id int8 not null,
   loans_id int8 not null,
-  primary key (Customer_id, loans_id)
+  primary key (owners_id, loans_id)
 );
 
 create table Branch (
@@ -31,9 +31,9 @@ create table Customer (
 );
 
 create table Customer_Account (
-  customer_id int8 not null,
+  owners_id int8 not null,
   accounts_id int8 not null,
-  primary key (Customer_id, accounts_id)
+  primary key (owners_id, accounts_id)
 );
 
 create table Loan (
@@ -65,7 +65,7 @@ alter table Customer_Loan
 
 alter table Customer_Loan 
   add constraint CUSTOMER_ID_FK 
-  foreign key (Customer_id) 
+  foreign key (owners_id) 
   references Customer;
 
 alter table Customer_Account 
@@ -75,9 +75,9 @@ alter table Customer_Account
 
 alter table Customer_Account 
   add constraint CUSTOMER_ID_FK 
-  foreign key (Customer_id) 
+  foreign key (owners_id) 
   references Customer;
-
+  
 alter table Loan 
   add constraint BRANCH_ID_FK 
   foreign key (branch_id) 

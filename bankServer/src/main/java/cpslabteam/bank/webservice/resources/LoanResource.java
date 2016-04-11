@@ -16,11 +16,11 @@ import cpslabteam.bank.database.objects.Loan;
 
 public class LoanResource extends ServerResource {
 
-	private String loanID;
+	private Long loanID;
 
 	@Override
 	protected void doInit() throws ResourceException {
-		loanID = getAttribute("loan");
+		loanID = Long.valueOf(getAttribute("loan"));
 	}
 
 	@Get("application/json")
@@ -29,7 +29,7 @@ public class LoanResource extends ServerResource {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			LoanDAO loanDAO = daoFactory.getLoanDAO();
-			Loan loan = loanDAO.findById(Long.valueOf(loanID));
+			Loan loan = loanDAO.findById(loanID);
 			SessionManager.getSession().getTransaction().commit();
 			return loan;
 		} catch (Exception e) {
@@ -61,7 +61,7 @@ public class LoanResource extends ServerResource {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			LoanDAO loanDAO = daoFactory.getLoanDAO();
-			Loan loan = loanDAO.findById(Long.valueOf(loanID));
+			Loan loan = loanDAO.findById(loanID);
 			loanDAO.makeTransient(loan);
 			SessionManager.getSession().getTransaction().commit();
 		} catch (Exception e) {

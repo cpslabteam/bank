@@ -17,13 +17,13 @@ import cpslabteam.bank.database.objects.Customer;
 
 public class CustomerAccountResource extends ServerResource {
 
-	private String customerID;
-	private String accountID;
+	private Long customerID;
+	private Long accountID;
 
 	@Override
 	protected void doInit() throws ResourceException {
-		customerID = getAttribute("customer");
-		accountID = getAttribute("account");
+		customerID = Long.valueOf(getAttribute("customer"));
+		accountID = Long.valueOf(getAttribute("account"));
 	}
 
 	@Get("application/json")
@@ -32,7 +32,7 @@ public class CustomerAccountResource extends ServerResource {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			AccountDAO accountDAO = daoFactory.getAccountDAO();
-			Account account = accountDAO.findCustomerAccount(Long.valueOf(customerID), Long.valueOf(accountID));
+			Account account = accountDAO.findCustomerAccount(customerID, accountID);
 			SessionManager.getSession().getTransaction().commit();
 			return account;
 		} catch (Exception e) {
@@ -41,7 +41,7 @@ public class CustomerAccountResource extends ServerResource {
 			throw e;
 		}
 	}
-	
+
 	@Delete("application/json")
 	public void removeAccount() throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
@@ -49,8 +49,8 @@ public class CustomerAccountResource extends ServerResource {
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			AccountDAO accountDAO = daoFactory.getAccountDAO();
 			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
-			Account account = accountDAO.findCustomerAccount(Long.valueOf(customerID), Long.valueOf(accountID));
-			Customer customer = customerDAO.findById(Long.valueOf(customerID));
+			Account account = accountDAO.findCustomerAccount(customerID, accountID);
+			Customer customer = customerDAO.findById(customerID);
 			customer.getAccounts().remove(account);
 			SessionManager.getSession().getTransaction().commit();
 		} catch (Exception e) {

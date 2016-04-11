@@ -2,6 +2,7 @@ package cpslabteam.bank.database.dao;
 
 import java.util.List;
 
+import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Query;
 
 import cpslabteam.bank.database.objects.Account;
@@ -24,7 +25,12 @@ public class AccountDAOHibernate extends GenericHibernateDAO<Account, Long>imple
 		Query query = getSession().createQuery(CUSTOMER_ACCOUNT_QUERY);
 		query.setLong("customer_id", customerID);
 		query.setLong("account_id", accountID);
-		return (Account) query.uniqueResult();
+		Account account = (Account) query.uniqueResult();
+		if (account!=null) {
+			return account;
+		} else {
+			throw new ObjectNotFoundException(accountID, getPersistentClass().getName());
+		}
 	}
 
 }

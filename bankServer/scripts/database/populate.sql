@@ -44,26 +44,26 @@ insert into loan (id, loan_number, branch_id, amount) values (40, 'L-16',  18, 1
 insert into loan (id, loan_number, branch_id, amount) values (41, 'L-20',  22, 7500);
 insert into loan (id, loan_number, branch_id, amount) values (42, 'L-21',  24, 570);
 
-insert into customer_loan (customer_id, loans_id) values (1, 34);
-insert into customer_loan (customer_id, loans_id) values (2, 35);
-insert into customer_loan (customer_id, loans_id) values (2, 39);
-insert into customer_loan (customer_id, loans_id) values (2, 42);
-insert into customer_loan (customer_id, loans_id) values (3, 36);
-insert into customer_loan (customer_id, loans_id) values (4, 38);
-insert into customer_loan (customer_id, loans_id) values (7, 34);
-insert into customer_loan (customer_id, loans_id) values (8, 40);
-insert into customer_loan (customer_id, loans_id) values (13, 37);
-insert into customer_loan (customer_id, loans_id) values (15, 41);
+insert into customer_loan (owners_id, loans_id) values (1, 34);
+insert into customer_loan (owners_id, loans_id) values (2, 35);
+insert into customer_loan (owners_id, loans_id) values (2, 39);
+insert into customer_loan (owners_id, loans_id) values (2, 42);
+insert into customer_loan (owners_id, loans_id) values (3, 36);
+insert into customer_loan (owners_id, loans_id) values (4, 38);
+insert into customer_loan (owners_id, loans_id) values (7, 34);
+insert into customer_loan (owners_id, loans_id) values (8, 40);
+insert into customer_loan (owners_id, loans_id) values (13, 37);
+insert into customer_loan (owners_id, loans_id) values (15, 41);
 
-insert into customer_account (customer_id, accounts_id) values (1, 31);
-insert into customer_account (customer_id, accounts_id) values (2, 26);
-insert into customer_account (customer_id, accounts_id) values (2, 33);
-insert into customer_account (customer_id, accounts_id) values (3, 25);
-insert into customer_account (customer_id, accounts_id) values (3, 27);
-insert into customer_account (customer_id, accounts_id) values (5, 30);
-insert into customer_account (customer_id, accounts_id) values (6, 28);
-insert into customer_account (customer_id, accounts_id) values (9, 25);
-insert into customer_account (customer_id, accounts_id) values (9, 29);
-insert into customer_account (customer_id, accounts_id) values (14, 32);
+insert into customer_account (owners_id, accounts_id) values (1, 31);
+insert into customer_account (owners_id, accounts_id) values (2, 26);
+insert into customer_account (owners_id, accounts_id) values (2, 33);
+insert into customer_account (owners_id, accounts_id) values (3, 25);
+insert into customer_account (owners_id, accounts_id) values (3, 27);
+insert into customer_account (owners_id, accounts_id) values (5, 30);
+insert into customer_account (owners_id, accounts_id) values (6, 28);
+insert into customer_account (owners_id, accounts_id) values (9, 25);
+insert into customer_account (owners_id, accounts_id) values (9, 29);
+insert into customer_account (owners_id, accounts_id) values (14, 32);
 
 select setval('hibernate_sequence', 42);

@@ -1,11 +1,17 @@
 package cpslabteam.bank.database.objects;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.NaturalId;
+
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity(name = "Branch")
 public class Branch extends BaseDataObject {
@@ -17,12 +23,25 @@ public class Branch extends BaseDataObject {
 	@Column(name = "city", nullable = false)
 	private String city;
 
-	@Column(name = "assets", precision = 20, scale = 2, columnDefinition = "NUMERIC(20,2)", nullable = false)
+	@Column(name = "assets", nullable = false)
 	private BigDecimal assets;
+	
+	@JsonSerialize(contentAs = BaseDataObject.class)
+	@OneToMany(mappedBy = "branch", cascade={ CascadeType.PERSIST, CascadeType.MERGE})
+	private Set<Account> accounts;
+	
+	@JsonSerialize(contentAs = BaseDataObject.class)
+	@OneToMany(mappedBy = "branch", cascade={ CascadeType.PERSIST, CascadeType.MERGE})
+	private Set<Loan> loans;
 
 	public Branch() {
 		super();
-		// TODO Auto-generated constructor stub
+		accounts = new HashSet<>();
+		loans = new HashSet<>();
+	}
+
+	public Set<Account> getAccounts() {
+		return accounts;
 	}
 
 	public BigDecimal getAssets() {
@@ -31,6 +50,10 @@ public class Branch extends BaseDataObject {
 
 	public String getCity() {
 		return city;
+	}
+
+	public Set<Loan> getLoans() {
+		return loans;
 	}
 
 	public String getName() {

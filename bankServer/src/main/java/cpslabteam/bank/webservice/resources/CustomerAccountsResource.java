@@ -19,11 +19,11 @@ import cpslabteam.bank.database.objects.Customer;
 
 public class CustomerAccountsResource extends ServerResource {
 
-	private String customerID;
+	private Long customerID;
 
 	@Override
 	protected void doInit() throws ResourceException {
-		customerID = getAttribute("customer");
+		customerID = Long.valueOf(getAttribute("customer"));
 	}
 
 	@Get("application/json")
@@ -32,7 +32,7 @@ public class CustomerAccountsResource extends ServerResource {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			AccountDAO accountDAO = daoFactory.getAccountDAO();
-			List<Account> accounts = accountDAO.findCustomerAccounts(Long.valueOf(customerID));
+			List<Account> accounts = accountDAO.findCustomerAccounts(customerID);
 			SessionManager.getSession().getTransaction().commit();
 			return accounts;
 		} catch (Exception e) {
@@ -49,9 +49,9 @@ public class CustomerAccountsResource extends ServerResource {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
-			Customer customer = customerDAO.findById(Long.valueOf(customerID));
+			Customer customer = customerDAO.findById(customerID);
 			customer.getAccounts().add(account);
-			List<Account> accounts = daoFactory.getAccountDAO().findCustomerAccounts(Long.valueOf(customerID));
+			List<Account> accounts = daoFactory.getAccountDAO().findCustomerAccounts(customerID);
 			SessionManager.getSession().getTransaction().commit();
 			return accounts;
 		} catch (Exception e) {

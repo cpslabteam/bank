@@ -1,11 +1,13 @@
 package cpslabteam.bank.database.objects;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.NaturalId;
@@ -21,15 +23,19 @@ public class Loan extends BaseDataObject {
 
 	@JsonSerialize(as = BaseDataObject.class)
 	@ManyToOne
-	@JoinColumn(name = "branch_id", nullable = false, foreignKey = @ForeignKey(name = "BRANCH_ID_FK") )
+	@JoinColumn(name = "branch_id", nullable = false)
 	private Branch branch;
 
-	@Column(name = "amount", precision = 20, scale = 2, columnDefinition = "NUMERIC(20,2)", nullable = false)
+	@Column(name = "amount", nullable = false)
 	private BigDecimal amount;
+
+	@JsonSerialize(contentAs = BaseDataObject.class)
+	@ManyToMany(mappedBy = "loans")
+	private Set<Customer> owners;
 
 	public Loan() {
 		super();
-		// TODO Auto-generated constructor stub
+		owners = new HashSet<>();
 	}
 
 	@Override
@@ -57,6 +63,10 @@ public class Loan extends BaseDataObject {
 
 	public String getLoanNumber() {
 		return loanNumber;
+	}
+
+	public Set<Customer> getOwners() {
+		return owners;
 	}
 
 	@Override

@@ -1,11 +1,13 @@
 package cpslabteam.bank.database.objects;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.NaturalId;
@@ -21,39 +23,19 @@ public class Account extends BaseDataObject {
 
 	@JsonSerialize(as = BaseDataObject.class)
 	@ManyToOne
-	@JoinColumn(name = "branch_id", nullable = false, foreignKey = @ForeignKey(name = "BRANCH_ID_FK") )
+	@JoinColumn(name = "branch_id", nullable = false)
 	private Branch branch;
 
-	@Column(name = "balance", precision = 20, scale = 2, columnDefinition = "NUMERIC(20,2)", nullable = false)
+	@Column(name = "balance", nullable = false)
 	private BigDecimal balance;
+	
+	@JsonSerialize(contentAs = BaseDataObject.class)
+	@ManyToMany(mappedBy = "accounts")
+	private Set<Customer> owners;
 
 	public Account() {
 		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public String getAccountNumber() {
-		return accountNumber;
-	}
-
-	public void setAccountNumber(String accountNumber) {
-		this.accountNumber = accountNumber;
-	}
-
-	public Branch getBranch() {
-		return branch;
-	}
-
-	public void setBranch(Branch branch) {
-		this.branch = branch;
-	}
-
-	public BigDecimal getBalance() {
-		return balance;
-	}
-
-	public void setBalance(BigDecimal balance) {
-		this.balance = balance;
+		owners = new HashSet<>();
 	}
 
 	@Override
@@ -71,11 +53,39 @@ public class Account extends BaseDataObject {
 		return true;
 	}
 
+	public String getAccountNumber() {
+		return accountNumber;
+	}
+
+	public BigDecimal getBalance() {
+		return balance;
+	}
+
+	public Branch getBranch() {
+		return branch;
+	}
+
+	public Set<Customer> getOwners() {
+		return owners;
+	}
+
 	@Override
 	public int hashCode() {
 		int hashcode = 0;
 		hashcode += ((accountNumber == null) ? 0 : accountNumber.hashCode());
 		return hashcode;
+	}
+
+	public void setAccountNumber(String accountNumber) {
+		this.accountNumber = accountNumber;
+	}
+
+	public void setBalance(BigDecimal balance) {
+		this.balance = balance;
+	}
+
+	public void setBranch(Branch branch) {
+		this.branch = branch;
 	}
 
 	@Override

@@ -16,11 +16,11 @@ import cpslabteam.bank.database.objects.Account;
 
 public class AccountResource extends ServerResource {
 
-	private String accountID;
+	private Long accountID;
 
 	@Override
 	protected void doInit() throws ResourceException {
-		accountID = getAttribute("account");
+		accountID = Long.valueOf(getAttribute("account"));
 	}
 
 	@Get("application/json")
@@ -29,7 +29,7 @@ public class AccountResource extends ServerResource {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			AccountDAO accountDAO = daoFactory.getAccountDAO();
-			Account account = accountDAO.findById(Long.valueOf(accountID));
+			Account account = accountDAO.findById(accountID);
 			SessionManager.getSession().getTransaction().commit();
 			return account;
 		} catch (Exception e) {
@@ -62,7 +62,7 @@ public class AccountResource extends ServerResource {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			AccountDAO accountDAO = daoFactory.getAccountDAO();
-			Account account = accountDAO.findById(Long.valueOf(accountID));
+			Account account = accountDAO.findById(accountID);
 			accountDAO.makeTransient(account);
 			SessionManager.getSession().getTransaction().commit();
 		} catch (Exception e) {
