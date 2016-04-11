@@ -2,7 +2,7 @@
 
 This is a simple bank application using our technology stack, and will be used in comparisons with the NSX.
 
-[TODO's](TODO.md)
+[TODO's](TODO.md)  
 [Server Resources](server-resources.md)
 
 ### Contents
