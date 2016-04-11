@@ -12,6 +12,8 @@ import cpslabteam.bank.webservice.resources.BorrowerResource;
 import cpslabteam.bank.webservice.resources.BorrowersResource;
 import cpslabteam.bank.webservice.resources.BranchResource;
 import cpslabteam.bank.webservice.resources.BranchesResource;
+import cpslabteam.bank.webservice.resources.CustomerAccountResource;
+import cpslabteam.bank.webservice.resources.CustomerAccountsResource;
 import cpslabteam.bank.webservice.resources.CustomerResource;
 import cpslabteam.bank.webservice.resources.CustomersResource;
 import cpslabteam.bank.webservice.resources.DepositorResource;
@@ -54,6 +56,10 @@ public final class DeclaredServerResources {
 		serverResources.put(ACCOUNTS_BASE_PATH + ACCOUNT_BASE_PATH, AccountResource.class);
 		serverResources.put(LOANS_BASE_PATH, LoansResource.class);
 		serverResources.put(LOANS_BASE_PATH + LOAN_BASE_PATH, LoanResource.class);
+		serverResources.put(CUSTOMERS_BASE_PATH + CUSTOMER_BASE_PATH + ACCOUNTS_BASE_PATH,
+				CustomerAccountsResource.class);
+		serverResources.put(CUSTOMERS_BASE_PATH + CUSTOMER_BASE_PATH + ACCOUNTS_BASE_PATH + ACCOUNT_BASE_PATH,
+				CustomerAccountResource.class);
 	}
 
 	public static Map<String, Class<? extends ServerResource>> getDeclaredServerResources() {

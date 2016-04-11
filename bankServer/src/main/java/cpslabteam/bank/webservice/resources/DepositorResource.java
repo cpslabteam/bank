@@ -1,7 +1,9 @@
 package cpslabteam.bank.webservice.resources;
 
 import org.hibernate.HibernateException;
+import org.restlet.resource.Delete;
 import org.restlet.resource.Get;
+import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
@@ -30,6 +32,39 @@ public class DepositorResource extends ServerResource {
 			Customer depositor = customerDAO.findById(Long.valueOf(depositorID));
 			SessionManager.getSession().getTransaction().commit();
 			return depositor;
+		} catch (Exception e) {
+			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
+				SessionManager.getSession().getTransaction().rollback();
+			throw e;
+		}
+	}
+
+	@Post("application/json")
+	public Customer updateCustomer(Customer depositor)
+			throws InterruptedException, JsonProcessingException, HibernateException {
+		try {
+			SessionManager.getSession().beginTransaction();
+			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
+			CustomerDAO depositorDAO = daoFactory.getCustomerDAO();
+			Customer updatedCustomer = depositorDAO.update(depositor);
+			SessionManager.getSession().getTransaction().commit();
+			return updatedCustomer;
+		} catch (Exception e) {
+			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
+				SessionManager.getSession().getTransaction().rollback();
+			throw e;
+		}
+	}
+
+	@Delete("application/json")
+	public void deleteCustomer() throws InterruptedException, JsonProcessingException, HibernateException {
+		try {
+			SessionManager.getSession().beginTransaction();
+			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
+			CustomerDAO depositorDAO = daoFactory.getCustomerDAO();
+			Customer depositor = depositorDAO.findById(Long.valueOf(depositorID));
+			depositorDAO.makeTransient(depositor);
+			SessionManager.getSession().getTransaction().commit();
 		} catch (Exception e) {
 			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
 				SessionManager.getSession().getTransaction().rollback();

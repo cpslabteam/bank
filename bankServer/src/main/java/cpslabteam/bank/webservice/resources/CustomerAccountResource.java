@@ -3,35 +3,38 @@ package cpslabteam.bank.webservice.resources;
 import org.hibernate.HibernateException;
 import org.restlet.resource.Delete;
 import org.restlet.resource.Get;
-import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import cpslabteam.bank.database.SessionManager;
+import cpslabteam.bank.database.dao.AccountDAO;
 import cpslabteam.bank.database.dao.CustomerDAO;
 import cpslabteam.bank.database.dao.DAOFactory;
+import cpslabteam.bank.database.objects.Account;
 import cpslabteam.bank.database.objects.Customer;
 
-public class BorrowerResource extends ServerResource {
+public class CustomerAccountResource extends ServerResource {
 
-	private String borrowerID;
+	private String customerID;
+	private String accountID;
 
 	@Override
 	protected void doInit() throws ResourceException {
-		borrowerID = getAttribute("borrower");
+		customerID = getAttribute("customer");
+		accountID = getAttribute("account");
 	}
 
 	@Get("application/json")
-	public Customer getBorrower() throws InterruptedException, JsonProcessingException, HibernateException {
+	public Account getAccount() throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
-			Customer borrower = customerDAO.findById(Long.valueOf(borrowerID));
+			AccountDAO accountDAO = daoFactory.getAccountDAO();
+			Account account = accountDAO.findCustomerAccount(Long.valueOf(customerID), Long.valueOf(accountID));
 			SessionManager.getSession().getTransaction().commit();
-			return borrower;
+			return account;
 		} catch (Exception e) {
 			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
 				SessionManager.getSession().getTransaction().rollback();
@@ -39,16 +42,17 @@ public class BorrowerResource extends ServerResource {
 		}
 	}
 	
-	@Post("application/json")
-	public Customer updateCustomer(Customer borrower)
-			throws InterruptedException, JsonProcessingException, HibernateException {
+	@Delete("application/json")
+	public void removeAccount() throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			CustomerDAO borrowerDAO = daoFactory.getCustomerDAO();
-			Customer updatedCustomer = borrowerDAO.update(borrower);
+			AccountDAO accountDAO = daoFactory.getAccountDAO();
+			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
+			Account account = accountDAO.findCustomerAccount(Long.valueOf(customerID), Long.valueOf(accountID));
+			Customer customer = customerDAO.findById(Long.valueOf(customerID));
+			customer.getAccounts().remove(account);
 			SessionManager.getSession().getTransaction().commit();
-			return updatedCustomer;
 		} catch (Exception e) {
 			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
 				SessionManager.getSession().getTransaction().rollback();
@@ -56,19 +60,4 @@ public class BorrowerResource extends ServerResource {
 		}
 	}
 
-	@Delete("application/json")
-	public void deleteCustomer() throws InterruptedException, JsonProcessingException, HibernateException {
-		try {
-			SessionManager.getSession().beginTransaction();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			CustomerDAO borrowerDAO = daoFactory.getCustomerDAO();
-			Customer borrower = borrowerDAO.findById(Long.valueOf(borrowerID));
-			borrowerDAO.makeTransient(borrower);
-			SessionManager.getSession().getTransaction().commit();
-		} catch (Exception e) {
-			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
-				SessionManager.getSession().getTransaction().rollback();
-			throw e;
-		}
-	}
 }
