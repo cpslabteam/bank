@@ -13,10 +13,11 @@ import org.restlet.resource.Put;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
-import cpslabteam.bank.database.SessionManager;
 import cpslabteam.bank.database.dao.DAOFactory;
 import cpslabteam.bank.database.dao.LoanDAO;
 import cpslabteam.bank.database.objects.Loan;
+import cpslabteam.bank.database.transaction.DatabaseTransaction;
+import cpslabteam.bank.database.transaction.DatabaseTransactionManager;
 
 public class BranchLoanResource extends ServerResource {
 
@@ -31,16 +32,17 @@ public class BranchLoanResource extends ServerResource {
 
 	@Get("application/json")
 	public Loan getLoan() throws InterruptedException, IOException, HibernateException {
+		DatabaseTransaction transaction = DatabaseTransactionManager.getDatabaseTransaction();
 		try {
-			SessionManager.getSession().beginTransaction();
+			transaction.begin();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			LoanDAO loanDAO = daoFactory.getLoanDAO();
 			Loan loan = loanDAO.findBranchLoan(branchID, loanID);
-			SessionManager.getSession().getTransaction().commit();
+			transaction.commit();
 			return loan;
 		} catch (Exception e) {
-			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
-				SessionManager.getSession().getTransaction().rollback();
+			if (transaction.canRollback())
+				transaction.rollback();
 			throw e;
 		}
 	}
@@ -48,38 +50,40 @@ public class BranchLoanResource extends ServerResource {
 	@Put("application/json")
 	public Loan updateLoan(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
+		DatabaseTransaction transaction = DatabaseTransactionManager.getDatabaseTransaction();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String loanNumber = request.getString("loan_number");
 			String ammount = request.getString("ammount");
-			SessionManager.getSession().beginTransaction();
+			transaction.begin();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			LoanDAO loanDAO = daoFactory.getLoanDAO();
 			Loan loan = loanDAO.findBranchLoan(branchID, loanID);
 			loan.setLoanNumber(loanNumber);
 			loan.setAmount(new BigDecimal(ammount));
 			Loan updatedLoan = loanDAO.update(loan);
-			SessionManager.getSession().getTransaction().commit();
+			transaction.commit();
 			return updatedLoan;
 		} catch (Exception e) {
-			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
-				SessionManager.getSession().getTransaction().rollback();
+			if (transaction.canRollback())
+				transaction.rollback();
 			throw e;
 		}
 	}
 
 	@Delete("application/json")
 	public void deleteLoan() throws InterruptedException, IOException, HibernateException {
+		DatabaseTransaction transaction = DatabaseTransactionManager.getDatabaseTransaction();
 		try {
-			SessionManager.getSession().beginTransaction();
+			transaction.begin();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			LoanDAO loanDAO = daoFactory.getLoanDAO();
 			Loan loan = loanDAO.findBranchLoan(branchID, loanID);
 			loanDAO.delete(loan);
-			SessionManager.getSession().getTransaction().commit();
+			transaction.commit();
 		} catch (Exception e) {
-			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
-				SessionManager.getSession().getTransaction().rollback();
+			if (transaction.canRollback())
+				transaction.rollback();
 			throw e;
 		}
 	}

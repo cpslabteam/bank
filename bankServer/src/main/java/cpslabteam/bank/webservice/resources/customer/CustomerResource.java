@@ -9,10 +9,11 @@ import org.restlet.resource.ServerResource;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import cpslabteam.bank.database.SessionManager;
 import cpslabteam.bank.database.dao.CustomerDAO;
 import cpslabteam.bank.database.dao.DAOFactory;
 import cpslabteam.bank.database.objects.Customer;
+import cpslabteam.bank.database.transaction.DatabaseTransaction;
+import cpslabteam.bank.database.transaction.DatabaseTransactionManager;
 
 public class CustomerResource extends ServerResource {
 
@@ -25,16 +26,17 @@ public class CustomerResource extends ServerResource {
 
 	@Get("application/json")
 	public Customer getCustomer() throws InterruptedException, JsonProcessingException, HibernateException {
+		DatabaseTransaction transaction = DatabaseTransactionManager.getDatabaseTransaction();
 		try {
-			SessionManager.getSession().beginTransaction();
+			transaction.begin();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
 			Customer customer = customerDAO.findById(customerID);
-			SessionManager.getSession().getTransaction().commit();
+			transaction.commit();
 			return customer;
 		} catch (Exception e) {
-			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
-				SessionManager.getSession().getTransaction().rollback();
+			if (transaction.canRollback())
+				transaction.rollback();
 			throw e;
 		}
 	}
@@ -42,32 +44,34 @@ public class CustomerResource extends ServerResource {
 	@Post("application/json")
 	public Customer updateCustomer(Customer customer)
 			throws InterruptedException, JsonProcessingException, HibernateException {
+		DatabaseTransaction transaction = DatabaseTransactionManager.getDatabaseTransaction();
 		try {
-			SessionManager.getSession().beginTransaction();
+			transaction.begin();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
 			Customer updatedCustomer = customerDAO.update(customer);
-			SessionManager.getSession().getTransaction().commit();
+			transaction.commit();
 			return updatedCustomer;
 		} catch (Exception e) {
-			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
-				SessionManager.getSession().getTransaction().rollback();
+			if (transaction.canRollback())
+				transaction.rollback();
 			throw e;
 		}
 	}
 
 	@Delete("application/json")
 	public void deleteCustomer() throws InterruptedException, JsonProcessingException, HibernateException {
+		DatabaseTransaction transaction = DatabaseTransactionManager.getDatabaseTransaction();
 		try {
-			SessionManager.getSession().beginTransaction();
+			transaction.begin();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
 			Customer customer = customerDAO.findById(customerID);
 			customerDAO.delete(customer);
-			SessionManager.getSession().getTransaction().commit();
+			transaction.commit();
 		} catch (Exception e) {
-			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
-				SessionManager.getSession().getTransaction().rollback();
+			if (transaction.canRollback())
+				transaction.rollback();
 			throw e;
 		}
 	}

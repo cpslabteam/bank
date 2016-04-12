@@ -13,10 +13,11 @@ import org.restlet.resource.Put;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
-import cpslabteam.bank.database.SessionManager;
 import cpslabteam.bank.database.dao.AccountDAO;
 import cpslabteam.bank.database.dao.DAOFactory;
 import cpslabteam.bank.database.objects.Account;
+import cpslabteam.bank.database.transaction.DatabaseTransaction;
+import cpslabteam.bank.database.transaction.DatabaseTransactionManager;
 
 public class BranchAccountResource extends ServerResource {
 
@@ -31,16 +32,17 @@ public class BranchAccountResource extends ServerResource {
 
 	@Get("application/json")
 	public Account getAccount() throws InterruptedException, IOException, HibernateException {
+		DatabaseTransaction transaction = DatabaseTransactionManager.getDatabaseTransaction();
 		try {
-			SessionManager.getSession().beginTransaction();
+			transaction.begin();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			AccountDAO accountDAO = daoFactory.getAccountDAO();
 			Account account = accountDAO.findBranchAccount(branchID, accountID);
-			SessionManager.getSession().getTransaction().commit();
+			transaction.commit();
 			return account;
 		} catch (Exception e) {
-			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
-				SessionManager.getSession().getTransaction().rollback();
+			if (transaction.canRollback())
+				transaction.rollback();
 			throw e;
 		}
 	}
@@ -48,38 +50,40 @@ public class BranchAccountResource extends ServerResource {
 	@Put("application/json")
 	public Account updateAccount(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
+		DatabaseTransaction transaction = DatabaseTransactionManager.getDatabaseTransaction();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String accountNumber = request.getString("account_number");
 			String balance = request.getString("balance");
-			SessionManager.getSession().beginTransaction();
+			transaction.begin();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			AccountDAO accountDAO = daoFactory.getAccountDAO();
 			Account account = accountDAO.findBranchAccount(branchID, accountID);
 			account.setAccountNumber(accountNumber);
 			account.setBalance(new BigDecimal(balance));
 			Account updatedAccount = accountDAO.update(account);
-			SessionManager.getSession().getTransaction().commit();
+			transaction.commit();
 			return updatedAccount;
 		} catch (Exception e) {
-			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
-				SessionManager.getSession().getTransaction().rollback();
+			if (transaction.canRollback())
+				transaction.rollback();
 			throw e;
 		}
 	}
 
 	@Delete("application/json")
 	public void deleteAccount() throws InterruptedException, IOException, HibernateException {
+		DatabaseTransaction transaction = DatabaseTransactionManager.getDatabaseTransaction();
 		try {
-			SessionManager.getSession().beginTransaction();
+			transaction.begin();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			AccountDAO accountDAO = daoFactory.getAccountDAO();
 			Account account = accountDAO.findBranchAccount(branchID, accountID);
 			accountDAO.delete(account);
-			SessionManager.getSession().getTransaction().commit();
+			transaction.commit();
 		} catch (Exception e) {
-			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
-				SessionManager.getSession().getTransaction().rollback();
+			if (transaction.canRollback())
+				transaction.rollback();
 			throw e;
 		}
 	}

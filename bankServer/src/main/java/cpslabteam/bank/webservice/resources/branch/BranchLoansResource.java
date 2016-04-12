@@ -13,12 +13,13 @@ import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
-import cpslabteam.bank.database.SessionManager;
 import cpslabteam.bank.database.dao.BranchDAO;
 import cpslabteam.bank.database.dao.DAOFactory;
 import cpslabteam.bank.database.dao.LoanDAO;
 import cpslabteam.bank.database.objects.Branch;
 import cpslabteam.bank.database.objects.Loan;
+import cpslabteam.bank.database.transaction.DatabaseTransaction;
+import cpslabteam.bank.database.transaction.DatabaseTransactionManager;
 
 public class BranchLoansResource extends ServerResource {
 
@@ -31,16 +32,17 @@ public class BranchLoansResource extends ServerResource {
 
 	@Get("application/json")
 	public List<Loan> getLoans() throws InterruptedException, IOException, HibernateException {
+		DatabaseTransaction transaction = DatabaseTransactionManager.getDatabaseTransaction();
 		try {
-			SessionManager.getSession().beginTransaction();
+			transaction.begin();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			LoanDAO loanDAO = daoFactory.getLoanDAO();
 			List<Loan> loans = loanDAO.findBranchLoans(branchID);
-			SessionManager.getSession().getTransaction().commit();
+			transaction.commit();
 			return loans;
 		} catch (Exception e) {
-			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
-				SessionManager.getSession().getTransaction().rollback();
+			if (transaction.canRollback())
+				transaction.rollback();
 			throw e;
 		}
 	}
@@ -48,23 +50,24 @@ public class BranchLoansResource extends ServerResource {
 	@Post("application/json")
 	public Loan createLoan(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
+		DatabaseTransaction transaction = DatabaseTransactionManager.getDatabaseTransaction();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String loanNumber = request.getString("loan_number");
 			String ammount = request.getString("ammount");
-			SessionManager.getSession().beginTransaction();
+			transaction.begin();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			LoanDAO loanDAO = daoFactory.getLoanDAO();
 			BranchDAO branchDAO = daoFactory.getBranchDAO();
 			Branch branch = branchDAO.findById(branchID);
 			Loan loan = new Loan(loanNumber, branch, new BigDecimal(ammount));
 			Loan createdLoan = loanDAO.persist(loan);
-			SessionManager.getSession().getTransaction().commit();
+			transaction.commit();
 			return createdLoan;
 		} catch (Exception e) {
 			System.out.println(e);
-			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
-				SessionManager.getSession().getTransaction().rollback();
+			if (transaction.canRollback())
+				transaction.rollback();
 			throw e;
 		}
 	}

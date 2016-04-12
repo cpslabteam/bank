@@ -10,43 +10,46 @@ import org.restlet.resource.ServerResource;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import cpslabteam.bank.database.SessionManager;
 import cpslabteam.bank.database.dao.DAOFactory;
 import cpslabteam.bank.database.dao.LoanDAO;
 import cpslabteam.bank.database.objects.Loan;
+import cpslabteam.bank.database.transaction.DatabaseTransaction;
+import cpslabteam.bank.database.transaction.DatabaseTransactionManager;
 
 public class LoansResource extends ServerResource {
 
 	@Get("application/json")
 	public List<Loan> getLoans(Representation entity)
 			throws InterruptedException, JsonProcessingException, HibernateException {
+		DatabaseTransaction transaction = DatabaseTransactionManager.getDatabaseTransaction();
 		try {
-			SessionManager.getSession().beginTransaction();
+			transaction.begin();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			LoanDAO loanDAO = daoFactory.getLoanDAO();
 			List<Loan> loans = loanDAO.findAll();
-			SessionManager.getSession().getTransaction().commit();
+			transaction.commit();
 			return loans;
 		} catch (Exception e) {
-			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
-				SessionManager.getSession().getTransaction().rollback();
+			if (transaction.canRollback())
+				transaction.rollback();
 			throw e;
 		}
 	}
 
 	@Post("application/json")
 	public Loan createLoan(Loan loan) throws InterruptedException, JsonProcessingException, HibernateException {
+		DatabaseTransaction transaction = DatabaseTransactionManager.getDatabaseTransaction();
 		try {
-			SessionManager.getSession().beginTransaction();
+			transaction.begin();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			LoanDAO loanDAO = daoFactory.getLoanDAO();
 			Loan createdLoan = loanDAO.persist(loan);
-			SessionManager.getSession().getTransaction().commit();
+			transaction.commit();
 			return createdLoan;
 		} catch (Exception e) {
 			System.out.println(e);
-			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
-				SessionManager.getSession().getTransaction().rollback();
+			if (transaction.canRollback())
+				transaction.rollback();
 			throw e;
 		}
 	}

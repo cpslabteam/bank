@@ -2,7 +2,7 @@ create sequence hibernate_sequence start 1 increment 1;
 
 create table Account (
   id int8 default nextval('hibernate_sequence') not null,
-  account_number varchar(255),
+  account_number varchar(255) not null,
   branch_id int8 not null,
   balance NUMERIC(20,2) not null,
   primary key (id)
@@ -38,7 +38,7 @@ create table Customer_Account (
 
 create table Loan (
   id int8 default nextval('hibernate_sequence') not null,
-  loan_number varchar(255),
+  loan_number varchar(255) not null,
   branch_id int8 not null,
   amount NUMERIC(20,2) not null,
   primary key (id)

@@ -13,12 +13,13 @@ import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
-import cpslabteam.bank.database.SessionManager;
 import cpslabteam.bank.database.dao.AccountDAO;
 import cpslabteam.bank.database.dao.BranchDAO;
 import cpslabteam.bank.database.dao.DAOFactory;
 import cpslabteam.bank.database.objects.Account;
 import cpslabteam.bank.database.objects.Branch;
+import cpslabteam.bank.database.transaction.DatabaseTransaction;
+import cpslabteam.bank.database.transaction.DatabaseTransactionManager;
 
 public class BranchAccountsResource extends ServerResource {
 
@@ -31,16 +32,17 @@ public class BranchAccountsResource extends ServerResource {
 
 	@Get("application/json")
 	public List<Account> getAccounts() throws InterruptedException, IOException, HibernateException {
+		DatabaseTransaction transaction = DatabaseTransactionManager.getDatabaseTransaction();
 		try {
-			SessionManager.getSession().beginTransaction();
+			transaction.begin();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			AccountDAO accountDAO = daoFactory.getAccountDAO();
 			List<Account> accounts = accountDAO.findBranchAccounts(branchID);
-			SessionManager.getSession().getTransaction().commit();
+			transaction.commit();
 			return accounts;
 		} catch (Exception e) {
-			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
-				SessionManager.getSession().getTransaction().rollback();
+			if (transaction.canRollback())
+				transaction.rollback();
 			throw e;
 		}
 	}
@@ -48,23 +50,24 @@ public class BranchAccountsResource extends ServerResource {
 	@Post("application/json")
 	public Account createAccount(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
+		DatabaseTransaction transaction = DatabaseTransactionManager.getDatabaseTransaction();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String accountNumber = request.getString("account_number");
 			String balance = request.getString("balance");
-			SessionManager.getSession().beginTransaction();
+			transaction.begin();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			AccountDAO accountDAO = daoFactory.getAccountDAO();
 			BranchDAO branchDAO = daoFactory.getBranchDAO();
 			Branch branch = branchDAO.findById(branchID);
 			Account account = new Account(accountNumber, branch, new BigDecimal(balance));
 			Account createdAccount = accountDAO.persist(account);
-			SessionManager.getSession().getTransaction().commit();
+			transaction.commit();
 			return createdAccount;
 		} catch (Exception e) {
 			System.out.println(e);
-			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
-				SessionManager.getSession().getTransaction().rollback();
+			if (transaction.canRollback())
+				transaction.rollback();
 			throw e;
 		}
 	}
