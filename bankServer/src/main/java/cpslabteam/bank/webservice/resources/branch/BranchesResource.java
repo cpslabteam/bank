@@ -1,32 +1,33 @@
-package cpslabteam.bank.webservice.resources;
+package cpslabteam.bank.webservice.resources.branch;
 
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.hibernate.HibernateException;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import cpslabteam.bank.database.SessionManager;
+import cpslabteam.bank.database.dao.BranchDAO;
 import cpslabteam.bank.database.dao.DAOFactory;
-import cpslabteam.bank.database.dao.LoanDAO;
-import cpslabteam.bank.database.objects.Loan;
+import cpslabteam.bank.database.objects.Branch;
 
-public class LoansResource extends ServerResource {
+public class BranchesResource extends ServerResource {
 
 	@Get("application/json")
-	public List<Loan> getLoans(Representation entity)
-			throws InterruptedException, JsonProcessingException, HibernateException {
+	public List<Branch> getBranches() throws InterruptedException, IOException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			LoanDAO loanDAO = daoFactory.getLoanDAO();
-			List<Loan> loans = loanDAO.findAll();
+			BranchDAO branchDAO = daoFactory.getBranchDAO();
+			List<Branch> branches = branchDAO.findAll();
 			SessionManager.getSession().getTransaction().commit();
-			return loans;
+			return branches;
 		} catch (Exception e) {
 			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
 				SessionManager.getSession().getTransaction().rollback();
@@ -35,14 +36,20 @@ public class LoansResource extends ServerResource {
 	}
 
 	@Post("application/json")
-	public Loan createLoan(Loan loan) throws InterruptedException, JsonProcessingException, HibernateException {
+	public Branch createBranch(Representation entity)
+			throws InterruptedException, HibernateException, JSONException, IOException {
 		try {
+			JSONObject request = new JSONObject(entity.getText());
+			String branchName= request.getString("name");
+			String branchCity = request.getString("city");
+			String branchAssets = request.getString("assets");
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			LoanDAO loanDAO = daoFactory.getLoanDAO();
-			Loan createdLoan = loanDAO.persist(loan);
+			BranchDAO branchDAO = daoFactory.getBranchDAO();
+			Branch branch = new Branch(branchName, branchCity, new BigDecimal(branchAssets));
+			Branch createdBranch = branchDAO.persist(branch);
 			SessionManager.getSession().getTransaction().commit();
-			return createdLoan;
+			return createdBranch;
 		} catch (Exception e) {
 			System.out.println(e);
 			if (SessionManager.getSession().getTransaction().getStatus().canRollback())

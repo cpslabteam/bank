@@ -1,10 +1,10 @@
-package cpslabteam.bank.webservice.resources;
+package cpslabteam.bank.webservice.resources.account;
+
+import java.util.List;
 
 import org.hibernate.HibernateException;
-import org.restlet.resource.Delete;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
-import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -14,24 +14,17 @@ import cpslabteam.bank.database.dao.AccountDAO;
 import cpslabteam.bank.database.dao.DAOFactory;
 import cpslabteam.bank.database.objects.Account;
 
-public class AccountResource extends ServerResource {
-
-	private Long accountID;
-
-	@Override
-	protected void doInit() throws ResourceException {
-		accountID = Long.valueOf(getAttribute("account"));
-	}
+public class AccountsResource extends ServerResource {
 
 	@Get("application/json")
-	public Account getAccount() throws InterruptedException, JsonProcessingException, HibernateException {
+	public List<Account> getAccount() throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			AccountDAO accountDAO = daoFactory.getAccountDAO();
-			Account account = accountDAO.findById(accountID);
+			List<Account> accounts = accountDAO.findAll();
 			SessionManager.getSession().getTransaction().commit();
-			return account;
+			return accounts;
 		} catch (Exception e) {
 			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
 				SessionManager.getSession().getTransaction().rollback();
@@ -40,35 +33,21 @@ public class AccountResource extends ServerResource {
 	}
 
 	@Post("application/json")
-	public Account updateAccount(Account account)
+	public Account createAccount(Account account)
 			throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			AccountDAO accountDAO = daoFactory.getAccountDAO();
-			Account updatedAccount = accountDAO.update(account);
+			Account createdAccount = accountDAO.persist(account);
 			SessionManager.getSession().getTransaction().commit();
-			return updatedAccount;
+			return createdAccount;
 		} catch (Exception e) {
+			System.out.println(e);
 			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
 				SessionManager.getSession().getTransaction().rollback();
 			throw e;
 		}
 	}
 
-	@Delete("application/json")
-	public void deleteAccount() throws InterruptedException, JsonProcessingException, HibernateException {
-		try {
-			SessionManager.getSession().beginTransaction();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			AccountDAO accountDAO = daoFactory.getAccountDAO();
-			Account account = accountDAO.findById(accountID);
-			accountDAO.makeTransient(account);
-			SessionManager.getSession().getTransaction().commit();
-		} catch (Exception e) {
-			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
-				SessionManager.getSession().getTransaction().rollback();
-			throw e;
-		}
-	}
 }

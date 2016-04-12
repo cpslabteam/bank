@@ -1,5 +1,7 @@
 package cpslabteam.bank.webservice;
 
+import java.io.IOException;
+
 import org.hibernate.HibernateException;
 import org.hibernate.ObjectNotFoundException;
 import org.hibernate.exception.ConstraintViolationException;
@@ -20,10 +22,9 @@ public class BankStatusService extends StatusService {
 	public Representation toRepresentation(Status status, Resource resource) {
 		String description = null;
 		JSONObject ret = new JSONObject();
-		if(status.getDescription() != null){
+		if (status.getDescription() != null) {
 			description = status.getDescription();
-		}
-		else {
+		} else {
 			description = "unknown error";
 		}
 		try {
@@ -39,13 +40,29 @@ public class BankStatusService extends StatusService {
 		Throwable cause = throwable.getCause();
 
 		if (cause == null) {
-			return handleUnknownException(throwable, resource);
-		} else if (cause instanceof JsonProcessingException) {
-			return handleJsonProcessingException(cause, resource);
+			return defaultHandleException(throwable, resource);
+		} else if (cause instanceof InterruptedException) {
+			return defaultHandleException(cause, resource);
+		} else if (cause instanceof IOException) {
+			return handleIOException(cause, resource);
+		} else if (cause instanceof JSONException) {
+			return handleJSONException(cause, resource);
 		} else if (cause instanceof HibernateException) {
 			return handleHibernateException(cause, resource);
 		} else {
-			return handleUnknownException(cause, resource);
+			return defaultHandleException(cause, resource);
+		}
+	}
+
+	private Status handleJSONException(Throwable throwable, Resource resource) {
+		return defaultHandleException(throwable, resource);
+	}
+
+	private Status handleIOException(Throwable throwable, Resource resource) {
+		if (throwable instanceof JsonProcessingException) {
+			return handleJsonProcessingException(throwable, resource);
+		} else {
+			return defaultHandleException(throwable, resource);
 		}
 	}
 
@@ -56,10 +73,10 @@ public class BankStatusService extends StatusService {
 					"Could not find entity " + e.getEntityName() + " with ID " + e.getIdentifier());
 		} else if (throwable instanceof ConstraintViolationException) {
 			ConstraintViolationException e = (ConstraintViolationException) throwable;
-			return new Status(Status.CLIENT_ERROR_CONFLICT, e, e.getLocalizedMessage(),
-					e.getSQLException().getMessage());
+			return new Status(Status.CLIENT_ERROR_CONFLICT, e, e.getSQLException().getMessage(),
+					"Request violates " + e.getConstraintName() + " constraint");
 		} else {
-			return handleUnknownException(throwable, resource);
+			return defaultHandleException(throwable, resource);
 		}
 	}
 
@@ -67,18 +84,18 @@ public class BankStatusService extends StatusService {
 		if (throwable instanceof JsonMappingException) {
 			Throwable cause = throwable.getCause();
 			if (cause == null) {
-				return handleUnknownException(throwable, resource);
+				return defaultHandleException(throwable, resource);
 			} else if (cause instanceof HibernateException) {
 				return handleHibernateException(cause, resource);
 			} else {
-				return handleUnknownException(cause, resource);
+				return defaultHandleException(cause, resource);
 			}
 		} else {
-			return handleUnknownException(throwable, resource);
+			return defaultHandleException(throwable, resource);
 		}
 	}
-	
-	private Status handleUnknownException(Throwable throwable, Resource resource){
+
+	private Status defaultHandleException(Throwable throwable, Resource resource) {
 		Status status = super.toStatus(throwable, resource);
 		return new Status(status, throwable.getLocalizedMessage(), throwable.getMessage());
 	}

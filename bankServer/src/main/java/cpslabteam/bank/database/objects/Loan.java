@@ -38,6 +38,14 @@ public class Loan extends BaseDataObject {
 		owners = new HashSet<>();
 	}
 
+	public Loan(String loanNumber, Branch branch, BigDecimal amount) {
+		super();
+		this.loanNumber = loanNumber;
+		this.branch = branch;
+		this.amount = amount;
+		owners = new HashSet<>();
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

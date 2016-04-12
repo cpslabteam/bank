@@ -1,4 +1,4 @@
-package cpslabteam.bank.webservice.resources;
+package cpslabteam.bank.webservice.resources.depositor;
 
 import org.hibernate.HibernateException;
 import org.restlet.resource.Delete;
@@ -14,39 +14,39 @@ import cpslabteam.bank.database.dao.CustomerDAO;
 import cpslabteam.bank.database.dao.DAOFactory;
 import cpslabteam.bank.database.objects.Customer;
 
-public class BorrowerResource extends ServerResource {
+public class DepositorResource extends ServerResource {
 
-	private Long borrowerID;
+	private Long depositorID;
 
 	@Override
 	protected void doInit() throws ResourceException {
-		borrowerID = Long.valueOf(getAttribute("borrower"));
+		depositorID = Long.valueOf(getAttribute("depositor"));
 	}
 
 	@Get("application/json")
-	public Customer getBorrower() throws InterruptedException, JsonProcessingException, HibernateException {
+	public Customer getDepositor() throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
-			Customer borrower = customerDAO.findById(borrowerID);
+			Customer depositor = customerDAO.findById(depositorID);
 			SessionManager.getSession().getTransaction().commit();
-			return borrower;
+			return depositor;
 		} catch (Exception e) {
 			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
 				SessionManager.getSession().getTransaction().rollback();
 			throw e;
 		}
 	}
-	
+
 	@Post("application/json")
-	public Customer updateCustomer(Customer borrower)
+	public Customer updateCustomer(Customer depositor)
 			throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			CustomerDAO borrowerDAO = daoFactory.getCustomerDAO();
-			Customer updatedCustomer = borrowerDAO.update(borrower);
+			CustomerDAO depositorDAO = daoFactory.getCustomerDAO();
+			Customer updatedCustomer = depositorDAO.update(depositor);
 			SessionManager.getSession().getTransaction().commit();
 			return updatedCustomer;
 		} catch (Exception e) {
@@ -61,9 +61,9 @@ public class BorrowerResource extends ServerResource {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			CustomerDAO borrowerDAO = daoFactory.getCustomerDAO();
-			Customer borrower = borrowerDAO.findById(borrowerID);
-			borrowerDAO.makeTransient(borrower);
+			CustomerDAO depositorDAO = daoFactory.getCustomerDAO();
+			Customer depositor = depositorDAO.findById(depositorID);
+			depositorDAO.delete(depositor);
 			SessionManager.getSession().getTransaction().commit();
 		} catch (Exception e) {
 			if (SessionManager.getSession().getTransaction().getStatus().canRollback())

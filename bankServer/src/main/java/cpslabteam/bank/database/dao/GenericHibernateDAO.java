@@ -81,7 +81,7 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable> implements
 		return entity;
 	}
 
-	public void makeTransient(T entity) {
+	public void delete(T entity) {
 		getSession().delete(entity);
 	}
 

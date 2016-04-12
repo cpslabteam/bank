@@ -21,5 +21,5 @@ public interface GenericDAO<T, ID extends Serializable> {
 	
 	T saveOrUpdate(T entity);
 
-	void makeTransient(T entity);
+	void delete(T entity);
 }

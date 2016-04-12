@@ -30,15 +30,25 @@ public class Customer extends BaseDataObject {
 
 	@JsonSerialize(contentAs = BaseDataObject.class)
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	private Set<Account> accounts = new HashSet<>();
+	private Set<Account> accounts;
 
 	@JsonSerialize(contentAs = BaseDataObject.class)
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	private Set<Loan> loans = new HashSet<>();
+	private Set<Loan> loans;
 
 	public Customer() {
 		super();
-		// TODO Auto-generated constructor stub
+		this.accounts = new HashSet<>();
+		this.loans = new HashSet<>();
+	}
+
+	public Customer(String name, String street, String city) {
+		super();
+		this.name = name;
+		this.street = street;
+		this.city = city;
+		this.accounts = new HashSet<>();
+		this.loans = new HashSet<>();
 	}
 
 	public Set<Account> getAccounts() {

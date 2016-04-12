@@ -1,37 +1,43 @@
-package cpslabteam.bank.webservice.resources;
+package cpslabteam.bank.webservice.resources.branch;
+
+import java.io.IOException;
+import java.math.BigDecimal;
 
 import org.hibernate.HibernateException;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.restlet.representation.Representation;
 import org.restlet.resource.Delete;
 import org.restlet.resource.Get;
-import org.restlet.resource.Post;
+import org.restlet.resource.Put;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import cpslabteam.bank.database.SessionManager;
-import cpslabteam.bank.database.dao.CustomerDAO;
 import cpslabteam.bank.database.dao.DAOFactory;
-import cpslabteam.bank.database.objects.Customer;
+import cpslabteam.bank.database.dao.LoanDAO;
+import cpslabteam.bank.database.objects.Loan;
 
-public class CustomerResource extends ServerResource {
+public class BranchLoanResource extends ServerResource {
 
-	private Long customerID;
+	private Long branchID;
+	private Long loanID;
 
 	@Override
 	protected void doInit() throws ResourceException {
-		customerID = Long.valueOf(getAttribute("customer"));
+		branchID = Long.valueOf(getAttribute("branch"));
+		loanID = Long.valueOf(getAttribute("loan"));
 	}
 
 	@Get("application/json")
-	public Customer getCustomer() throws InterruptedException, JsonProcessingException, HibernateException {
+	public Loan getLoan() throws InterruptedException, IOException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
-			Customer customer = customerDAO.findById(customerID);
+			LoanDAO loanDAO = daoFactory.getLoanDAO();
+			Loan loan = loanDAO.findBranchLoan(branchID, loanID);
 			SessionManager.getSession().getTransaction().commit();
-			return customer;
+			return loan;
 		} catch (Exception e) {
 			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
 				SessionManager.getSession().getTransaction().rollback();
@@ -39,16 +45,22 @@ public class CustomerResource extends ServerResource {
 		}
 	}
 
-	@Post("application/json")
-	public Customer updateCustomer(Customer customer)
-			throws InterruptedException, JsonProcessingException, HibernateException {
+	@Put("application/json")
+	public Loan updateLoan(Representation entity)
+			throws InterruptedException, IOException, HibernateException, JSONException {
 		try {
+			JSONObject request = new JSONObject(entity.getText());
+			String loanNumber = request.getString("loan_number");
+			String ammount = request.getString("ammount");
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
-			Customer updatedCustomer = customerDAO.update(customer);
+			LoanDAO loanDAO = daoFactory.getLoanDAO();
+			Loan loan = loanDAO.findBranchLoan(branchID, loanID);
+			loan.setLoanNumber(loanNumber);
+			loan.setAmount(new BigDecimal(ammount));
+			Loan updatedLoan = loanDAO.update(loan);
 			SessionManager.getSession().getTransaction().commit();
-			return updatedCustomer;
+			return updatedLoan;
 		} catch (Exception e) {
 			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
 				SessionManager.getSession().getTransaction().rollback();
@@ -57,13 +69,13 @@ public class CustomerResource extends ServerResource {
 	}
 
 	@Delete("application/json")
-	public void deleteCustomer() throws InterruptedException, JsonProcessingException, HibernateException {
+	public void deleteLoan() throws InterruptedException, IOException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
-			Customer customer = customerDAO.findById(customerID);
-			customerDAO.makeTransient(customer);
+			LoanDAO loanDAO = daoFactory.getLoanDAO();
+			Loan loan = loanDAO.findBranchLoan(branchID, loanID);
+			loanDAO.delete(loan);
 			SessionManager.getSession().getTransaction().commit();
 		} catch (Exception e) {
 			if (SessionManager.getSession().getTransaction().getStatus().canRollback())

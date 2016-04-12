@@ -1,4 +1,4 @@
-package cpslabteam.bank.webservice.resources;
+package cpslabteam.bank.webservice.resources.customer;
 
 import java.util.List;
 
@@ -10,21 +10,21 @@ import org.restlet.resource.ServerResource;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import cpslabteam.bank.database.SessionManager;
-import cpslabteam.bank.database.dao.AccountDAO;
+import cpslabteam.bank.database.dao.CustomerDAO;
 import cpslabteam.bank.database.dao.DAOFactory;
-import cpslabteam.bank.database.objects.Account;
+import cpslabteam.bank.database.objects.Customer;
 
-public class AccountsResource extends ServerResource {
+public class CustomersResource extends ServerResource {
 
 	@Get("application/json")
-	public List<Account> getAccount() throws InterruptedException, JsonProcessingException, HibernateException {
+	public List<Customer> getCustomers() throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			AccountDAO accountDAO = daoFactory.getAccountDAO();
-			List<Account> accounts = accountDAO.findAll();
+			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
+			List<Customer> customers = customerDAO.findAll();
 			SessionManager.getSession().getTransaction().commit();
-			return accounts;
+			return customers;
 		} catch (Exception e) {
 			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
 				SessionManager.getSession().getTransaction().rollback();
@@ -33,17 +33,16 @@ public class AccountsResource extends ServerResource {
 	}
 
 	@Post("application/json")
-	public Account createAccount(Account account)
+	public Customer createCustomer(Customer customer)
 			throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			AccountDAO accountDAO = daoFactory.getAccountDAO();
-			Account createdAccount = accountDAO.persist(account);
+			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
+			Customer createdCustomer = customerDAO.persist(customer);
 			SessionManager.getSession().getTransaction().commit();
-			return createdAccount;
+			return createdCustomer;
 		} catch (Exception e) {
-			System.out.println(e);
 			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
 				SessionManager.getSession().getTransaction().rollback();
 			throw e;

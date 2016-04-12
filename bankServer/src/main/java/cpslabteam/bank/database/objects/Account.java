@@ -28,13 +28,21 @@ public class Account extends BaseDataObject {
 
 	@Column(name = "balance", nullable = false)
 	private BigDecimal balance;
-	
+
 	@JsonSerialize(contentAs = BaseDataObject.class)
 	@ManyToMany(mappedBy = "accounts")
 	private Set<Customer> owners;
 
 	public Account() {
 		super();
+		owners = new HashSet<>();
+	}
+
+	public Account(String accountNumber, Branch branch, BigDecimal balance) {
+		super();
+		this.accountNumber = accountNumber;
+		this.branch = branch;
+		this.balance = balance;
 		owners = new HashSet<>();
 	}
 

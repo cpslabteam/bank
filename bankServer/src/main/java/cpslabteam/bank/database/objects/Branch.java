@@ -40,6 +40,15 @@ public class Branch extends BaseDataObject {
 		loans = new HashSet<>();
 	}
 
+	public Branch(String name, String city, BigDecimal assets) {
+		super();
+		this.name = name;
+		this.city = city;
+		this.assets = assets;
+		accounts = new HashSet<>();
+		loans = new HashSet<>();
+	}
+
 	public Set<Account> getAccounts() {
 		return accounts;
 	}

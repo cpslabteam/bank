@@ -1,30 +1,40 @@
-package cpslabteam.bank.webservice.resources;
+package cpslabteam.bank.webservice.resources.customer;
 
 import java.util.List;
 
 import org.hibernate.HibernateException;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
+import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import cpslabteam.bank.database.SessionManager;
-import cpslabteam.bank.database.dao.BranchDAO;
+import cpslabteam.bank.database.dao.AccountDAO;
+import cpslabteam.bank.database.dao.CustomerDAO;
 import cpslabteam.bank.database.dao.DAOFactory;
-import cpslabteam.bank.database.objects.Branch;
+import cpslabteam.bank.database.objects.Account;
+import cpslabteam.bank.database.objects.Customer;
 
-public class BranchesResource extends ServerResource {
+public class CustomerAccountsResource extends ServerResource {
+
+	private Long customerID;
+
+	@Override
+	protected void doInit() throws ResourceException {
+		customerID = Long.valueOf(getAttribute("customer"));
+	}
 
 	@Get("application/json")
-	public List<Branch> getBranches() throws InterruptedException, JsonProcessingException, HibernateException {
+	public List<Account> getAccounts() throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			BranchDAO branchDAO = daoFactory.getBranchDAO();
-			List<Branch> branches = branchDAO.findAll();
+			AccountDAO accountDAO = daoFactory.getAccountDAO();
+			List<Account> accounts = accountDAO.findCustomerAccounts(customerID);
 			SessionManager.getSession().getTransaction().commit();
-			return branches;
+			return accounts;
 		} catch (Exception e) {
 			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
 				SessionManager.getSession().getTransaction().rollback();
@@ -33,20 +43,22 @@ public class BranchesResource extends ServerResource {
 	}
 
 	@Post("application/json")
-	public Branch createBranch(Branch branch)
+	public List<Account> addAccount(Account account)
 			throws InterruptedException, JsonProcessingException, HibernateException {
 		try {
 			SessionManager.getSession().beginTransaction();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			BranchDAO branchDAO = daoFactory.getBranchDAO();
-			Branch createdBranch = branchDAO.persist(branch);
+			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
+			Customer customer = customerDAO.findById(customerID);
+			customer.getAccounts().add(account);
+			List<Account> accounts = daoFactory.getAccountDAO().findCustomerAccounts(customerID);
 			SessionManager.getSession().getTransaction().commit();
-			return createdBranch;
+			return accounts;
 		} catch (Exception e) {
-			System.out.println(e);
 			if (SessionManager.getSession().getTransaction().getStatus().canRollback())
 				SessionManager.getSession().getTransaction().rollback();
 			throw e;
 		}
 	}
+
 }
