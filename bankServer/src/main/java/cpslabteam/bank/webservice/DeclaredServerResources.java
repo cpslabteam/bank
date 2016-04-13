@@ -6,6 +6,9 @@ import java.util.Set;
 
 import org.restlet.resource.ServerResource;
 
+import cpslabteam.bank.webservice.resources.account.AccountBranchResource;
+import cpslabteam.bank.webservice.resources.account.AccountOwnerResource;
+import cpslabteam.bank.webservice.resources.account.AccountOwnersResource;
 import cpslabteam.bank.webservice.resources.account.AccountResource;
 import cpslabteam.bank.webservice.resources.account.AccountsResource;
 import cpslabteam.bank.webservice.resources.borrower.BorrowerResource;
@@ -29,18 +32,21 @@ public final class DeclaredServerResources {
 
 	private static Map<String, Class<? extends ServerResource>> serverResources;
 
-	private static final String CUSTOMERS_BASE_PATH = "/customers";
-	private static final String CUSTOMER_BASE_PATH = "/{customer}";
-	private static final String DEPOSITORS_BASE_PATH = "/depositors";
-	private static final String DEPOSITOR_BASE_PATH = "/{depositor}";
-	private static final String BORROWERS_BASE_PATH = "/borrowers";
-	private static final String BORROWER_BASE_PATH = "/{borrower}";
-	private static final String BRANCHES_BASE_PATH = "/branches";
-	private static final String BRANCH_BASE_PATH = "/{branch}";
-	private static final String ACCOUNTS_BASE_PATH = "/accounts";
-	private static final String ACCOUNT_BASE_PATH = "/{account}";
-	private static final String LOANS_BASE_PATH = "/loans";
-	private static final String LOAN_BASE_PATH = "/{loan}";
+	private static final String CUSTOMERS_PATH = "/customers";
+	private static final String CUSTOMER_PATH = "/{customer}";
+	private static final String DEPOSITORS_PATH = "/depositors";
+	private static final String DEPOSITOR_PATH = "/{depositor}";
+	private static final String BORROWERS_PATH = "/borrowers";
+	private static final String BORROWER_PATH = "/{borrower}";
+	private static final String BRANCHES_PATH = "/branches";
+	private static final String BRANCH_PATH = "/{branch}";
+	private static final String ACCOUNTS_PATH = "/accounts";
+	private static final String ACCOUNT_PATH = "/{account}";
+	private static final String LOANS_PATH = "/loans";
+	private static final String LOAN_PATH = "/{loan}";
+	private static final String ACCOUNT_BRANCH_PATH = "/branch";
+	private static final String ACCOUNT_OWNERS_PATH = "/owners";
+	private static final String ACCOUNT_OWNER_PATH = "/{owner}";
 
 	static {
 		serverResources = new LinkedHashMap<>();
@@ -48,33 +54,34 @@ public final class DeclaredServerResources {
 	}
 
 	private static void declareServerResources() {
-		serverResources.put(BRANCHES_BASE_PATH, BranchesResource.class);
-		serverResources.put(BRANCHES_BASE_PATH + BRANCH_BASE_PATH, BranchResource.class);
-		serverResources.put(BRANCHES_BASE_PATH + BRANCH_BASE_PATH + ACCOUNTS_BASE_PATH, BranchAccountsResource.class);
-		serverResources.put(BRANCHES_BASE_PATH + BRANCH_BASE_PATH + ACCOUNTS_BASE_PATH + ACCOUNT_BASE_PATH,
-				BranchAccountResource.class);
-		serverResources.put(BRANCHES_BASE_PATH + BRANCH_BASE_PATH + LOANS_BASE_PATH, BranchLoansResource.class);
-		serverResources.put(BRANCHES_BASE_PATH + BRANCH_BASE_PATH + LOANS_BASE_PATH + LOAN_BASE_PATH,
-				BranchLoanResource.class);
+		serverResources.put(BRANCHES_PATH, BranchesResource.class);
+		serverResources.put(BRANCHES_PATH + BRANCH_PATH, BranchResource.class);
+		serverResources.put(BRANCHES_PATH + BRANCH_PATH + ACCOUNTS_PATH, BranchAccountsResource.class);
+		serverResources.put(BRANCHES_PATH + BRANCH_PATH + ACCOUNTS_PATH + ACCOUNT_PATH, BranchAccountResource.class);
+		serverResources.put(BRANCHES_PATH + BRANCH_PATH + LOANS_PATH, BranchLoansResource.class);
+		serverResources.put(BRANCHES_PATH + BRANCH_PATH + LOANS_PATH + LOAN_PATH, BranchLoanResource.class);
 
-		serverResources.put(ACCOUNTS_BASE_PATH, AccountsResource.class);
-		serverResources.put(ACCOUNTS_BASE_PATH + ACCOUNT_BASE_PATH, AccountResource.class);
+		serverResources.put(ACCOUNTS_PATH, AccountsResource.class);
+		serverResources.put(ACCOUNTS_PATH + ACCOUNT_PATH, AccountResource.class);
+		serverResources.put(ACCOUNTS_PATH + ACCOUNT_PATH + ACCOUNT_BRANCH_PATH, AccountBranchResource.class);
+		serverResources.put(ACCOUNTS_PATH + ACCOUNT_PATH + ACCOUNT_OWNERS_PATH, AccountOwnersResource.class);
+		serverResources.put(ACCOUNTS_PATH + ACCOUNT_PATH + ACCOUNT_OWNERS_PATH + ACCOUNT_OWNER_PATH,
+				AccountOwnerResource.class);
 
-		serverResources.put(LOANS_BASE_PATH, LoansResource.class);
-		serverResources.put(LOANS_BASE_PATH + LOAN_BASE_PATH, LoanResource.class);
+		serverResources.put(LOANS_PATH, LoansResource.class);
+		serverResources.put(LOANS_PATH + LOAN_PATH, LoanResource.class);
 
-		serverResources.put(CUSTOMERS_BASE_PATH, CustomersResource.class);
-		serverResources.put(CUSTOMERS_BASE_PATH + CUSTOMER_BASE_PATH, CustomerResource.class);
-		serverResources.put(CUSTOMERS_BASE_PATH + CUSTOMER_BASE_PATH + ACCOUNTS_BASE_PATH,
-				CustomerAccountsResource.class);
-		serverResources.put(CUSTOMERS_BASE_PATH + CUSTOMER_BASE_PATH + ACCOUNTS_BASE_PATH + ACCOUNT_BASE_PATH,
+		serverResources.put(CUSTOMERS_PATH, CustomersResource.class);
+		serverResources.put(CUSTOMERS_PATH + CUSTOMER_PATH, CustomerResource.class);
+		serverResources.put(CUSTOMERS_PATH + CUSTOMER_PATH + ACCOUNTS_PATH, CustomerAccountsResource.class);
+		serverResources.put(CUSTOMERS_PATH + CUSTOMER_PATH + ACCOUNTS_PATH + ACCOUNT_PATH,
 				CustomerAccountResource.class);
 
-		serverResources.put(DEPOSITORS_BASE_PATH, DepositorsResource.class);
-		serverResources.put(DEPOSITORS_BASE_PATH + DEPOSITOR_BASE_PATH, DepositorResource.class);
+		serverResources.put(DEPOSITORS_PATH, DepositorsResource.class);
+		serverResources.put(DEPOSITORS_PATH + DEPOSITOR_PATH, DepositorResource.class);
 
-		serverResources.put(BORROWERS_BASE_PATH, BorrowersResource.class);
-		serverResources.put(BORROWERS_BASE_PATH + BORROWER_BASE_PATH, BorrowerResource.class);
+		serverResources.put(BORROWERS_PATH, BorrowersResource.class);
+		serverResources.put(BORROWERS_PATH + BORROWER_PATH, BorrowerResource.class);
 	}
 
 	public static Map<String, Class<? extends ServerResource>> getDeclaredServerResources() {

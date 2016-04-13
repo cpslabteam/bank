@@ -55,7 +55,8 @@ public class BankStatusService extends StatusService {
 	}
 
 	private Status handleJSONException(Throwable throwable, Resource resource) {
-		return defaultHandleException(throwable, resource);
+		return new Status(Status.CLIENT_ERROR_BAD_REQUEST, throwable, throwable.getMessage(),
+				throwable.getLocalizedMessage());
 	}
 
 	private Status handleIOException(Throwable throwable, Resource resource) {

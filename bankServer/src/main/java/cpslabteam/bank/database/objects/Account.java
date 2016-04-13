@@ -2,6 +2,7 @@ package cpslabteam.bank.database.objects;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -46,19 +47,26 @@ public class Account extends BaseDataObject {
 		owners = new HashSet<>();
 	}
 
+	public void addOwner(Customer owner) {
+		owners.add(owner);
+		owner.getAccounts().add(this);
+	}
+	
+	public void removeOwner(Customer owner){
+		owners.remove(owner);
+		owner.getAccounts().remove(this);
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (!(obj instanceof Account))
+		if (obj == null || getClass() != obj.getClass())
 			return false;
 
 		final Account account = (Account) obj;
 
-		if (!account.getAccountNumber().equals(getAccountNumber()))
-			return false;
-
-		return true;
+		return Objects.equals(accountNumber, account.getAccountNumber());
 	}
 
 	public String getAccountNumber() {
@@ -79,9 +87,7 @@ public class Account extends BaseDataObject {
 
 	@Override
 	public int hashCode() {
-		int hashcode = 0;
-		hashcode += ((accountNumber == null) ? 0 : accountNumber.hashCode());
-		return hashcode;
+		return Objects.hash(accountNumber);
 	}
 
 	public void setAccountNumber(String accountNumber) {

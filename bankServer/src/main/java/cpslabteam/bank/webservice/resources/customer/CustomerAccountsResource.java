@@ -53,7 +53,7 @@ public class CustomerAccountsResource extends ServerResource {
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
 			Customer customer = customerDAO.findById(customerID);
-			customer.getAccounts().add(account);
+			customer.addAccount(account);
 			List<Account> accounts = daoFactory.getAccountDAO().findCustomerAccounts(customerID);
 			transaction.commit();
 			return accounts;

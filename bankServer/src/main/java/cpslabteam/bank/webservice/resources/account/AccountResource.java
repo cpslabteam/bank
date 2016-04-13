@@ -1,13 +1,17 @@
 package cpslabteam.bank.webservice.resources.account;
 
+import java.io.IOException;
+import java.math.BigDecimal;
+
 import org.hibernate.HibernateException;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.restlet.representation.Representation;
 import org.restlet.resource.Delete;
 import org.restlet.resource.Get;
-import org.restlet.resource.Post;
+import org.restlet.resource.Put;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import cpslabteam.bank.database.dao.AccountDAO;
 import cpslabteam.bank.database.dao.DAOFactory;
@@ -25,7 +29,7 @@ public class AccountResource extends ServerResource {
 	}
 
 	@Get("application/json")
-	public Account getAccount() throws InterruptedException, JsonProcessingException, HibernateException {
+	public Account getAccount() throws InterruptedException, IOException, HibernateException {
 		DatabaseTransaction transaction = DatabaseTransactionManager.getDatabaseTransaction();
 		try {
 			transaction.begin();
@@ -41,14 +45,20 @@ public class AccountResource extends ServerResource {
 		}
 	}
 
-	@Post("application/json")
-	public Account updateAccount(Account account)
-			throws InterruptedException, JsonProcessingException, HibernateException {
+	@Put("application/json")
+	public Account updateAccount(Representation entity)
+			throws InterruptedException, IOException, HibernateException, JSONException {
 		DatabaseTransaction transaction = DatabaseTransactionManager.getDatabaseTransaction();
 		try {
+			JSONObject request = new JSONObject(entity.getText());
+			String accountNumber = request.getString("account_number");
+			String balance = request.getString("balance");
 			transaction.begin();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			AccountDAO accountDAO = daoFactory.getAccountDAO();
+			Account account = accountDAO.findById(accountID);
+			account.setAccountNumber(accountNumber);
+			account.setBalance(new BigDecimal(balance));
 			Account updatedAccount = accountDAO.update(account);
 			transaction.commit();
 			return updatedAccount;
@@ -60,7 +70,7 @@ public class AccountResource extends ServerResource {
 	}
 
 	@Delete("application/json")
-	public void deleteAccount() throws InterruptedException, JsonProcessingException, HibernateException {
+	public void deleteAccount() throws InterruptedException, IOException, HibernateException {
 		DatabaseTransaction transaction = DatabaseTransactionManager.getDatabaseTransaction();
 		try {
 			transaction.begin();

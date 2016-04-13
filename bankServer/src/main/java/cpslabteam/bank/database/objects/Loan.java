@@ -2,6 +2,7 @@ package cpslabteam.bank.database.objects;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -50,15 +51,12 @@ public class Loan extends BaseDataObject {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (!(obj instanceof Loan))
+		if (obj == null || getClass() != obj.getClass())
 			return false;
 
 		final Loan loan = (Loan) obj;
 
-		if (!loan.getLoanNumber().equals(getLoanNumber()))
-			return false;
-
-		return true;
+		return Objects.equals(loanNumber, loan.getLoanNumber());
 	}
 
 	public BigDecimal getAmount() {
@@ -79,9 +77,7 @@ public class Loan extends BaseDataObject {
 
 	@Override
 	public int hashCode() {
-		int hashcode = 0;
-		hashcode += ((loanNumber == null) ? 0 : loanNumber.hashCode());
-		return hashcode;
+		return Objects.hash(loanNumber);
 	}
 
 	public void setAmount(BigDecimal amount) {
@@ -94,6 +90,16 @@ public class Loan extends BaseDataObject {
 
 	public void setLoanNumber(String loanNumber) {
 		this.loanNumber = loanNumber;
+	}
+	
+	public void addOwner(Customer owner){
+		owners.add(owner);
+		owner.getLoans().add(this);
+	}
+	
+	public void removeOwner(Customer owner){
+		owners.remove(owner);
+		owner.getLoans().remove(this);
 	}
 
 	@Override

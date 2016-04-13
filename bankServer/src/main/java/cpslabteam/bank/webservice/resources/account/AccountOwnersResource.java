@@ -1,12 +1,16 @@
-package cpslabteam.bank.webservice.resources.customer;
+package cpslabteam.bank.webservice.resources.account;
+
+import java.io.IOException;
+import java.util.List;
 
 import org.hibernate.HibernateException;
-import org.restlet.resource.Delete;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
+import org.restlet.resource.Put;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import cpslabteam.bank.database.dao.AccountDAO;
 import cpslabteam.bank.database.dao.CustomerDAO;
@@ -16,27 +20,25 @@ import cpslabteam.bank.database.objects.Customer;
 import cpslabteam.bank.database.transaction.DatabaseTransaction;
 import cpslabteam.bank.database.transaction.DatabaseTransactionManager;
 
-public class CustomerAccountResource extends ServerResource {
+public class AccountOwnersResource extends ServerResource {
 
-	private Long customerID;
 	private Long accountID;
 
 	@Override
 	protected void doInit() throws ResourceException {
-		customerID = Long.valueOf(getAttribute("customer"));
 		accountID = Long.valueOf(getAttribute("account"));
 	}
 
 	@Get("application/json")
-	public Account getAccount() throws InterruptedException, JsonProcessingException, HibernateException {
+	public List<Customer> getOwners() throws InterruptedException, IOException, HibernateException {
 		DatabaseTransaction transaction = DatabaseTransactionManager.getDatabaseTransaction();
 		try {
 			transaction.begin();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			AccountDAO accountDAO = daoFactory.getAccountDAO();
-			Account account = accountDAO.findCustomerAccount(customerID, accountID);
+			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
+			List<Customer> owners = customerDAO.findAccountOwners(accountID);
 			transaction.commit();
-			return account;
+			return owners;
 		} catch (Exception e) {
 			if (transaction.canRollback())
 				transaction.rollback();
@@ -44,18 +46,22 @@ public class CustomerAccountResource extends ServerResource {
 		}
 	}
 
-	@Delete("application/json")
-	public void removeAccount() throws InterruptedException, JsonProcessingException, HibernateException {
+	@Put("application/json")
+	public Customer addOwner(Representation entity)
+			throws InterruptedException, IOException, HibernateException, JSONException {
 		DatabaseTransaction transaction = DatabaseTransactionManager.getDatabaseTransaction();
 		try {
+			JSONObject request = new JSONObject(entity.getText());
+			String ownerID = request.getString("id");
 			transaction.begin();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			AccountDAO accountDAO = daoFactory.getAccountDAO();
 			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
-			Account account = accountDAO.findCustomerAccount(customerID, accountID);
-			Customer customer = customerDAO.findById(customerID);
-			customer.removeAccount(account);
+			Customer owner = customerDAO.findById(Long.valueOf(ownerID));
+			Account account = accountDAO.findById(accountID);
+			account.addOwner(owner);
 			transaction.commit();
+			return owner;
 		} catch (Exception e) {
 			if (transaction.canRollback())
 				transaction.rollback();

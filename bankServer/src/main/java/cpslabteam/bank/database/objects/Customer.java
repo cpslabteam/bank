@@ -1,6 +1,7 @@
 package cpslabteam.bank.database.objects;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -51,6 +52,35 @@ public class Customer extends BaseDataObject {
 		this.loans = new HashSet<>();
 	}
 
+	public void addAccount(Account account) {
+		accounts.add(account);
+	}
+	
+	public void removeAccount(Account account){
+		accounts.remove(account);
+	}
+	
+	public void addLoan(Loan loan){
+		loans.add(loan);
+	}
+	
+	public void removeLoan(Loan loan){
+		loans.remove(loan);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		Customer customer = (Customer) obj;
+		return Objects.equals(name, customer.getName()) && Objects.equals(street, customer.getStreet())
+				&& Objects.equals(city, customer.getCity());
+	}
+
 	public Set<Account> getAccounts() {
 		return accounts;
 	}
@@ -69,6 +99,11 @@ public class Customer extends BaseDataObject {
 
 	public String getStreet() {
 		return street;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, street, city);
 	}
 
 	public void setCity(String city) {

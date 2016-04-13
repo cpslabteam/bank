@@ -68,19 +68,19 @@ public class Branch extends BaseDataObject {
 	public String getName() {
 		return name;
 	}
-
+	
 	public void setAssets(BigDecimal assets) {
 		this.assets = assets;
 	}
-
+	
 	public void setCity(String city) {
 		this.city = city;
 	}
-
+	
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "Branch [id=" + getId() + ", name=" + name + ", city=" + city + ", assets=" + assets + "]";
