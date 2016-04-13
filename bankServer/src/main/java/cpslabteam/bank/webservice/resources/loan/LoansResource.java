@@ -46,14 +46,14 @@ public class LoansResource extends ServerResource {
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String loanNumber = request.getString("loan_number");
-			String ammount = request.getString("ammount");
+			String amount = request.getString("amount");
 			String branchID = request.getString("branch_id");
 			transaction.begin();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			LoanDAO loanDAO = daoFactory.getLoanDAO();
 			BranchDAO branchDAO = daoFactory.getBranchDAO();
 			Branch branch = branchDAO.findById(Long.valueOf(branchID));
-			Loan loan = new Loan(loanNumber, branch, new BigDecimal(ammount));
+			Loan loan = new Loan(loanNumber, branch, new BigDecimal(amount));
 			Loan createdLoan = loanDAO.persist(loan);
 			transaction.commit();
 			return createdLoan;

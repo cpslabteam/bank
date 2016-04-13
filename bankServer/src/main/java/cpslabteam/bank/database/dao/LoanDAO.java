@@ -10,4 +10,8 @@ public interface LoanDAO extends GenericDAO<Loan, Long> {
 
 	Loan findBranchLoan(Long branchID, Long loanID);
 
+	List<Loan> findCustomerLoans(Long customerID);
+	
+	Loan findCustomerLoan(Long customerID, Long loanID);
+
 }

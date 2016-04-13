@@ -1,19 +1,25 @@
 package cpslabteam.bank.webservice.resources.customer;
 
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.hibernate.HibernateException;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
+import org.restlet.resource.Put;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import cpslabteam.bank.database.dao.AccountDAO;
+import cpslabteam.bank.database.dao.BranchDAO;
 import cpslabteam.bank.database.dao.CustomerDAO;
 import cpslabteam.bank.database.dao.DAOFactory;
 import cpslabteam.bank.database.objects.Account;
+import cpslabteam.bank.database.objects.Branch;
 import cpslabteam.bank.database.objects.Customer;
 import cpslabteam.bank.database.transaction.DatabaseTransaction;
 import cpslabteam.bank.database.transaction.DatabaseTransactionManager;
@@ -28,7 +34,7 @@ public class CustomerAccountsResource extends ServerResource {
 	}
 
 	@Get("application/json")
-	public List<Account> getAccounts() throws InterruptedException, JsonProcessingException, HibernateException {
+	public List<Account> getAccounts() throws InterruptedException, IOException, HibernateException {
 		DatabaseTransaction transaction = DatabaseTransactionManager.getDatabaseTransaction();
 		try {
 			transaction.begin();
@@ -44,19 +50,50 @@ public class CustomerAccountsResource extends ServerResource {
 		}
 	}
 
-	@Post("application/json")
-	public List<Account> addAccount(Account account)
-			throws InterruptedException, JsonProcessingException, HibernateException {
+	@Put("application/json")
+	public Account addAccount(Representation entity)
+			throws InterruptedException, IOException, HibernateException, JSONException {
 		DatabaseTransaction transaction = DatabaseTransactionManager.getDatabaseTransaction();
 		try {
+			JSONObject request = new JSONObject(entity.getText());
+			String accountID = request.getString("id");
 			transaction.begin();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
+			AccountDAO accountDAO = daoFactory.getAccountDAO();
+			Account account = accountDAO.findById(Long.valueOf(accountID));
 			Customer customer = customerDAO.findById(customerID);
 			customer.addAccount(account);
-			List<Account> accounts = daoFactory.getAccountDAO().findCustomerAccounts(customerID);
 			transaction.commit();
-			return accounts;
+			return account;
+		} catch (Exception e) {
+			if (transaction.canRollback())
+				transaction.rollback();
+			throw e;
+		}
+	}
+
+	@Post("application/json")
+	public Account createAccount(Representation entity)
+			throws InterruptedException, IOException, HibernateException, JSONException {
+		DatabaseTransaction transaction = DatabaseTransactionManager.getDatabaseTransaction();
+		try {
+			JSONObject request = new JSONObject(entity.getText());
+			String accountNumber = request.getString("account_number");
+			String balance = request.getString("balance");
+			String branchID = request.getString("branch_id");
+			transaction.begin();
+			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
+			AccountDAO accountDAO = daoFactory.getAccountDAO();
+			BranchDAO branchDAO = daoFactory.getBranchDAO();
+			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
+			Customer customer = customerDAO.findById(customerID);
+			Branch branch = branchDAO.findById(Long.valueOf(branchID));
+			Account account = new Account(accountNumber, branch, new BigDecimal(balance));
+			Account createdAccount = accountDAO.persist(account);
+			customer.addAccount(createdAccount);
+			transaction.commit();
+			return createdAccount;
 		} catch (Exception e) {
 			if (transaction.canRollback())
 				transaction.rollback();

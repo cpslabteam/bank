@@ -1,22 +1,23 @@
 package cpslabteam.bank.webservice.resources.customer;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 
 import org.hibernate.HibernateException;
-import org.restlet.resource.Delete;
-import org.restlet.resource.Get;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.restlet.representation.Representation;
+import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
 import cpslabteam.bank.database.dao.AccountDAO;
-import cpslabteam.bank.database.dao.CustomerDAO;
 import cpslabteam.bank.database.dao.DAOFactory;
 import cpslabteam.bank.database.objects.Account;
-import cpslabteam.bank.database.objects.Customer;
 import cpslabteam.bank.database.transaction.DatabaseTransaction;
 import cpslabteam.bank.database.transaction.DatabaseTransactionManager;
 
-public class CustomerAccountResource extends ServerResource {
+public class CustomerAccountDepositResource extends ServerResource {
 
 	private Long customerID;
 	private Long accountID;
@@ -27,40 +28,26 @@ public class CustomerAccountResource extends ServerResource {
 		accountID = Long.valueOf(getAttribute("account"));
 	}
 
-	@Get("application/json")
-	public Account getAccount() throws InterruptedException, IOException, HibernateException {
+	@Post("application/json")
+	public Account deposit(Representation entity)
+			throws InterruptedException, IOException, HibernateException, JSONException {
 		DatabaseTransaction transaction = DatabaseTransactionManager.getDatabaseTransaction();
 		try {
+			JSONObject request = new JSONObject(entity.getText());
+			String amount = request.getString("amount");
 			transaction.begin();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			AccountDAO accountDAO = daoFactory.getAccountDAO();
 			Account account = accountDAO.findCustomerAccount(customerID, accountID);
+			BigDecimal newBalance = account.getBalance().add(new BigDecimal(amount));
+			account.setBalance(newBalance);
+			Account updatedAccount = accountDAO.update(account);
 			transaction.commit();
-			return account;
+			return updatedAccount;
 		} catch (Exception e) {
 			if (transaction.canRollback())
 				transaction.rollback();
 			throw e;
 		}
 	}
-
-	@Delete("application/json")
-	public void removeAccount() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getDatabaseTransaction();
-		try {
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			AccountDAO accountDAO = daoFactory.getAccountDAO();
-			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
-			Account account = accountDAO.findCustomerAccount(customerID, accountID);
-			Customer customer = customerDAO.findById(customerID);
-			customer.removeAccount(account);
-			transaction.commit();
-		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
-			throw e;
-		}
-	}
-
 }

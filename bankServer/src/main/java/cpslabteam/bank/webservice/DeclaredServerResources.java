@@ -19,8 +19,13 @@ import cpslabteam.bank.webservice.resources.branch.BranchLoanResource;
 import cpslabteam.bank.webservice.resources.branch.BranchLoansResource;
 import cpslabteam.bank.webservice.resources.branch.BranchResource;
 import cpslabteam.bank.webservice.resources.branch.BranchesResource;
+import cpslabteam.bank.webservice.resources.customer.CustomerAccountDepositResource;
 import cpslabteam.bank.webservice.resources.customer.CustomerAccountResource;
+import cpslabteam.bank.webservice.resources.customer.CustomerAccountWithdrawResource;
 import cpslabteam.bank.webservice.resources.customer.CustomerAccountsResource;
+import cpslabteam.bank.webservice.resources.customer.CustomerLoanDepositResource;
+import cpslabteam.bank.webservice.resources.customer.CustomerLoanResource;
+import cpslabteam.bank.webservice.resources.customer.CustomerLoansResource;
 import cpslabteam.bank.webservice.resources.customer.CustomerResource;
 import cpslabteam.bank.webservice.resources.customer.CustomersResource;
 import cpslabteam.bank.webservice.resources.depositor.DepositorResource;
@@ -64,6 +69,11 @@ public final class DeclaredServerResources {
 		serverResources.put("/customers/{customer}", CustomerResource.class);
 		serverResources.put("/customers/{customer}/accounts", CustomerAccountsResource.class);
 		serverResources.put("/customers/{customer}/accounts/{account}", CustomerAccountResource.class);
+		serverResources.put("/customers/{customer}/accounts/{account}/deposit", CustomerAccountDepositResource.class);
+		serverResources.put("/customers/{customer}/accounts/{account}/withdraw", CustomerAccountWithdrawResource.class);
+		serverResources.put("/customers/{customer}/loans", CustomerLoansResource.class);
+		serverResources.put("/customers/{customer}/loans/{loan}", CustomerLoanResource.class);
+		serverResources.put("/customers/{customer}/loans/{loan}/deposit", CustomerLoanDepositResource.class);
 
 		serverResources.put("/depositors", DepositorsResource.class);
 		serverResources.put("/depositors/{depositor}", DepositorResource.class);

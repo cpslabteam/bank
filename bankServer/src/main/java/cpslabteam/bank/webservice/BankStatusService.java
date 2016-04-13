@@ -74,7 +74,7 @@ public class BankStatusService extends StatusService {
 					"Could not find entity " + e.getEntityName() + " with ID " + e.getIdentifier());
 		} else if (throwable instanceof ConstraintViolationException) {
 			ConstraintViolationException e = (ConstraintViolationException) throwable;
-			return new Status(Status.CLIENT_ERROR_CONFLICT, e, e.getSQLException().getMessage(),
+			return new Status(Status.CLIENT_ERROR_CONFLICT, e, e.getConstraintName(),
 					"Request violates " + e.getConstraintName() + " constraint");
 		} else {
 			return defaultHandleException(throwable, resource);

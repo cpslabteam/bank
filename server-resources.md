@@ -24,10 +24,10 @@ All server resources that are or will be present in the Bank REST API.
   - *DELETE():* deletes account
 - **/branches/{branch}/loans**
   - *GET():* *returns* list loans in branch
-  - *POST(loan_number, ammount):* creates loan in branch *returns* created loan
+  - *POST(loan_number, amount):* creates loan in branch *returns* created loan
 - **/branches/{branch}/loans/{loan}**
   - *GET():* *returns* loan
-  - *PUT(loan_number, ammount):* updates loan *returns* updated loan
+  - *PUT(loan_number, amount):* updates loan *returns* updated loan
   - *DELETE():* deletes loan
 
 ###Account
@@ -51,10 +51,10 @@ All server resources that are or will be present in the Bank REST API.
 ###Loan
 - **/loans**
   - *GET():* *returns* list loans
-  - *POST(loan_number, ammount, branch_id):* creates loan *returns* created loan
+  - *POST(loan_number, amount, branch_id):* creates loan *returns* created loan
 - **/loans/{loan}**
   - *GET():* *returns* loan
-  - *PUT(loan_number, ammount):* updates loan *returns* updated loan
+  - *PUT(loan_number, amount):* updates loan *returns* updated loan
   - *DELETE():* deletes loan
 - **/loans/{loan}/branch**
   - *GET():* *returns* branch
@@ -82,15 +82,15 @@ All server resources that are or will be present in the Bank REST API.
   - *GET():* *returns* account
   - *DELETE():* removes account
 - **/customers/{customer}/accounts/{account}/deposit**
-  - *POST(ammount):* deposits ammount in account *returns* account
+  - *POST(amount):* deposits amount in account *returns* account
 - **/customers/{customer}/accounts/{account}/withdraw**
-  - *POST(ammount):* withdraws ammount from account *returns* account
+  - *POST(amount):* withdraws amount from account *returns* account
 - **/customers/{customer}/loans**
   - *GET():* *returns* list loans
   - *PUT(id):* add loan *returns* added loan
-  - *POST(loan_number, ammount, branch_id):* creates and adds loan *returns* created loan
+  - *POST(loan_number, amount, branch_id):* creates and adds loan *returns* created loan
 - **/customers/{customer}/loans/{loan}**
   - *GET():* *returns* loan
   - *DELETE():* deletes loan
 - **/customers/{customer}/loans/{loan}/deposit**
-  - *POST(ammount):* deposits ammount in loan *returns* loan
+  - *POST(amount):* deposits amount in loan *returns* loan

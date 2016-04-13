@@ -82,3 +82,11 @@ alter table Loan
   add constraint BRANCH_ID_FK 
   foreign key (branch_id) 
   references Branch;
+
+alter table Account
+  add constraint POSITIVE_BALANCE
+  check( balance >= 0.00);
+
+alter table Loan
+  add constraint POSITIVE_AMMOUNT
+  check( amount >= 0.00);

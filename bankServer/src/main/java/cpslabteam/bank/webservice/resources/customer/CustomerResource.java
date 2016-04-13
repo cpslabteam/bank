@@ -1,13 +1,16 @@
 package cpslabteam.bank.webservice.resources.customer;
 
+import java.io.IOException;
+
 import org.hibernate.HibernateException;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.restlet.representation.Representation;
 import org.restlet.resource.Delete;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import cpslabteam.bank.database.dao.CustomerDAO;
 import cpslabteam.bank.database.dao.DAOFactory;
@@ -25,7 +28,7 @@ public class CustomerResource extends ServerResource {
 	}
 
 	@Get("application/json")
-	public Customer getCustomer() throws InterruptedException, JsonProcessingException, HibernateException {
+	public Customer getCustomer() throws InterruptedException, IOException, HibernateException {
 		DatabaseTransaction transaction = DatabaseTransactionManager.getDatabaseTransaction();
 		try {
 			transaction.begin();
@@ -42,13 +45,21 @@ public class CustomerResource extends ServerResource {
 	}
 
 	@Post("application/json")
-	public Customer updateCustomer(Customer customer)
-			throws InterruptedException, JsonProcessingException, HibernateException {
+	public Customer updateCustomer(Representation entity)
+			throws InterruptedException, IOException, HibernateException, JSONException {
 		DatabaseTransaction transaction = DatabaseTransactionManager.getDatabaseTransaction();
 		try {
+			JSONObject request = new JSONObject(entity.getText());
+			String name = request.getString("name");
+			String street = request.getString("street");
+			String city = request.getString("city");
 			transaction.begin();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
+			Customer customer = customerDAO.findById(customerID);
+			customer.setName(name);
+			customer.setStreet(street);
+			customer.setCity(city);
 			Customer updatedCustomer = customerDAO.update(customer);
 			transaction.commit();
 			return updatedCustomer;
@@ -60,7 +71,7 @@ public class CustomerResource extends ServerResource {
 	}
 
 	@Delete("application/json")
-	public void deleteCustomer() throws InterruptedException, JsonProcessingException, HibernateException {
+	public void deleteCustomer() throws InterruptedException, IOException, HibernateException {
 		DatabaseTransaction transaction = DatabaseTransactionManager.getDatabaseTransaction();
 		try {
 			transaction.begin();

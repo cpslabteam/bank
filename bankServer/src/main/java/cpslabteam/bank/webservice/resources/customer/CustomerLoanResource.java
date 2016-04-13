@@ -1,30 +1,29 @@
-package cpslabteam.bank.webservice.resources.loan;
+package cpslabteam.bank.webservice.resources.customer;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 
 import org.hibernate.HibernateException;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.restlet.representation.Representation;
 import org.restlet.resource.Delete;
 import org.restlet.resource.Get;
-import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
-import cpslabteam.bank.database.dao.DAOFactory;
 import cpslabteam.bank.database.dao.LoanDAO;
+import cpslabteam.bank.database.dao.CustomerDAO;
+import cpslabteam.bank.database.dao.DAOFactory;
 import cpslabteam.bank.database.objects.Loan;
+import cpslabteam.bank.database.objects.Customer;
 import cpslabteam.bank.database.transaction.DatabaseTransaction;
 import cpslabteam.bank.database.transaction.DatabaseTransactionManager;
 
-public class LoanResource extends ServerResource {
+public class CustomerLoanResource extends ServerResource {
 
+	private Long customerID;
 	private Long loanID;
 
 	@Override
 	protected void doInit() throws ResourceException {
+		customerID = Long.valueOf(getAttribute("customer"));
 		loanID = Long.valueOf(getAttribute("loan"));
 	}
 
@@ -35,7 +34,7 @@ public class LoanResource extends ServerResource {
 			transaction.begin();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			LoanDAO loanDAO = daoFactory.getLoanDAO();
-			Loan loan = loanDAO.findById(loanID);
+			Loan loan = loanDAO.findCustomerLoan(customerID, loanID);
 			transaction.commit();
 			return loan;
 		} catch (Exception e) {
@@ -45,23 +44,18 @@ public class LoanResource extends ServerResource {
 		}
 	}
 
-	@Post("application/json")
-	public Loan updateLoan(Representation entity)
-			throws InterruptedException, IOException, HibernateException, JSONException {
+	@Delete("application/json")
+	public void removeLoan() throws InterruptedException, IOException, HibernateException {
 		DatabaseTransaction transaction = DatabaseTransactionManager.getDatabaseTransaction();
 		try {
-			JSONObject request = new JSONObject(entity.getText());
-			String loanNumber = request.getString("loan_number");
-			String amount = request.getString("amount");
 			transaction.begin();
 			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
 			LoanDAO loanDAO = daoFactory.getLoanDAO();
-			Loan loan = loanDAO.findById(loanID);
-			loan.setLoanNumber(loanNumber);
-			loan.setAmount(new BigDecimal(amount));
-			Loan updatedLoan = loanDAO.update(loan);
+			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
+			Loan loan = loanDAO.findCustomerLoan(customerID, loanID);
+			Customer customer = customerDAO.findById(customerID);
+			customer.removeLoan(loan);
 			transaction.commit();
-			return updatedLoan;
 		} catch (Exception e) {
 			if (transaction.canRollback())
 				transaction.rollback();
@@ -69,20 +63,5 @@ public class LoanResource extends ServerResource {
 		}
 	}
 
-	@Delete("application/json")
-	public void deleteLoan() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getDatabaseTransaction();
-		try {
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			LoanDAO loanDAO = daoFactory.getLoanDAO();
-			Loan loan = loanDAO.findById(loanID);
-			loanDAO.delete(loan);
-			transaction.commit();
-		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
-			throw e;
-		}
-	}
+
 }
