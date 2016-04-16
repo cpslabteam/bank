@@ -43,14 +43,6 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable> implements
 			throw new ObjectNotFoundException(id, getPersistentClass().getName());
 	}
 
-	public void readIntoObject(T object, ID id) {
-		getSession().load(object, id);
-	}
-
-	public T getById(ID id) {
-		return (T) getSession().get(getPersistentClass(), id);
-	}
-
 	public List<T> findAll() {
 		return findByCriteria();
 	}
@@ -76,20 +68,15 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable> implements
 		return entity;
 	}
 
-	public T saveOrUpdate(T entity) {
-		getSession().saveOrUpdate(entity);
-		return entity;
-	}
-
 	public void delete(T entity) {
 		getSession().delete(entity);
 	}
 
-	public void flush() {
+	protected void flush() {
 		getSession().flush();
 	}
 
-	public void clear() {
+	protected void clear() {
 		getSession().clear();
 	}
 

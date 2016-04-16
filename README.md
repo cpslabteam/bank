@@ -12,6 +12,7 @@ This is a simple bank application using our technology stack, and will be used i
 
 ## Technologies
 
+* [Java JDK 8]
 * [AngularJS]
 * [Restlet]
 * [Hibernate]
@@ -37,11 +38,16 @@ This is a simple bank application using our technology stack, and will be used i
  
 5. Call the server resources using *testpage.html* in *bankClient/testpage.html* (currently only for GET methods), or use the [Postman] app (recommended).
 
+####Optional
+To display colored messages in eclipse console install the [ANSI Console] plugin (instructions in the link). If not then disable the color properties in *bankServer/src/main/resources/log4j.properties* by commenting out the color related properties and uncommenting the uncolored ones.
+
 [//]: # (link variables)
 
+   [Java JDK 8]: <http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html>
    [AngularJS]: <http://angularjs.org>
    [Restlet]: <https://restlet.com/>
    [Postgresql]: <http://www.postgresql.org/>
    [Hibernate]: <http://hibernate.org/>
    [DataModel]: <https://github.com/cpslabteam/bank/blob/master/docs/models/BankDataModel.png>
    [Postman]: <https://www.getpostman.com>
+   [ANSI Console]: <http://mihai-nita.net/2013/06/03/eclipse-plugin-ansi-in-console/>

@@ -14,14 +14,16 @@ import org.restlet.engine.converter.ConverterHelper;
 import org.restlet.ext.jackson.JacksonConverter;
 import org.restlet.routing.Router;
 import org.restlet.service.CorsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import cpslabteam.bank.jsonserialization.HibernateJacksonConverter;
 
 public final class BankRestServerAPI extends Application {
 
-	private static Component component;
+	private static Logger logger = LoggerFactory.getLogger(BankRestServerAPI.class);
 
-	private static final String LOGGER_TAG = "[Bank REST API] ";
+	private static Component component;
 
 	private static final BankRestServerAPI singleton = new BankRestServerAPI();
 
@@ -32,7 +34,7 @@ public final class BankRestServerAPI extends Application {
 	public static void close() throws Exception {
 		new Thread() {
 			public void run() {
-				logInfo("Bundle closing, stopping REST server.");
+				logger.info("Bundle closing, stopping REST server.");
 				try {
 					component.stop();
 				} catch (Exception e) {
@@ -54,23 +56,16 @@ public final class BankRestServerAPI extends Application {
 					serverAttach();
 					printAvailableEndpoints();
 				} catch (InterruptedException e) {
-					logInfo("Bundle closing, stopping REST server.");
+					logger.info("Bundle closing, stopping REST server.");
 				}
 			}
 		}.start();
 	}
 
-	private static void logError(String errorMessage) {
-		System.out.println("[ERROR]" + LOGGER_TAG + errorMessage);
-	}
-
-	private static void logInfo(String infoMessage) {
-		System.out.println("[INFO]" + LOGGER_TAG + infoMessage);
-	}
-
 	private static void printAvailableEndpoints() {
-		logInfo("You can use this REST API by addressing the following endpoints:");
-		DeclaredServerResources.getDeclaredServerResourcesURLs().forEach(url -> logInfo("	- " + ROOT_ADDRESS + url));
+		logger.info("You can use this REST API by addressing the following endpoints:");
+		DeclaredServerResources.getDeclaredServerResourcesURLs()
+				.forEach(url -> logger.info("	{}{}", ROOT_ADDRESS, url));
 	}
 
 	private static void serverAttach() {
@@ -85,10 +80,10 @@ public final class BankRestServerAPI extends Application {
 		boolean serverBound = false;
 		while (!serverBound) {
 			try {
-				logInfo("Bundle started, REST server initializing...");
+				logger.info("Bundle started, REST server initializing...");
 				component.start();
 				if (component.isStarted())
-					logInfo("REST Server Started in port " + SERVER_PORT + ".");
+					logger.info("REST Server Started in port {}.", SERVER_PORT);
 				serverBound = true;
 			} catch (Exception e) {
 				try {
@@ -96,8 +91,8 @@ public final class BankRestServerAPI extends Application {
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
-				logError("Port " + SERVER_PORT
-						+ " is occupied! Check if a server is running already. Trying again in 15 sec.");
+				logger.error("Port {} is occupied! Check if a server is running already. Trying again in 15 sec.",
+						SERVER_PORT);
 				Thread.sleep(15000);
 			}
 		}
@@ -108,19 +103,19 @@ public final class BankRestServerAPI extends Application {
 		setStatusService(new BankStatusService());
 		setHibernateJacksonConverter();
 	}
-	
-	private void setHibernateJacksonConverter(){
+
+	private void setHibernateJacksonConverter() {
 		List<ConverterHelper> converters = Engine.getInstance().getRegisteredConverters();
 		JacksonConverter jacksonConverter = new JacksonConverter();
 		for (ConverterHelper converter : converters) {
-		    if (converter instanceof JacksonConverter) {
-		        jacksonConverter = (JacksonConverter) converter;
-		        break;
-		    }
+			if (converter instanceof JacksonConverter) {
+				jacksonConverter = (JacksonConverter) converter;
+				break;
+			}
 		}
-		if (jacksonConverter!=null) {
-		    converters.remove(jacksonConverter);
-		    converters.add(new HibernateJacksonConverter());
+		if (jacksonConverter != null) {
+			converters.remove(jacksonConverter);
+			converters.add(new HibernateJacksonConverter());
 		}
 	}
 

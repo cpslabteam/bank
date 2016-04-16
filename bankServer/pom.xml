@@ -37,7 +37,8 @@
 		<jackson-datatype-hibernate-version>2.7.2</jackson-datatype-hibernate-version>
 		<junit-version>4.12</junit-version>
 		<hibernate-core-version>5.1.0.Final</hibernate-core-version>
-		<slf4j-api-version>1.7.12</slf4j-api-version>
+		<slf4j-version>1.7.21</slf4j-version>
+		<jcabilog-version>0.17.1</jcabilog-version>
 		<postgresql-version>9.4-1206-jdbc42</postgresql-version>
 	</properties>
 
@@ -90,7 +91,17 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j-api-version}</version>
+			<version>${slf4j-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${slf4j-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jcabi</groupId>
+			<artifactId>jcabi-log</artifactId>
+			<version>${jcabilog-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
