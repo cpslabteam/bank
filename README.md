@@ -3,7 +3,7 @@
 This is a simple bank application using our technology stack, and will be used in comparisons with the NSX.
 
 [TODO's](TODO.md)  
-[Server Resources](server-resources.md)
+[REST API](server-resources.md)
 
 ### Contents
 [**Technologies**](#technologies)  
@@ -28,15 +28,17 @@ This is a simple bank application using our technology stack, and will be used i
 
 ## Running Instructions
 
-1. Import the *bankServer* project into Eclipse (Mars version) by importing as *File->Import->Maven->Existing Maven Projects*. 
+**Requires Eclipse Mars and PostgreSQL 9.4.4 or greater**
 
-2. Open *hibernate.cfg.xml* file in the *bankServer/src/main/resources/hibernate* directory, and change the database connection settings to fit your own, or adjust your properties to match the existing values. 
+1. Import the *bank* project into Eclipse by importing as *File->Import->Maven->Existing Maven Projects*. 
 
-3. Connect to the postgres database to use, and run the *reset_bank.sql* script, located in *bankServer/scripts/database*. 
+2. Open *hibernate.cfg.xml* file in the *bank/src/main/resources/hibernate* directory, and change the database connection settings to fit your own, or adjust your properties to match the existing values. 
 
-4. Run the *ServerActivator* class in *bankServer/src/main/java* to start the server. 
- 
-5. Call the server resources using *testpage.html* in *bankClient/testpage.html* (currently only for GET methods), or use the [Postman] app (recommended).
+3. Connect to the postgres database to use, and run the *reset_bank.sql* script, located in *bank/scripts/database*. 
+
+4. Run the *ServerActivator* class in *bank/src/main/java/cpslabteam/bank/server* to start the server. 
+
+5. Access the client by addressing http://localhost:8000 or access the REST API by addressing http://localhost:9192/*{resource}*. To test the REST API use the [Postman] app.
 
 ####Optional
 To display colored messages in eclipse console install the [ANSI Console] plugin (instructions in the link). If not then disable the color properties in *bankServer/src/main/resources/log4j.properties* by commenting out the color related properties and uncommenting the uncolored ones.

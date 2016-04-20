@@ -1,4 +1,4 @@
-#Server Resources
+#REST API
 
 All server resources that are or will be present in the Bank REST API.
 
