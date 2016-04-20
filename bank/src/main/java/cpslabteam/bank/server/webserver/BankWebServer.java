@@ -1,14 +1,16 @@
 package cpslabteam.bank.server.webserver;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
 
 import org.restlet.Application;
 import org.restlet.Component;
 import org.restlet.Restlet;
-import org.restlet.data.MediaType;
+import org.restlet.data.LocalReference;
 import org.restlet.data.Method;
 import org.restlet.data.Protocol;
+import org.restlet.data.Reference;
 import org.restlet.resource.Directory;
 import org.restlet.routing.Router;
 import org.restlet.service.CorsService;
@@ -27,11 +29,11 @@ public class BankWebServer extends Application {
 
 	private static final String ROOT_ADDRESS = "http://localhost:" + SERVER_PORT;
 	
-	private static final String DIRECTORY_BASE_PATH = "";
+	private static final String DIRECTORY_RESOURCE_PATH = "";
 	
-	private static final String DIRECTORY_ROOT_URI = "clap://thread/client";
+	private static final String DIRECTORY_RELATIVE_PATH = "client/";
 	
-	private static final String INDEX_PAGE_NAME = "index";
+	private static final String INDEX_PAGE = "index.html";
 
 	public static void close() throws Exception {
 		new Thread() {
@@ -76,7 +78,7 @@ public class BankWebServer extends Application {
 		component = new Component();
 
 		component.getServers().add(Protocol.HTTP, SERVER_PORT);
-		component.getClients().add(Protocol.CLAP);
+		component.getClients().add(Protocol.FILE);
 
 		boolean serverBound = false;
 		while (!serverBound) {
@@ -116,10 +118,10 @@ public class BankWebServer extends Application {
 	@Override
 	public synchronized Restlet createInboundRoot() {
 		final Router router = new Router(getContext());
-		Directory directory = new Directory(getContext(), DIRECTORY_ROOT_URI);
-		directory.setIndexName(INDEX_PAGE_NAME);
-		getMetadataService().addExtension("html", MediaType.TEXT_HTML);
-		router.attach(DIRECTORY_BASE_PATH, directory);
+		Reference rootUri = LocalReference.createFileReference(new File(DIRECTORY_RELATIVE_PATH));
+		Directory directory = new Directory(getContext(), Reference.decode(rootUri.toString()));
+		directory.setIndexName(INDEX_PAGE);
+        router.attach(DIRECTORY_RESOURCE_PATH, directory);
 		return router;
 	}
 	

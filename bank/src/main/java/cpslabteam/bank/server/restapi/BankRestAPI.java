@@ -84,7 +84,6 @@ public final class BankRestAPI extends Application {
 		component = new Component();
 
 		component.getServers().add(Protocol.HTTP, SERVER_PORT);
-		component.getClients().add(Protocol.CLAP);
 
 		boolean serverBound = false;
 		while (!serverBound) {
