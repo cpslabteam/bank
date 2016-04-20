@@ -14,6 +14,7 @@ This is a simple bank application using our technology stack, and will be used i
 
 * [Java JDK 8]
 * [AngularJS]
+* [Bootstrap]
 * [Restlet]
 * [Hibernate]
 * [Postgresql]
@@ -47,6 +48,7 @@ To display colored messages in eclipse console install the [ANSI Console] plugin
 
    [Java JDK 8]: <http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html>
    [AngularJS]: <http://angularjs.org>
+   [Bootstrap]: <http://getbootstrap.com/>
    [Restlet]: <https://restlet.com/>
    [Postgresql]: <http://www.postgresql.org/>
    [Hibernate]: <http://hibernate.org/>
