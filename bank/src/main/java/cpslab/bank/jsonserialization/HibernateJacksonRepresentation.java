@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module.Feature;
 
-import cpslab.bank.database.SessionManager;
+import cpslab.bank.util.db.hibernate.SessionManager;
 
 public class HibernateJacksonRepresentation<T> extends JacksonRepresentation<T> {
     public HibernateJacksonRepresentation(Representation representation,
