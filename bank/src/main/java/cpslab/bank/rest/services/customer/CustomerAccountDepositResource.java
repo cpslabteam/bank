@@ -31,22 +31,22 @@ public class CustomerAccountDepositResource extends ServerResource {
 	@Post("application/json")
 	public Account deposit(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String amount = request.getString("amount");
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			AccountDAO accountDAO = daoFactory.getAccountDAO();
+			tx.begin();
+			
+			AccountDAO accountDAO = (AccountDAO) DAOFactory.createDao(Account.class);
 			Account account = accountDAO.findCustomerAccount(customerID, accountID);
 			BigDecimal newBalance = account.getBalance().add(new BigDecimal(amount));
 			account.setBalance(newBalance);
 			Account updatedAccount = accountDAO.update(account);
-			transaction.commit();
+			tx.commit();
 			return updatedAccount;
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}

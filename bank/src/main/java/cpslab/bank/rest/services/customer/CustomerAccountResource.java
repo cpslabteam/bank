@@ -29,36 +29,36 @@ public class CustomerAccountResource extends ServerResource {
 
 	@Get("application/json")
 	public Account getAccount() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			AccountDAO accountDAO = daoFactory.getAccountDAO();
+			tx.begin();
+			
+			AccountDAO accountDAO = (AccountDAO) DAOFactory.createDao(Account.class);
 			Account account = accountDAO.findCustomerAccount(customerID, accountID);
-			transaction.commit();
+			tx.commit();
 			return account;
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}
 
 	@Delete("application/json")
 	public void removeAccount() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			AccountDAO accountDAO = daoFactory.getAccountDAO();
-			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
+			tx.begin();
+			
+			AccountDAO accountDAO = (AccountDAO) DAOFactory.createDao(Account.class);
+			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.createDao(Customer.class);
 			Account account = accountDAO.findCustomerAccount(customerID, accountID);
 			Customer customer = customerDAO.findById(customerID);
 			customer.removeAccount(account);
-			transaction.commit();
+			tx.commit();
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}

@@ -32,17 +32,17 @@ public class BranchAccountsResource extends ServerResource {
 
 	@Get("application/json")
 	public List<Account> getAccounts() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			AccountDAO accountDAO = daoFactory.getAccountDAO();
+			tx.begin();
+			
+			AccountDAO accountDAO = (AccountDAO) DAOFactory.createDao(Account.class);
 			List<Account> accounts = accountDAO.findBranchAccounts(branchID);
-			transaction.commit();
+			tx.commit();
 			return accounts;
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}
@@ -50,24 +50,24 @@ public class BranchAccountsResource extends ServerResource {
 	@Post("application/json")
 	public Account createAccount(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String accountNumber = request.getString("account_number");
 			String balance = request.getString("balance");
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			AccountDAO accountDAO = daoFactory.getAccountDAO();
-			BranchDAO branchDAO = daoFactory.getBranchDAO();
+			tx.begin();
+			
+			AccountDAO accountDAO = (AccountDAO) DAOFactory.createDao(Account.class);
+			BranchDAO branchDAO = (BranchDAO) DAOFactory.createDao(Branch.class);
 			Branch branch = branchDAO.findById(branchID);
 			Account account = new Account(accountNumber, branch, new BigDecimal(balance));
 			Account createdAccount = accountDAO.persist(account);
-			transaction.commit();
+			tx.commit();
 			return createdAccount;
 		} catch (Exception e) {
 			System.out.println(e);
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}

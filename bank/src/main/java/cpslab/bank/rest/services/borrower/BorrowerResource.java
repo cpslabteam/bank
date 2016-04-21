@@ -1,4 +1,4 @@
-package cpslab.bank.rest.borrower;
+package cpslab.bank.rest.services.borrower;
 
 import org.hibernate.HibernateException;
 import org.restlet.resource.Delete;
@@ -26,17 +26,17 @@ public class BorrowerResource extends ServerResource {
 
 	@Get("application/json")
 	public Customer getBorrower() throws InterruptedException, JsonProcessingException, HibernateException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
+			tx.begin();
+			
+			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.createDao(Customer.class);
 			Customer borrower = customerDAO.findById(borrowerID);
-			transaction.commit();
+			tx.commit();
 			return borrower;
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}
@@ -44,34 +44,34 @@ public class BorrowerResource extends ServerResource {
 	@Post("application/json")
 	public Customer updateCustomer(Customer borrower)
 			throws InterruptedException, JsonProcessingException, HibernateException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			CustomerDAO borrowerDAO = daoFactory.getCustomerDAO();
+			tx.begin();
+			
+			CustomerDAO borrowerDAO = (CustomerDAO) DAOFactory.createDao(Customer.class);
 			Customer updatedCustomer = borrowerDAO.update(borrower);
-			transaction.commit();
+			tx.commit();
 			return updatedCustomer;
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}
 
 	@Delete("application/json")
 	public void deleteCustomer() throws InterruptedException, JsonProcessingException, HibernateException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			CustomerDAO borrowerDAO = daoFactory.getCustomerDAO();
+			tx.begin();
+			
+			CustomerDAO borrowerDAO = (CustomerDAO) DAOFactory.createDao(Customer.class);
 			Customer borrower = borrowerDAO.findById(borrowerID);
 			borrowerDAO.delete(borrower);
-			transaction.commit();
+			tx.commit();
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}

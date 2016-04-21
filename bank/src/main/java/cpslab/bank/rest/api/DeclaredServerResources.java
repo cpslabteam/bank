@@ -6,13 +6,13 @@ import java.util.Set;
 
 import org.restlet.resource.ServerResource;
 
-import cpslab.bank.rest.borrower.BorrowerResource;
-import cpslab.bank.rest.borrower.BorrowersResource;
 import cpslab.bank.rest.services.account.AccountBranchResource;
 import cpslab.bank.rest.services.account.AccountOwnerResource;
 import cpslab.bank.rest.services.account.AccountOwnersResource;
 import cpslab.bank.rest.services.account.AccountResource;
 import cpslab.bank.rest.services.account.AccountsResource;
+import cpslab.bank.rest.services.borrower.BorrowerResource;
+import cpslab.bank.rest.services.borrower.BorrowersResource;
 import cpslab.bank.rest.services.branch.BranchAccountResource;
 import cpslab.bank.rest.services.branch.BranchAccountsResource;
 import cpslab.bank.rest.services.branch.BranchLoanResource;

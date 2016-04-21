@@ -29,17 +29,17 @@ public class CustomerResource extends ServerResource {
 
 	@Get("application/json")
 	public Customer getCustomer() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
+			tx.begin();
+			
+			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.createDao(Customer.class);
 			Customer customer = customerDAO.findById(customerID);
-			transaction.commit();
+			tx.commit();
 			return customer;
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}
@@ -47,42 +47,42 @@ public class CustomerResource extends ServerResource {
 	@Post("application/json")
 	public Customer updateCustomer(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String name = request.getString("name");
 			String street = request.getString("street");
 			String city = request.getString("city");
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
+			tx.begin();
+			
+			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.createDao(Customer.class);
 			Customer customer = customerDAO.findById(customerID);
 			customer.setName(name);
 			customer.setStreet(street);
 			customer.setCity(city);
 			Customer updatedCustomer = customerDAO.update(customer);
-			transaction.commit();
+			tx.commit();
 			return updatedCustomer;
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}
 
 	@Delete("application/json")
 	public void deleteCustomer() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
+			tx.begin();
+			
+			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.createDao(Customer.class);
 			Customer customer = customerDAO.findById(customerID);
 			customerDAO.delete(customer);
-			transaction.commit();
+			tx.commit();
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}

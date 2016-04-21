@@ -29,36 +29,34 @@ public class AccountOwnerResource extends ServerResource {
 
 	@Get("application/json")
 	public Customer getOwner() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
+			tx.begin();
+			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.createDao(Customer.class);
 			Customer owner = customerDAO.findAccountOwner(accountID, ownerID);
-			transaction.commit();
+			tx.commit();
 			return owner;
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}
 
 	@Delete("application/json")
 	public void removeOwner() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			AccountDAO accountDAO = daoFactory.getAccountDAO();
-			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
+			tx.begin();
+			AccountDAO accountDAO = (AccountDAO) DAOFactory.createDao(Account.class);
+			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.createDao(Customer.class);
 			Account account = accountDAO.findById(accountID);
 			Customer owner = customerDAO.findById(ownerID);
 			account.removeOwner(owner);
-			transaction.commit();
+			tx.commit();
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}

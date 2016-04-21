@@ -31,17 +31,17 @@ public class AccountOwnersResource extends ServerResource {
 
 	@Get("application/json")
 	public List<Customer> getOwners() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
+			tx.begin();
+			
+			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.createDao(Customer.class);
 			List<Customer> owners = customerDAO.findAccountOwners(accountID);
-			transaction.commit();
+			tx.commit();
 			return owners;
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}
@@ -49,22 +49,22 @@ public class AccountOwnersResource extends ServerResource {
 	@Put("application/json")
 	public Customer addOwner(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String ownerID = request.getString("id");
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			AccountDAO accountDAO = daoFactory.getAccountDAO();
-			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
+			tx.begin();
+			
+			AccountDAO accountDAO = (AccountDAO) DAOFactory.createDao(Account.class);
+			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.createDao(Customer.class);
 			Customer owner = customerDAO.findById(Long.valueOf(ownerID));
 			Account account = accountDAO.findById(accountID);
 			account.addOwner(owner);
-			transaction.commit();
+			tx.commit();
 			return owner;
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}

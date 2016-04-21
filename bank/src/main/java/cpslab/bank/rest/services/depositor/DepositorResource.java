@@ -26,17 +26,17 @@ public class DepositorResource extends ServerResource {
 
 	@Get("application/json")
 	public Customer getDepositor() throws InterruptedException, JsonProcessingException, HibernateException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
+			tx.begin();
+			
+			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.createDao(Customer.class);
 			Customer depositor = customerDAO.findById(depositorID);
-			transaction.commit();
+			tx.commit();
 			return depositor;
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}
@@ -44,34 +44,34 @@ public class DepositorResource extends ServerResource {
 	@Post("application/json")
 	public Customer updateCustomer(Customer depositor)
 			throws InterruptedException, JsonProcessingException, HibernateException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			CustomerDAO depositorDAO = daoFactory.getCustomerDAO();
+			tx.begin();
+			
+			CustomerDAO depositorDAO = (CustomerDAO) DAOFactory.createDao(Customer.class);
 			Customer updatedCustomer = depositorDAO.update(depositor);
-			transaction.commit();
+			tx.commit();
 			return updatedCustomer;
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}
 
 	@Delete("application/json")
 	public void deleteCustomer() throws InterruptedException, JsonProcessingException, HibernateException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			CustomerDAO depositorDAO = daoFactory.getCustomerDAO();
+			tx.begin();
+			
+			CustomerDAO depositorDAO = (CustomerDAO) DAOFactory.createDao(Customer.class);
 			Customer depositor = depositorDAO.findById(depositorID);
 			depositorDAO.delete(depositor);
-			transaction.commit();
+			tx.commit();
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}

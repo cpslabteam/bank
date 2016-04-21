@@ -35,17 +35,17 @@ public class CustomerAccountsResource extends ServerResource {
 
 	@Get("application/json")
 	public List<Account> getAccounts() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			AccountDAO accountDAO = daoFactory.getAccountDAO();
+			tx.begin();
+			
+			AccountDAO accountDAO = (AccountDAO) DAOFactory.createDao(Account.class);
 			List<Account> accounts = accountDAO.findCustomerAccounts(customerID);
-			transaction.commit();
+			tx.commit();
 			return accounts;
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}
@@ -53,22 +53,22 @@ public class CustomerAccountsResource extends ServerResource {
 	@Put("application/json")
 	public Account addAccount(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String accountID = request.getString("id");
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
-			AccountDAO accountDAO = daoFactory.getAccountDAO();
+			tx.begin();
+			
+			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.createDao(Customer.class);
+			AccountDAO accountDAO = (AccountDAO) DAOFactory.createDao(Account.class);
 			Account account = accountDAO.findById(Long.valueOf(accountID));
 			Customer customer = customerDAO.findById(customerID);
 			customer.addAccount(account);
-			transaction.commit();
+			tx.commit();
 			return account;
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}
@@ -76,27 +76,27 @@ public class CustomerAccountsResource extends ServerResource {
 	@Post("application/json")
 	public Account createAccount(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String accountNumber = request.getString("account_number");
 			String balance = request.getString("balance");
 			String branchID = request.getString("branch_id");
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			AccountDAO accountDAO = daoFactory.getAccountDAO();
-			BranchDAO branchDAO = daoFactory.getBranchDAO();
-			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
+			tx.begin();
+			
+			AccountDAO accountDAO = (AccountDAO) DAOFactory.createDao(Account.class);
+			BranchDAO branchDAO = (BranchDAO) DAOFactory.createDao(Branch.class);
+			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.createDao(Customer.class);
 			Customer customer = customerDAO.findById(customerID);
 			Branch branch = branchDAO.findById(Long.valueOf(branchID));
 			Account account = new Account(accountNumber, branch, new BigDecimal(balance));
 			Account createdAccount = accountDAO.persist(account);
 			customer.addAccount(createdAccount);
-			transaction.commit();
+			tx.commit();
 			return createdAccount;
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}

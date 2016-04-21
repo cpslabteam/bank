@@ -9,34 +9,34 @@ import cpslab.util.db.DatabaseTransaction;
 public class HibernateDatabaseTransaction implements DatabaseTransaction {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
-	private Transaction transaction = null;
+	private Transaction tx = null;
 
 	public HibernateDatabaseTransaction() {
 		super();
-		this.transaction = SessionManager.getSession().getTransaction();
+		this.tx = SessionManager.getSession().getTransaction();
 	}
 
 	@Override
 	public void begin() {
 		logger.debug("Database Transaction started");
-		transaction.begin();
+		tx.begin();
 	}
 
 	@Override
 	public void commit() {
 		logger.debug("Database Transaction commited");
-		transaction.commit();
+		tx.commit();
 	}
 
 	@Override
 	public void rollback() {
 		logger.debug("Database Transaction rolled back");
-		transaction.rollback();
+		tx.rollback();
 	}
 
 	@Override
 	public boolean canRollback() {
-		return transaction.getStatus().canRollback();
+		return tx.getStatus().canRollback();
 	}
 
 }

@@ -30,17 +30,17 @@ public class LoanResource extends ServerResource {
 
 	@Get("application/json")
 	public Loan getLoan() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			LoanDAO loanDAO = daoFactory.getLoanDAO();
+			tx.begin();
+			
+			LoanDAO loanDAO = (LoanDAO) DAOFactory.createDao(Loan.class);
 			Loan loan = loanDAO.findById(loanID);
-			transaction.commit();
+			tx.commit();
 			return loan;
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}
@@ -48,40 +48,40 @@ public class LoanResource extends ServerResource {
 	@Post("application/json")
 	public Loan updateLoan(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String loanNumber = request.getString("loan_number");
 			String amount = request.getString("amount");
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			LoanDAO loanDAO = daoFactory.getLoanDAO();
+			tx.begin();
+			
+			LoanDAO loanDAO = (LoanDAO) DAOFactory.createDao(Loan.class);
 			Loan loan = loanDAO.findById(loanID);
 			loan.setLoanNumber(loanNumber);
 			loan.setAmount(new BigDecimal(amount));
 			Loan updatedLoan = loanDAO.update(loan);
-			transaction.commit();
+			tx.commit();
 			return updatedLoan;
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}
 
 	@Delete("application/json")
 	public void deleteLoan() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			LoanDAO loanDAO = daoFactory.getLoanDAO();
+			tx.begin();
+			
+			LoanDAO loanDAO = (LoanDAO) DAOFactory.createDao(Loan.class);
 			Loan loan = loanDAO.findById(loanID);
 			loanDAO.delete(loan);
-			transaction.commit();
+			tx.commit();
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}

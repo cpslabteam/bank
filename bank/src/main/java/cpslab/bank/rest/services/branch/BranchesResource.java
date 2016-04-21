@@ -22,17 +22,17 @@ public class BranchesResource extends ServerResource {
 
 	@Get("application/json")
 	public List<Branch> getBranches() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			BranchDAO branchDAO = daoFactory.getBranchDAO();
+			tx.begin();
+			
+			BranchDAO branchDAO = (BranchDAO) DAOFactory.createDao(Branch.class);
 			List<Branch> branches = branchDAO.findAll();
-			transaction.commit();
+			tx.commit();
 			return branches;
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}
@@ -40,23 +40,23 @@ public class BranchesResource extends ServerResource {
 	@Post("application/json")
 	public Branch createBranch(Representation entity)
 			throws InterruptedException, HibernateException, JSONException, IOException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String branchName = request.getString("name");
 			String branchCity = request.getString("city");
 			String branchAssets = request.getString("assets");
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			BranchDAO branchDAO = daoFactory.getBranchDAO();
+			tx.begin();
+			
+			BranchDAO branchDAO = (BranchDAO) DAOFactory.createDao(Branch.class);
 			Branch branch = new Branch(branchName, branchCity, new BigDecimal(branchAssets));
 			Branch createdBranch = branchDAO.persist(branch);
-			transaction.commit();
+			tx.commit();
 			return createdBranch;
 		} catch (Exception e) {
 			System.out.println(e);
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}

@@ -31,22 +31,22 @@ public class CustomerLoanDepositResource extends ServerResource {
 	@Post("application/json")
 	public Loan deposit(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String amount = request.getString("amount");
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			LoanDAO loanDAO = daoFactory.getLoanDAO();
+			tx.begin();
+			
+			LoanDAO loanDAO = (LoanDAO) DAOFactory.createDao(Loan.class);
 			Loan loan = loanDAO.findCustomerLoan(customerID, loanID);
 			BigDecimal newBalance = loan.getAmount().subtract(new BigDecimal(amount));
 			loan.setAmount(newBalance);
 			Loan updatedLoan = loanDAO.update(loan);
-			transaction.commit();
+			tx.commit();
 			return updatedLoan;
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}

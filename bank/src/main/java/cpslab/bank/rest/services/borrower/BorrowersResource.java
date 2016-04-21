@@ -1,4 +1,4 @@
-package cpslab.bank.rest.borrower;
+package cpslab.bank.rest.services.borrower;
 
 import java.util.List;
 
@@ -18,17 +18,17 @@ public class BorrowersResource extends ServerResource {
 
 	@Get("application/json")
 	public List<Customer> getBorrowers() throws InterruptedException, JsonProcessingException, HibernateException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
+			tx.begin();
+			
+			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.createDao(Customer.class);
 			List<Customer> borrowers = customerDAO.findBorrowers();
-			transaction.commit();
+			tx.commit();
 			return borrowers;
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}

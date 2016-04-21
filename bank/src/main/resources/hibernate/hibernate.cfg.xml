@@ -26,11 +26,11 @@
 		<property name="current_session_context_class">thread</property>
 
 		<!-- Mappings -->
-		<mapping class="cpslabteam.bank.database.objects.BaseDataObject"></mapping>
-		<mapping class="cpslabteam.bank.database.objects.Customer"></mapping>
-		<mapping class="cpslabteam.bank.database.objects.Account"></mapping>
-		<mapping class="cpslabteam.bank.database.objects.Loan"></mapping>
-		<mapping class="cpslabteam.bank.database.objects.Branch"></mapping>
+		<mapping class="cpslab.bank.api.entities.BaseDataObject"></mapping>
+		<mapping class="cpslab.bank.api.entities.Customer"></mapping>
+		<mapping class="cpslab.bank.api.entities.Account"></mapping>
+		<mapping class="cpslab.bank.api.entities.Loan"></mapping>
+		<mapping class="cpslab.bank.api.entities.Branch"></mapping>
 
 	</session-factory>
 </hibernate-configuration>

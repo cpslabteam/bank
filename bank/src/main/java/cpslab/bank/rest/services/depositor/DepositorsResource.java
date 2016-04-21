@@ -20,17 +20,17 @@ public class DepositorsResource extends ServerResource {
 	@Get("application/json")
 	public List<Customer> getDepositors(Representation entity)
 			throws InterruptedException, JsonProcessingException, HibernateException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
+			tx.begin();
+			
+			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.createDao(Customer.class);
 			List<Customer> depositors = customerDAO.findDepositors();
-			transaction.commit();
+			tx.commit();
 			return depositors;
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}

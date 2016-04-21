@@ -29,36 +29,36 @@ public class CustomerLoanResource extends ServerResource {
 
 	@Get("application/json")
 	public Loan getLoan() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			LoanDAO loanDAO = daoFactory.getLoanDAO();
+			tx.begin();
+			
+			LoanDAO loanDAO = (LoanDAO) DAOFactory.createDao(Loan.class);
 			Loan loan = loanDAO.findCustomerLoan(customerID, loanID);
-			transaction.commit();
+			tx.commit();
 			return loan;
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}
 
 	@Delete("application/json")
 	public void removeLoan() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			LoanDAO loanDAO = daoFactory.getLoanDAO();
-			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
+			tx.begin();
+			
+			LoanDAO loanDAO = (LoanDAO) DAOFactory.createDao(Loan.class);
+			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.createDao(Customer.class);
 			Loan loan = loanDAO.findCustomerLoan(customerID, loanID);
 			Customer customer = customerDAO.findById(customerID);
 			customer.removeLoan(loan);
-			transaction.commit();
+			tx.commit();
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}

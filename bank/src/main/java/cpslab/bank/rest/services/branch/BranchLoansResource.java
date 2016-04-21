@@ -32,17 +32,17 @@ public class BranchLoansResource extends ServerResource {
 
 	@Get("application/json")
 	public List<Loan> getLoans() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			LoanDAO loanDAO = daoFactory.getLoanDAO();
+			tx.begin();
+			
+			LoanDAO loanDAO = (LoanDAO) DAOFactory.createDao(Loan.class);
 			List<Loan> loans = loanDAO.findBranchLoans(branchID);
-			transaction.commit();
+			tx.commit();
 			return loans;
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}
@@ -50,24 +50,24 @@ public class BranchLoansResource extends ServerResource {
 	@Post("application/json")
 	public Loan createLoan(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String loanNumber = request.getString("loan_number");
 			String amount = request.getString("amount");
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			LoanDAO loanDAO = daoFactory.getLoanDAO();
-			BranchDAO branchDAO = daoFactory.getBranchDAO();
+			tx.begin();
+			
+			LoanDAO loanDAO = (LoanDAO) DAOFactory.createDao(Loan.class);
+			BranchDAO branchDAO = (BranchDAO) DAOFactory.createDao(Branch.class);
 			Branch branch = branchDAO.findById(branchID);
 			Loan loan = new Loan(loanNumber, branch, new BigDecimal(amount));
 			Loan createdLoan = loanDAO.persist(loan);
-			transaction.commit();
+			tx.commit();
 			return createdLoan;
 		} catch (Exception e) {
 			System.out.println(e);
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}

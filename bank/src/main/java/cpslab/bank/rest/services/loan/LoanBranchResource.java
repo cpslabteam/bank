@@ -30,18 +30,18 @@ public class LoanBranchResource extends ServerResource {
 
 	@Get("application/json")
 	public Branch getBranch() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			LoanDAO loanDAO = daoFactory.getLoanDAO();
+			tx.begin();
+			
+			LoanDAO loanDAO = (LoanDAO) DAOFactory.createDao(Loan.class);
 			Loan loan = loanDAO.findById(loanID);
 			Branch branch = loan.getBranch();
-			transaction.commit();
+			tx.commit();
 			return branch;
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}
@@ -49,23 +49,23 @@ public class LoanBranchResource extends ServerResource {
 	@Put("application/json")
 	public Branch changeBranch(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String branchID = request.getString("id");
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			LoanDAO loanDAO = daoFactory.getLoanDAO();
-			BranchDAO branchDAO = daoFactory.getBranchDAO();
+			tx.begin();
+			
+			LoanDAO loanDAO = (LoanDAO) DAOFactory.createDao(Loan.class);
+			BranchDAO branchDAO = (BranchDAO) DAOFactory.createDao(Branch.class);
 			Loan loan = loanDAO.findById(loanID);
 			Branch branch = branchDAO.findById(Long.valueOf(branchID));
 			loan.setBranch(branch);
 			loanDAO.update(loan);
-			transaction.commit();
+			tx.commit();
 			return branch;
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}

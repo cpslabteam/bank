@@ -35,17 +35,17 @@ public class CustomerLoansResource extends ServerResource {
 
 	@Get("application/json")
 	public List<Loan> getLoans() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			LoanDAO loanDAO = daoFactory.getLoanDAO();
+			tx.begin();
+			
+			LoanDAO loanDAO = (LoanDAO) DAOFactory.createDao(Loan.class);
 			List<Loan> loans = loanDAO.findCustomerLoans(customerID);
-			transaction.commit();
+			tx.commit();
 			return loans;
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}
@@ -53,22 +53,22 @@ public class CustomerLoansResource extends ServerResource {
 	@Put("application/json")
 	public Loan addLoan(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String loanID = request.getString("id");
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
-			LoanDAO loanDAO = daoFactory.getLoanDAO();
+			tx.begin();
+			
+			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.createDao(Customer.class);
+			LoanDAO loanDAO = (LoanDAO) DAOFactory.createDao(Loan.class);
 			Loan loan = loanDAO.findById(Long.valueOf(loanID));
 			Customer customer = customerDAO.findById(customerID);
 			customer.addLoan(loan);
-			transaction.commit();
+			tx.commit();
 			return loan;
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}
@@ -76,27 +76,27 @@ public class CustomerLoansResource extends ServerResource {
 	@Post("application/json")
 	public Loan createLoan(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
-		DatabaseTransaction transaction = DatabaseTransactionManager.getTransaction();
+		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String loanNumber = request.getString("loan_number");
 			String amount = request.getString("amount");
 			String branchID = request.getString("branch_id");
-			transaction.begin();
-			DAOFactory daoFactory = DAOFactory.instance(DAOFactory.HIBERNATE);
-			LoanDAO loanDAO = daoFactory.getLoanDAO();
-			BranchDAO branchDAO = daoFactory.getBranchDAO();
-			CustomerDAO customerDAO = daoFactory.getCustomerDAO();
+			tx.begin();
+			
+			LoanDAO loanDAO = (LoanDAO) DAOFactory.createDao(Loan.class);
+			BranchDAO branchDAO = (BranchDAO) DAOFactory.createDao(Branch.class);
+			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.createDao(Customer.class);
 			Customer customer = customerDAO.findById(customerID);
 			Branch branch = branchDAO.findById(Long.valueOf(branchID));
 			Loan loan = new Loan(loanNumber, branch, new BigDecimal(amount));
 			Loan createdLoan = loanDAO.persist(loan);
 			customer.addLoan(createdLoan);
-			transaction.commit();
+			tx.commit();
 			return createdLoan;
 		} catch (Exception e) {
-			if (transaction.canRollback())
-				transaction.rollback();
+			if (tx.canRollback())
+				tx.rollback();
 			throw e;
 		}
 	}
