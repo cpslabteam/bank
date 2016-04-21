@@ -1,4 +1,4 @@
-package cpslab.bank.jsonserialization;
+package cpslab.util.rest;
 
 import java.io.IOException;
 

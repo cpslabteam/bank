@@ -8,7 +8,7 @@ import org.hibernate.criterion.Restrictions;
 
 import cpslab.bank.api.dao.CustomerDAO;
 import cpslab.bank.api.entities.Customer;
-import cpslab.bank.util.db.hibernate.HibernateDAO;
+import cpslab.util.db.hibernate.HibernateDAO;
 
 public class HibernateCustomerDAO extends HibernateDAO<Customer>implements CustomerDAO {
 

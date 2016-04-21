@@ -1,4 +1,4 @@
-package cpslab.bank.jsonserialization;
+package cpslab.util.rest;
 
 import org.restlet.data.MediaType;
 import org.restlet.ext.jackson.JacksonRepresentation;
@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module.Feature;
 
-import cpslab.bank.util.db.hibernate.SessionManager;
+import cpslab.util.db.hibernate.SessionManager;
 
 public class HibernateJacksonRepresentation<T> extends JacksonRepresentation<T> {
     public HibernateJacksonRepresentation(Representation representation,

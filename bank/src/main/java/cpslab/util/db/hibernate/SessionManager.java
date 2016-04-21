@@ -1,4 +1,4 @@
-package cpslab.bank.util.db.hibernate;
+package cpslab.util.db.hibernate;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;

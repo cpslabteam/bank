@@ -7,7 +7,7 @@ import org.hibernate.Query;
 
 import cpslab.bank.api.dao.LoanDAO;
 import cpslab.bank.api.entities.Loan;
-import cpslab.bank.util.db.hibernate.HibernateDAO;
+import cpslab.util.db.hibernate.HibernateDAO;
 
 public class HibernateLoanDAO extends
         HibernateDAO<Loan>

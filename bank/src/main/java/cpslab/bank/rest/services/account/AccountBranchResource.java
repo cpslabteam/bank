@@ -19,9 +19,9 @@ import cpslab.bank.api.entities.Account;
 import cpslab.bank.api.entities.Branch;
 import cpslab.bank.internal.dao.HibernateAccountDAO;
 import cpslab.bank.internal.dao.HibernateDAOFactory;
-import cpslab.bank.util.db.DatabaseTransaction;
-import cpslab.bank.util.db.DatabaseTransactionManager;
-import cpslab.bank.util.db.GenericDAO;
+import cpslab.util.db.DatabaseTransaction;
+import cpslab.util.db.DatabaseTransactionManager;
+import cpslab.util.db.GenericDAO;
 
 public class AccountBranchResource extends
         ServerResource {

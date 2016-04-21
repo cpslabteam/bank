@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import cpslab.bank.api.entities.BaseDataObject;
-import cpslab.bank.util.db.GenericDAO;
+import cpslab.util.db.GenericDAO;
 
 public abstract class DAOFactory {
     private static Map<Class<?>, Class<?>> daoByDataObject = new HashMap<>();

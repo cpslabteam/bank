@@ -1,4 +1,4 @@
-package cpslab.bank.jsonserialization;
+package cpslab.util.rest;
 
 public abstract class JsonViews {
 

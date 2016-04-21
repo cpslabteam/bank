@@ -16,8 +16,8 @@ import org.restlet.resource.ServerResource;
 import cpslab.bank.api.dao.DAOFactory;
 import cpslab.bank.api.dao.LoanDAO;
 import cpslab.bank.api.entities.Loan;
-import cpslab.bank.util.db.DatabaseTransaction;
-import cpslab.bank.util.db.DatabaseTransactionManager;
+import cpslab.util.db.DatabaseTransaction;
+import cpslab.util.db.DatabaseTransactionManager;
 
 public class LoanResource extends ServerResource {
 

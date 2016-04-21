@@ -1,4 +1,4 @@
-package cpslab.bank.util.db;
+package cpslab.util.db;
 
 import java.util.List;
 

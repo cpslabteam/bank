@@ -7,7 +7,7 @@ import org.hibernate.Query;
 
 import cpslab.bank.api.dao.AccountDAO;
 import cpslab.bank.api.entities.Account;
-import cpslab.bank.util.db.hibernate.HibernateDAO;
+import cpslab.util.db.hibernate.HibernateDAO;
 
 public class HibernateAccountDAO extends HibernateDAO<Account>implements AccountDAO {
 

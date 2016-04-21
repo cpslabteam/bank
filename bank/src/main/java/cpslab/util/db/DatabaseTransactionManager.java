@@ -1,6 +1,6 @@
-package cpslab.bank.util.db;
+package cpslab.util.db;
 
-import cpslab.bank.util.db.hibernate.HibernateDatabaseTransaction;
+import cpslab.util.db.hibernate.HibernateDatabaseTransaction;
 
 public final class DatabaseTransactionManager {
 

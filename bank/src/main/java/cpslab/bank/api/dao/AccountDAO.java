@@ -3,7 +3,7 @@ package cpslab.bank.api.dao;
 import java.util.List;
 
 import cpslab.bank.api.entities.Account;
-import cpslab.bank.util.db.GenericDAO;
+import cpslab.util.db.GenericDAO;
 
 public interface AccountDAO extends GenericDAO<Account> {
 

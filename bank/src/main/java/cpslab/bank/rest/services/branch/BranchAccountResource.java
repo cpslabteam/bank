@@ -16,8 +16,8 @@ import org.restlet.resource.ServerResource;
 import cpslab.bank.api.dao.AccountDAO;
 import cpslab.bank.api.dao.DAOFactory;
 import cpslab.bank.api.entities.Account;
-import cpslab.bank.util.db.DatabaseTransaction;
-import cpslab.bank.util.db.DatabaseTransactionManager;
+import cpslab.util.db.DatabaseTransaction;
+import cpslab.util.db.DatabaseTransactionManager;
 
 public class BranchAccountResource extends ServerResource {
 

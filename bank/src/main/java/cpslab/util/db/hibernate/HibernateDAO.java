@@ -1,4 +1,4 @@
-package cpslab.bank.util.db.hibernate;
+package cpslab.util.db.hibernate;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
@@ -10,7 +10,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Example;
 
-import cpslab.bank.util.db.GenericDAO;
+import cpslab.util.db.GenericDAO;
 
 public abstract class HibernateDAO<T> implements GenericDAO<T> {
 

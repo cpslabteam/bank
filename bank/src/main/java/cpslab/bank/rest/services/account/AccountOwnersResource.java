@@ -17,8 +17,8 @@ import cpslab.bank.api.dao.CustomerDAO;
 import cpslab.bank.api.dao.DAOFactory;
 import cpslab.bank.api.entities.Account;
 import cpslab.bank.api.entities.Customer;
-import cpslab.bank.util.db.DatabaseTransaction;
-import cpslab.bank.util.db.DatabaseTransactionManager;
+import cpslab.util.db.DatabaseTransaction;
+import cpslab.util.db.DatabaseTransactionManager;
 
 public class AccountOwnersResource extends ServerResource {
 

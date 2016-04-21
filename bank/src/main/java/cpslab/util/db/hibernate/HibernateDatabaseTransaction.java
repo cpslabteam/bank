@@ -1,10 +1,10 @@
-package cpslab.bank.util.db.hibernate;
+package cpslab.util.db.hibernate;
 
 import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cpslab.bank.util.db.DatabaseTransaction;
+import cpslab.util.db.DatabaseTransaction;
 
 public class HibernateDatabaseTransaction implements DatabaseTransaction {
 

@@ -1,4 +1,4 @@
-package cpslab.bank.jsonserialization;
+package cpslab.util.rest;
 
 import org.restlet.data.MediaType;
 import org.restlet.ext.jackson.JacksonConverter;

@@ -19,7 +19,7 @@ import org.restlet.service.CorsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cpslab.bank.jsonserialization.HibernateJacksonConverter;
+import cpslab.util.rest.HibernateJacksonConverter;
 
 public final class BankRestAPI extends Application {
 
