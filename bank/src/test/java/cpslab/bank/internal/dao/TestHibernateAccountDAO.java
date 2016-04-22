@@ -1,0 +1,29 @@
+package cpslab.bank.internal.dao;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import cpslab.bank.api.dao.AccountDAO;
+import cpslab.bank.api.entities.Account;
+import cpslab.util.db.DAOFactory;
+
+public class TestHibernateAccountDAO {
+
+    /**
+     * Make sure that account DAO is in the DAO Factory
+     *
+     * @throws Exception the exception
+     */
+    @BeforeClass
+    public static void beforeClass() throws Exception {
+        DAOFactory.registerDao(Account.class, HibernateAccountDAO.class);
+    }
+
+    @Test
+    public void test() {
+        AccountDAO dao = (AccountDAO) DAOFactory.create(Account.class);
+        
+
+    }
+
+}
