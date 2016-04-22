@@ -17,10 +17,10 @@ import org.restlet.resource.ServerResource;
 import cpslab.bank.api.dao.AccountDAO;
 import cpslab.bank.api.dao.BranchDAO;
 import cpslab.bank.api.dao.CustomerDAO;
-import cpslab.bank.api.dao.DAOFactory;
 import cpslab.bank.api.entities.Account;
 import cpslab.bank.api.entities.Branch;
 import cpslab.bank.api.entities.Customer;
+import cpslab.util.db.DAOFactory;
 import cpslab.util.db.DatabaseTransaction;
 import cpslab.util.db.DatabaseTransactionManager;
 
@@ -39,7 +39,7 @@ public class CustomerAccountsResource extends ServerResource {
 		try {
 			tx.begin();
 			
-			AccountDAO accountDAO = (AccountDAO) DAOFactory.createDao(Account.class);
+			AccountDAO accountDAO = (AccountDAO) DAOFactory.create(Account.class);
 			List<Account> accounts = accountDAO.findCustomerAccounts(customerID);
 			tx.commit();
 			return accounts;
@@ -59,8 +59,8 @@ public class CustomerAccountsResource extends ServerResource {
 			String accountID = request.getString("id");
 			tx.begin();
 			
-			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.createDao(Customer.class);
-			AccountDAO accountDAO = (AccountDAO) DAOFactory.createDao(Account.class);
+			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.create(Customer.class);
+			AccountDAO accountDAO = (AccountDAO) DAOFactory.create(Account.class);
 			Account account = accountDAO.findById(Long.valueOf(accountID));
 			Customer customer = customerDAO.findById(customerID);
 			customer.addAccount(account);
@@ -84,9 +84,9 @@ public class CustomerAccountsResource extends ServerResource {
 			String branchID = request.getString("branch_id");
 			tx.begin();
 			
-			AccountDAO accountDAO = (AccountDAO) DAOFactory.createDao(Account.class);
-			BranchDAO branchDAO = (BranchDAO) DAOFactory.createDao(Branch.class);
-			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.createDao(Customer.class);
+			AccountDAO accountDAO = (AccountDAO) DAOFactory.create(Account.class);
+			BranchDAO branchDAO = (BranchDAO) DAOFactory.create(Branch.class);
+			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.create(Customer.class);
 			Customer customer = customerDAO.findById(customerID);
 			Branch branch = branchDAO.findById(Long.valueOf(branchID));
 			Account account = new Account(accountNumber, branch, new BigDecimal(balance));

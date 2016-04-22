@@ -11,14 +11,16 @@ import javax.persistence.ManyToMany;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import cpslab.util.db.hibernate.BaseDataEntity;
+
 /**
  * Represents the Customer object and defines the mapping of it's table in the
  * database. Contains Name, Street, and City.
  *
- * @see BaseDataObject
+ * @see BaseDataEntity
  */
 @Entity(name = "Customer")
-public class Customer extends BaseDataObject {
+public class Customer extends BaseDataEntity {
 
 	@Column(name = "name", nullable = false)
 	private String name;
@@ -29,11 +31,11 @@ public class Customer extends BaseDataObject {
 	@Column(name = "city", nullable = false)
 	private String city;
 
-	@JsonSerialize(contentAs = BaseDataObject.class)
+	@JsonSerialize(contentAs = BaseDataEntity.class)
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	private Set<Account> accounts;
 
-	@JsonSerialize(contentAs = BaseDataObject.class)
+	@JsonSerialize(contentAs = BaseDataEntity.class)
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	private Set<Loan> loans;
 

@@ -27,7 +27,7 @@ public final class SessionManager {
 	static {
 		sessionFactory = createSessionFactory();
 	}
-
+	
 	public static SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}

@@ -10,9 +10,9 @@ import org.restlet.resource.ServerResource;
 
 import cpslab.bank.api.dao.AccountDAO;
 import cpslab.bank.api.dao.CustomerDAO;
-import cpslab.bank.api.dao.DAOFactory;
 import cpslab.bank.api.entities.Account;
 import cpslab.bank.api.entities.Customer;
+import cpslab.util.db.DAOFactory;
 import cpslab.util.db.DatabaseTransaction;
 import cpslab.util.db.DatabaseTransactionManager;
 
@@ -33,7 +33,7 @@ public class CustomerAccountResource extends ServerResource {
 		try {
 			tx.begin();
 			
-			AccountDAO accountDAO = (AccountDAO) DAOFactory.createDao(Account.class);
+			AccountDAO accountDAO = (AccountDAO) DAOFactory.create(Account.class);
 			Account account = accountDAO.findCustomerAccount(customerID, accountID);
 			tx.commit();
 			return account;
@@ -50,8 +50,8 @@ public class CustomerAccountResource extends ServerResource {
 		try {
 			tx.begin();
 			
-			AccountDAO accountDAO = (AccountDAO) DAOFactory.createDao(Account.class);
-			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.createDao(Customer.class);
+			AccountDAO accountDAO = (AccountDAO) DAOFactory.create(Account.class);
+			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.create(Customer.class);
 			Account account = accountDAO.findCustomerAccount(customerID, accountID);
 			Customer customer = customerDAO.findById(customerID);
 			customer.removeAccount(account);

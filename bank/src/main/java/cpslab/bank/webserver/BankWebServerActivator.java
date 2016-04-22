@@ -17,13 +17,13 @@ import org.restlet.service.CorsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class BankWebServer extends Application {
+public class BankWebServerActivator extends Application {
 
-	private static Logger logger = LoggerFactory.getLogger(BankWebServer.class);
+	private static Logger logger = LoggerFactory.getLogger(BankWebServerActivator.class);
 
 	private static Component component;
 
-	private static final BankWebServer singleton = new BankWebServer();
+	private static final BankWebServerActivator singleton = new BankWebServerActivator();
 
 	private static final int SERVER_PORT = 8000;
 
@@ -48,7 +48,7 @@ public class BankWebServer extends Application {
 		}.start();
 	}
 
-	public static BankWebServer getInstance() {
+	public static BankWebServerActivator getInstance() {
 		return singleton;
 	}
 
@@ -101,7 +101,7 @@ public class BankWebServer extends Application {
 		}
 	}
 
-	private BankWebServer() {
+	private BankWebServerActivator() {
 		configureCorsService();
 	}
 

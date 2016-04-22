@@ -12,8 +12,8 @@ import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
 import cpslab.bank.api.dao.AccountDAO;
-import cpslab.bank.api.dao.DAOFactory;
 import cpslab.bank.api.entities.Account;
+import cpslab.util.db.DAOFactory;
 import cpslab.util.db.DatabaseTransaction;
 import cpslab.util.db.DatabaseTransactionManager;
 
@@ -37,7 +37,7 @@ public class CustomerAccountDepositResource extends ServerResource {
 			String amount = request.getString("amount");
 			tx.begin();
 			
-			AccountDAO accountDAO = (AccountDAO) DAOFactory.createDao(Account.class);
+			AccountDAO accountDAO = (AccountDAO) DAOFactory.create(Account.class);
 			Account account = accountDAO.findCustomerAccount(customerID, accountID);
 			BigDecimal newBalance = account.getBalance().add(new BigDecimal(amount));
 			account.setBalance(newBalance);

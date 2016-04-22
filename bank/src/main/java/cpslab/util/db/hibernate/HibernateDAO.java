@@ -1,6 +1,5 @@
 package cpslab.util.db.hibernate;
 
-import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
@@ -10,84 +9,99 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Example;
 
+import cpslab.bank.api.entities.Account;
+import cpslab.bank.internal.dao.HibernateAccountDAO;
+import cpslab.util.db.DAOFactory;
 import cpslab.util.db.GenericDAO;
 
-public abstract class HibernateDAO<T> implements GenericDAO<T> {
+/**
+ * A base implementation for Hoibernate DAOs.
+ * <p>
+ * Must be instantiated and a default constructor has to be provided.
+ * 
+ * @param <T>
+ */
+public abstract class HibernateDAO<T>
+        implements GenericDAO<T> {
 
-	private Class<T> persistentClass;
-	private Session session;
+    private Class<T> persistentClass;
+    private Session session;
 
-	@SuppressWarnings("unchecked")
-	public HibernateDAO() {
-		this.persistentClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass())
-				.getActualTypeArguments()[0];
-	}
+    static {
+        DAOFactory.registerDao(Account.class, HibernateAccountDAO.class);
+    }
 
-	public void setSession(Session s) {
-		this.session = s;
-	}
+    @SuppressWarnings("unchecked")
+    public HibernateDAO() {
+        this.persistentClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass())
+                .getActualTypeArguments()[0];
+    }
 
-	protected Session getSession() {
-		if (session == null)
-			throw new IllegalStateException("Session has not been set on DAO before usage");
-		return session;
-	}
+    public void setSession(Session s) {
+        this.session = s;
+    }
 
-	public Class<T> getPersistentClass() {
-		return persistentClass;
-	}
+    protected Session getSession() {
+        if (session == null)
+            throw new IllegalStateException("Session has not been set on DAO before usage");
+        return session;
+    }
 
-	public T findById(Long id) {
-		T object = (T) getSession().get(getPersistentClass(), id);
-		if (object != null)
-			return object;
-		else
-			throw new ObjectNotFoundException(id, getPersistentClass().getName());
-	}
+    public Class<T> getPersistentClass() {
+        return persistentClass;
+    }
 
-	public List<T> findAll() {
-		return findByCriteria();
-	}
+    public T findById(Long id) {
+        T object = (T) getSession().get(getPersistentClass(), id);
+        if (object != null)
+            return object;
+        else
+            throw new ObjectNotFoundException(id, getPersistentClass().getName());
+    }
 
-	@SuppressWarnings("unchecked")
-	public List<T> findByExample(T exampleInstance, String[] excludeProperty) {
-		Criteria crit = getSession().createCriteria(getPersistentClass());
-		Example example = Example.create(exampleInstance);
-		for (String exclude : excludeProperty) {
-			example.excludeProperty(exclude);
-		}
-		crit.add(example);
-		return crit.list();
-	}
+    public List<T> findAll() {
+        return findByCriteria();
+    }
 
-	public T update(T entity) {
-		getSession().update(entity);
-		return entity;
-	}
+    @SuppressWarnings("unchecked")
+    public List<T> findByExample(T exampleInstance, String[] excludeProperty) {
+        Criteria crit = getSession().createCriteria(getPersistentClass());
+        Example example = Example.create(exampleInstance);
+        for (String exclude : excludeProperty) {
+            example.excludeProperty(exclude);
+        }
+        crit.add(example);
+        return crit.list();
+    }
 
-	public T persist(T entity) {
-		getSession().persist(entity);
-		return entity;
-	}
+    public T update(T entity) {
+        getSession().update(entity);
+        return entity;
+    }
 
-	public void delete(T entity) {
-		getSession().delete(entity);
-	}
+    public T persist(T entity) {
+        getSession().persist(entity);
+        return entity;
+    }
 
-	protected void flush() {
-		getSession().flush();
-	}
+    public void delete(T entity) {
+        getSession().delete(entity);
+    }
 
-	protected void clear() {
-		getSession().clear();
-	}
+    protected void flush() {
+        getSession().flush();
+    }
 
-	@SuppressWarnings("unchecked")
-	protected List<T> findByCriteria(Criterion... criterion) {
-		Criteria crit = getSession().createCriteria(getPersistentClass());
-		for (Criterion c : criterion) {
-			crit.add(c);
-		}
-		return crit.list();
-	}
+    protected void clear() {
+        getSession().clear();
+    }
+
+    @SuppressWarnings("unchecked")
+    protected List<T> findByCriteria(Criterion... criterion) {
+        Criteria crit = getSession().createCriteria(getPersistentClass());
+        for (Criterion c : criterion) {
+            crit.add(c);
+        }
+        return crit.list();
+    }
 }

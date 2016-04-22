@@ -13,8 +13,10 @@ import org.hibernate.annotations.NaturalId;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import cpslab.util.db.hibernate.BaseDataEntity;
+
 @Entity(name = "Branch")
-public class Branch extends BaseDataObject {
+public class Branch extends BaseDataEntity {
 
 	@Column(name = "name", nullable = false)
 	@NaturalId(mutable = true)
@@ -26,11 +28,11 @@ public class Branch extends BaseDataObject {
 	@Column(name = "assets", nullable = false)
 	private BigDecimal assets;
 	
-	@JsonSerialize(contentAs = BaseDataObject.class)
+	@JsonSerialize(contentAs = BaseDataEntity.class)
 	@OneToMany(mappedBy = "branch", cascade={ CascadeType.PERSIST, CascadeType.MERGE})
 	private Set<Account> accounts;
 	
-	@JsonSerialize(contentAs = BaseDataObject.class)
+	@JsonSerialize(contentAs = BaseDataEntity.class)
 	@OneToMany(mappedBy = "branch", cascade={ CascadeType.PERSIST, CascadeType.MERGE})
 	private Set<Loan> loans;
 

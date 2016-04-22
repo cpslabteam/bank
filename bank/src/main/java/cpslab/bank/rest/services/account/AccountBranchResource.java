@@ -13,9 +13,9 @@ import org.restlet.resource.ServerResource;
 
 import cpslab.bank.api.dao.AccountDAO;
 import cpslab.bank.api.dao.BranchDAO;
-import cpslab.bank.api.dao.DAOFactory;
 import cpslab.bank.api.entities.Account;
 import cpslab.bank.api.entities.Branch;
+import cpslab.util.db.DAOFactory;
 import cpslab.util.db.DatabaseTransaction;
 import cpslab.util.db.DatabaseTransactionManager;
 
@@ -33,7 +33,7 @@ public class AccountBranchResource extends ServerResource {
 		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
 		try {
 			tx.begin();
-			AccountDAO accountDAO = (AccountDAO) DAOFactory.createDao(Account.class);
+			AccountDAO accountDAO = (AccountDAO) DAOFactory.create(Account.class);
 			Account account = accountDAO.findById(accountID);
 			Branch branch = account.getBranch();
 			tx.commit();
@@ -53,8 +53,8 @@ public class AccountBranchResource extends ServerResource {
 			JSONObject request = new JSONObject(entity.getText());
 			String branchID = request.getString("id");
 			tx.begin();
-			AccountDAO accountDAO = (AccountDAO) DAOFactory.createDao(Account.class);
-			BranchDAO branchDAO = (BranchDAO) DAOFactory.createDao(Branch.class);
+			AccountDAO accountDAO = (AccountDAO) DAOFactory.create(Account.class);
+			BranchDAO branchDAO = (BranchDAO) DAOFactory.create(Branch.class);
 			Account account = accountDAO.findById(accountID);
 			Branch branch = branchDAO.findById(Long.valueOf(branchID));
 			account.setBranch(branch);

@@ -1,4 +1,4 @@
-package cpslab.bank.api.entities;
+package cpslab.util.db.hibernate;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @MappedSuperclass
 @JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
-public abstract class BaseDataObject {
+public abstract class BaseDataEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)

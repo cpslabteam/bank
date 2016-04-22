@@ -11,9 +11,9 @@ import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
-import cpslab.bank.api.dao.DAOFactory;
 import cpslab.bank.api.dao.LoanDAO;
 import cpslab.bank.api.entities.Loan;
+import cpslab.util.db.DAOFactory;
 import cpslab.util.db.DatabaseTransaction;
 import cpslab.util.db.DatabaseTransactionManager;
 
@@ -37,7 +37,7 @@ public class CustomerLoanDepositResource extends ServerResource {
 			String amount = request.getString("amount");
 			tx.begin();
 			
-			LoanDAO loanDAO = (LoanDAO) DAOFactory.createDao(Loan.class);
+			LoanDAO loanDAO = (LoanDAO) DAOFactory.create(Loan.class);
 			Loan loan = loanDAO.findCustomerLoan(customerID, loanID);
 			BigDecimal newBalance = loan.getAmount().subtract(new BigDecimal(amount));
 			loan.setAmount(newBalance);

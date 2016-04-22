@@ -13,8 +13,8 @@ import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
 
 import cpslab.bank.api.dao.BranchDAO;
-import cpslab.bank.api.dao.DAOFactory;
 import cpslab.bank.api.entities.Branch;
+import cpslab.util.db.DAOFactory;
 import cpslab.util.db.DatabaseTransaction;
 import cpslab.util.db.DatabaseTransactionManager;
 
@@ -26,7 +26,7 @@ public class BranchesResource extends ServerResource {
 		try {
 			tx.begin();
 			
-			BranchDAO branchDAO = (BranchDAO) DAOFactory.createDao(Branch.class);
+			BranchDAO branchDAO = (BranchDAO) DAOFactory.create(Branch.class);
 			List<Branch> branches = branchDAO.findAll();
 			tx.commit();
 			return branches;
@@ -48,7 +48,7 @@ public class BranchesResource extends ServerResource {
 			String branchAssets = request.getString("assets");
 			tx.begin();
 			
-			BranchDAO branchDAO = (BranchDAO) DAOFactory.createDao(Branch.class);
+			BranchDAO branchDAO = (BranchDAO) DAOFactory.create(Branch.class);
 			Branch branch = new Branch(branchName, branchCity, new BigDecimal(branchAssets));
 			Branch createdBranch = branchDAO.persist(branch);
 			tx.commit();

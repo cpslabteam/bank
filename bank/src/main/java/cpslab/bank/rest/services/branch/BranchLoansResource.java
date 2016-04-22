@@ -14,10 +14,10 @@ import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
 import cpslab.bank.api.dao.BranchDAO;
-import cpslab.bank.api.dao.DAOFactory;
 import cpslab.bank.api.dao.LoanDAO;
 import cpslab.bank.api.entities.Branch;
 import cpslab.bank.api.entities.Loan;
+import cpslab.util.db.DAOFactory;
 import cpslab.util.db.DatabaseTransaction;
 import cpslab.util.db.DatabaseTransactionManager;
 
@@ -36,7 +36,7 @@ public class BranchLoansResource extends ServerResource {
 		try {
 			tx.begin();
 			
-			LoanDAO loanDAO = (LoanDAO) DAOFactory.createDao(Loan.class);
+			LoanDAO loanDAO = (LoanDAO) DAOFactory.create(Loan.class);
 			List<Loan> loans = loanDAO.findBranchLoans(branchID);
 			tx.commit();
 			return loans;
@@ -57,8 +57,8 @@ public class BranchLoansResource extends ServerResource {
 			String amount = request.getString("amount");
 			tx.begin();
 			
-			LoanDAO loanDAO = (LoanDAO) DAOFactory.createDao(Loan.class);
-			BranchDAO branchDAO = (BranchDAO) DAOFactory.createDao(Branch.class);
+			LoanDAO loanDAO = (LoanDAO) DAOFactory.create(Loan.class);
+			BranchDAO branchDAO = (BranchDAO) DAOFactory.create(Branch.class);
 			Branch branch = branchDAO.findById(branchID);
 			Loan loan = new Loan(loanNumber, branch, new BigDecimal(amount));
 			Loan createdLoan = loanDAO.persist(loan);

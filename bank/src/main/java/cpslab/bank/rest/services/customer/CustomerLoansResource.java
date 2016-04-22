@@ -16,11 +16,11 @@ import org.restlet.resource.ServerResource;
 
 import cpslab.bank.api.dao.BranchDAO;
 import cpslab.bank.api.dao.CustomerDAO;
-import cpslab.bank.api.dao.DAOFactory;
 import cpslab.bank.api.dao.LoanDAO;
 import cpslab.bank.api.entities.Branch;
 import cpslab.bank.api.entities.Customer;
 import cpslab.bank.api.entities.Loan;
+import cpslab.util.db.DAOFactory;
 import cpslab.util.db.DatabaseTransaction;
 import cpslab.util.db.DatabaseTransactionManager;
 
@@ -39,7 +39,7 @@ public class CustomerLoansResource extends ServerResource {
 		try {
 			tx.begin();
 			
-			LoanDAO loanDAO = (LoanDAO) DAOFactory.createDao(Loan.class);
+			LoanDAO loanDAO = (LoanDAO) DAOFactory.create(Loan.class);
 			List<Loan> loans = loanDAO.findCustomerLoans(customerID);
 			tx.commit();
 			return loans;
@@ -59,8 +59,8 @@ public class CustomerLoansResource extends ServerResource {
 			String loanID = request.getString("id");
 			tx.begin();
 			
-			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.createDao(Customer.class);
-			LoanDAO loanDAO = (LoanDAO) DAOFactory.createDao(Loan.class);
+			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.create(Customer.class);
+			LoanDAO loanDAO = (LoanDAO) DAOFactory.create(Loan.class);
 			Loan loan = loanDAO.findById(Long.valueOf(loanID));
 			Customer customer = customerDAO.findById(customerID);
 			customer.addLoan(loan);
@@ -84,9 +84,9 @@ public class CustomerLoansResource extends ServerResource {
 			String branchID = request.getString("branch_id");
 			tx.begin();
 			
-			LoanDAO loanDAO = (LoanDAO) DAOFactory.createDao(Loan.class);
-			BranchDAO branchDAO = (BranchDAO) DAOFactory.createDao(Branch.class);
-			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.createDao(Customer.class);
+			LoanDAO loanDAO = (LoanDAO) DAOFactory.create(Loan.class);
+			BranchDAO branchDAO = (BranchDAO) DAOFactory.create(Branch.class);
+			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.create(Customer.class);
 			Customer customer = customerDAO.findById(customerID);
 			Branch branch = branchDAO.findById(Long.valueOf(branchID));
 			Loan loan = new Loan(loanNumber, branch, new BigDecimal(amount));

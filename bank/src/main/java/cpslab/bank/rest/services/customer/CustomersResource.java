@@ -12,8 +12,8 @@ import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
 
 import cpslab.bank.api.dao.CustomerDAO;
-import cpslab.bank.api.dao.DAOFactory;
 import cpslab.bank.api.entities.Customer;
+import cpslab.util.db.DAOFactory;
 import cpslab.util.db.DatabaseTransaction;
 import cpslab.util.db.DatabaseTransactionManager;
 
@@ -25,7 +25,7 @@ public class CustomersResource extends ServerResource {
 		try {
 			tx.begin();
 			
-			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.createDao(Customer.class);
+			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.create(Customer.class);
 			List<Customer> customers = customerDAO.findAll();
 			tx.commit();
 			return customers;
@@ -47,7 +47,7 @@ public class CustomersResource extends ServerResource {
 			String city = request.getString("city");
 			tx.begin();
 			
-			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.createDao(Customer.class);
+			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.create(Customer.class);
 			Customer customer = new Customer(name, street, city);
 			Customer createdCustomer = customerDAO.persist(customer);
 			tx.commit();

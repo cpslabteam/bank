@@ -14,9 +14,9 @@ import org.restlet.resource.ServerResource;
 
 import cpslab.bank.api.dao.AccountDAO;
 import cpslab.bank.api.dao.CustomerDAO;
-import cpslab.bank.api.dao.DAOFactory;
 import cpslab.bank.api.entities.Account;
 import cpslab.bank.api.entities.Customer;
+import cpslab.util.db.DAOFactory;
 import cpslab.util.db.DatabaseTransaction;
 import cpslab.util.db.DatabaseTransactionManager;
 
@@ -35,7 +35,7 @@ public class AccountOwnersResource extends ServerResource {
 		try {
 			tx.begin();
 			
-			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.createDao(Customer.class);
+			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.create(Customer.class);
 			List<Customer> owners = customerDAO.findAccountOwners(accountID);
 			tx.commit();
 			return owners;
@@ -55,8 +55,8 @@ public class AccountOwnersResource extends ServerResource {
 			String ownerID = request.getString("id");
 			tx.begin();
 			
-			AccountDAO accountDAO = (AccountDAO) DAOFactory.createDao(Account.class);
-			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.createDao(Customer.class);
+			AccountDAO accountDAO = (AccountDAO) DAOFactory.create(Account.class);
+			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.create(Customer.class);
 			Customer owner = customerDAO.findById(Long.valueOf(ownerID));
 			Account account = accountDAO.findById(accountID);
 			account.addOwner(owner);

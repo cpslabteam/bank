@@ -14,8 +14,8 @@ import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
 import cpslab.bank.api.dao.BranchDAO;
-import cpslab.bank.api.dao.DAOFactory;
 import cpslab.bank.api.entities.Branch;
+import cpslab.util.db.DAOFactory;
 import cpslab.util.db.DatabaseTransaction;
 import cpslab.util.db.DatabaseTransactionManager;
 
@@ -34,7 +34,7 @@ public class BranchResource extends ServerResource {
 		try {
 			tx.begin();
 			
-			BranchDAO branchDAO = (BranchDAO) DAOFactory.createDao(Branch.class);
+			BranchDAO branchDAO = (BranchDAO) DAOFactory.create(Branch.class);
 			Branch branch = branchDAO.findById(branchID);
 			tx.commit();
 			return branch;
@@ -56,7 +56,7 @@ public class BranchResource extends ServerResource {
 			String assets = request.getString("assets");
 			tx.begin();
 			
-			BranchDAO branchDAO = (BranchDAO) DAOFactory.createDao(Branch.class);
+			BranchDAO branchDAO = (BranchDAO) DAOFactory.create(Branch.class);
 			Branch branch = branchDAO.findById(branchID);
 			branch.setName(name);
 			branch.setCity(city);
@@ -77,7 +77,7 @@ public class BranchResource extends ServerResource {
 		try {
 			tx.begin();
 			
-			BranchDAO branchDAO = (BranchDAO) DAOFactory.createDao(Branch.class);
+			BranchDAO branchDAO = (BranchDAO) DAOFactory.create(Branch.class);
 			Branch branch = branchDAO.findById(branchID);
 			branchDAO.delete(branch);
 			tx.commit();

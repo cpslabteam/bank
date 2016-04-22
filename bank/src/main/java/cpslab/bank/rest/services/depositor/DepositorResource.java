@@ -10,8 +10,8 @@ import org.restlet.resource.ServerResource;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import cpslab.bank.api.dao.CustomerDAO;
-import cpslab.bank.api.dao.DAOFactory;
 import cpslab.bank.api.entities.Customer;
+import cpslab.util.db.DAOFactory;
 import cpslab.util.db.DatabaseTransaction;
 import cpslab.util.db.DatabaseTransactionManager;
 
@@ -30,7 +30,7 @@ public class DepositorResource extends ServerResource {
 		try {
 			tx.begin();
 			
-			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.createDao(Customer.class);
+			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.create(Customer.class);
 			Customer depositor = customerDAO.findById(depositorID);
 			tx.commit();
 			return depositor;
@@ -48,7 +48,7 @@ public class DepositorResource extends ServerResource {
 		try {
 			tx.begin();
 			
-			CustomerDAO depositorDAO = (CustomerDAO) DAOFactory.createDao(Customer.class);
+			CustomerDAO depositorDAO = (CustomerDAO) DAOFactory.create(Customer.class);
 			Customer updatedCustomer = depositorDAO.update(depositor);
 			tx.commit();
 			return updatedCustomer;
@@ -65,7 +65,7 @@ public class DepositorResource extends ServerResource {
 		try {
 			tx.begin();
 			
-			CustomerDAO depositorDAO = (CustomerDAO) DAOFactory.createDao(Customer.class);
+			CustomerDAO depositorDAO = (CustomerDAO) DAOFactory.create(Customer.class);
 			Customer depositor = depositorDAO.findById(depositorID);
 			depositorDAO.delete(depositor);
 			tx.commit();

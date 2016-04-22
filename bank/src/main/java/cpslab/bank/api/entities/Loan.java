@@ -15,14 +15,16 @@ import org.hibernate.annotations.NaturalId;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import cpslab.util.db.hibernate.BaseDataEntity;
+
 @Entity(name = "Loan")
-public class Loan extends BaseDataObject {
+public class Loan extends BaseDataEntity {
 
 	@Column(name = "loan_number")
 	@NaturalId
 	private String loanNumber;
 
-	@JsonSerialize(as = BaseDataObject.class)
+	@JsonSerialize(as = BaseDataEntity.class)
 	@ManyToOne
 	@JoinColumn(name = "branch_id", nullable = false)
 	private Branch branch;
@@ -30,7 +32,7 @@ public class Loan extends BaseDataObject {
 	@Column(name = "amount", nullable = false)
 	private BigDecimal amount;
 
-	@JsonSerialize(contentAs = BaseDataObject.class)
+	@JsonSerialize(contentAs = BaseDataEntity.class)
 	@ManyToMany(mappedBy = "loans")
 	private Set<Customer> owners;
 

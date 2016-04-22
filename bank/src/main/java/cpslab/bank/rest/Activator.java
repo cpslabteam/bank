@@ -3,28 +3,28 @@ package cpslab.bank.rest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cpslab.bank.rest.api.BankRestAPI;
-import cpslab.bank.webserver.BankWebServer;
+import cpslab.bank.rest.api.BankRestServerActivator;
+import cpslab.bank.webserver.BankWebServerActivator;
 
-public class ServerActivator {
+public class Activator {
 	
-	private static Logger logger = LoggerFactory.getLogger(ServerActivator.class);
+	private static Logger logger = LoggerFactory.getLogger(Activator.class);
 
 	public static void main(String[] args) throws Exception {
-		BankRestAPI.open();
-		BankWebServer.open();
+		BankRestServerActivator.open();
+		BankWebServerActivator.open();
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 
 			@Override
 			public void run() {
 				try {
-					BankRestAPI.close();
+					BankRestServerActivator.close();
 				} catch (Exception e) {
 					logger.error("Exception shuting down rest API", e);
 				}
 				try{
-					BankWebServer.close();
+					BankWebServerActivator.close();
 				} catch (Exception e) {
 					logger.error("Exception shuting down webserver", e);
 				}

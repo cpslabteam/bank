@@ -14,8 +14,8 @@ import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
 import cpslab.bank.api.dao.AccountDAO;
-import cpslab.bank.api.dao.DAOFactory;
 import cpslab.bank.api.entities.Account;
+import cpslab.util.db.DAOFactory;
 import cpslab.util.db.DatabaseTransaction;
 import cpslab.util.db.DatabaseTransactionManager;
 
@@ -36,7 +36,7 @@ public class BranchAccountResource extends ServerResource {
 		try {
 			tx.begin();
 			
-			AccountDAO accountDAO = (AccountDAO) DAOFactory.createDao(Account.class);
+			AccountDAO accountDAO = (AccountDAO) DAOFactory.create(Account.class);
 			Account account = accountDAO.findBranchAccount(branchID, accountID);
 			tx.commit();
 			return account;
@@ -57,7 +57,7 @@ public class BranchAccountResource extends ServerResource {
 			String balance = request.getString("balance");
 			tx.begin();
 			
-			AccountDAO accountDAO = (AccountDAO) DAOFactory.createDao(Account.class);
+			AccountDAO accountDAO = (AccountDAO) DAOFactory.create(Account.class);
 			Account account = accountDAO.findBranchAccount(branchID, accountID);
 			account.setAccountNumber(accountNumber);
 			account.setBalance(new BigDecimal(balance));
@@ -77,7 +77,7 @@ public class BranchAccountResource extends ServerResource {
 		try {
 			tx.begin();
 			
-			AccountDAO accountDAO = (AccountDAO) DAOFactory.createDao(Account.class);
+			AccountDAO accountDAO = (AccountDAO) DAOFactory.create(Account.class);
 			Account account = accountDAO.findBranchAccount(branchID, accountID);
 			accountDAO.delete(account);
 			tx.commit();
