@@ -14,9 +14,9 @@ import org.restlet.resource.ServerResource;
 
 import cpslab.bank.api.dao.CustomerDAO;
 import cpslab.bank.api.entities.Customer;
-import cpslab.util.db.DAOFactory;
-import cpslab.util.db.DatabaseTransaction;
-import cpslab.util.db.DatabaseTransactionManager;
+import cpslab.util.db.__DaoFactory;
+import cpslab.util.db.Transaction;
+import cpslab.util.db.TransactionFactory;
 
 public class CustomerResource extends ServerResource {
 
@@ -29,11 +29,11 @@ public class CustomerResource extends ServerResource {
 
 	@Get("application/json")
 	public Customer getCustomer() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
+		Transaction tx = TransactionFactory.create();
 		try {
 			tx.begin();
 			
-			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.create(Customer.class);
+			CustomerDAO customerDAO = (CustomerDAO) __DaoFactory.create(Customer.class);
 			Customer customer = customerDAO.findById(customerID);
 			tx.commit();
 			return customer;
@@ -47,7 +47,7 @@ public class CustomerResource extends ServerResource {
 	@Post("application/json")
 	public Customer updateCustomer(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
+		Transaction tx = TransactionFactory.create();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String name = request.getString("name");
@@ -55,7 +55,7 @@ public class CustomerResource extends ServerResource {
 			String city = request.getString("city");
 			tx.begin();
 			
-			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.create(Customer.class);
+			CustomerDAO customerDAO = (CustomerDAO) __DaoFactory.create(Customer.class);
 			Customer customer = customerDAO.findById(customerID);
 			customer.setName(name);
 			customer.setStreet(street);
@@ -72,11 +72,11 @@ public class CustomerResource extends ServerResource {
 
 	@Delete("application/json")
 	public void deleteCustomer() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
+		Transaction tx = TransactionFactory.create();
 		try {
 			tx.begin();
 			
-			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.create(Customer.class);
+			CustomerDAO customerDAO = (CustomerDAO) __DaoFactory.create(Customer.class);
 			Customer customer = customerDAO.findById(customerID);
 			customerDAO.delete(customer);
 			tx.commit();

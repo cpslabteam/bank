@@ -5,7 +5,8 @@ import org.junit.Test;
 
 import cpslab.bank.api.dao.AccountDAO;
 import cpslab.bank.api.entities.Account;
-import cpslab.util.db.DAOFactory;
+import cpslab.util.db.__DaoFactory;
+import cpslab.util.db.hibernate.HibernateRepository;
 
 public class TestHibernateAccountDAO {
 
@@ -16,12 +17,14 @@ public class TestHibernateAccountDAO {
      */
     @BeforeClass
     public static void beforeClass() throws Exception {
-        DAOFactory.registerDao(Account.class, HibernateAccountDAO.class);
+        __DaoFactory.registerDao(Account.class, HibernateAccountDAO.class);
+        
+        HibernateRepository.getInstance().registerDao(Account.class, HibernateAccountDAO.class);
     }
 
     @Test
     public void test() {
-        AccountDAO dao = (AccountDAO) DAOFactory.create(Account.class);
+        AccountDAO dao = (AccountDAO) __DaoFactory.create(Account.class);
         
 
     }

@@ -15,9 +15,9 @@ import org.restlet.resource.ServerResource;
 
 import cpslab.bank.api.dao.AccountDAO;
 import cpslab.bank.api.entities.Account;
-import cpslab.util.db.DAOFactory;
-import cpslab.util.db.DatabaseTransaction;
-import cpslab.util.db.DatabaseTransactionManager;
+import cpslab.util.db.__DaoFactory;
+import cpslab.util.db.Transaction;
+import cpslab.util.db.TransactionFactory;
 
 public class BranchAccountResource extends ServerResource {
 
@@ -32,11 +32,11 @@ public class BranchAccountResource extends ServerResource {
 
 	@Get("application/json")
 	public Account getAccount() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
+		Transaction tx = TransactionFactory.create();
 		try {
 			tx.begin();
 			
-			AccountDAO accountDAO = (AccountDAO) DAOFactory.create(Account.class);
+			AccountDAO accountDAO = (AccountDAO) __DaoFactory.create(Account.class);
 			Account account = accountDAO.findBranchAccount(branchID, accountID);
 			tx.commit();
 			return account;
@@ -50,14 +50,14 @@ public class BranchAccountResource extends ServerResource {
 	@Put("application/json")
 	public Account updateAccount(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
+		Transaction tx = TransactionFactory.create();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String accountNumber = request.getString("account_number");
 			String balance = request.getString("balance");
 			tx.begin();
 			
-			AccountDAO accountDAO = (AccountDAO) DAOFactory.create(Account.class);
+			AccountDAO accountDAO = (AccountDAO) __DaoFactory.create(Account.class);
 			Account account = accountDAO.findBranchAccount(branchID, accountID);
 			account.setAccountNumber(accountNumber);
 			account.setBalance(new BigDecimal(balance));
@@ -73,11 +73,11 @@ public class BranchAccountResource extends ServerResource {
 
 	@Delete("application/json")
 	public void deleteAccount() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
+		Transaction tx = TransactionFactory.create();
 		try {
 			tx.begin();
 			
-			AccountDAO accountDAO = (AccountDAO) DAOFactory.create(Account.class);
+			AccountDAO accountDAO = (AccountDAO) __DaoFactory.create(Account.class);
 			Account account = accountDAO.findBranchAccount(branchID, accountID);
 			accountDAO.delete(account);
 			tx.commit();

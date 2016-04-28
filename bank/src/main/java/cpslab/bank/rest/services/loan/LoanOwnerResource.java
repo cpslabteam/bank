@@ -12,9 +12,9 @@ import cpslab.bank.api.dao.CustomerDAO;
 import cpslab.bank.api.dao.LoanDAO;
 import cpslab.bank.api.entities.Customer;
 import cpslab.bank.api.entities.Loan;
-import cpslab.util.db.DAOFactory;
-import cpslab.util.db.DatabaseTransaction;
-import cpslab.util.db.DatabaseTransactionManager;
+import cpslab.util.db.__DaoFactory;
+import cpslab.util.db.Transaction;
+import cpslab.util.db.TransactionFactory;
 
 public class LoanOwnerResource extends ServerResource {
 
@@ -29,11 +29,11 @@ public class LoanOwnerResource extends ServerResource {
 
 	@Get("application/json")
 	public Customer getOwner() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
+		Transaction tx = TransactionFactory.create();
 		try {
 			tx.begin();
 			
-			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.create(Customer.class);
+			CustomerDAO customerDAO = (CustomerDAO) __DaoFactory.create(Customer.class);
 			Customer owner = customerDAO.findLoanOwner(loanID, ownerID);
 			tx.commit();
 			return owner;
@@ -46,12 +46,12 @@ public class LoanOwnerResource extends ServerResource {
 
 	@Delete("application/json")
 	public void removeOwner() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
+		Transaction tx = TransactionFactory.create();
 		try {
 			tx.begin();
 			
-			LoanDAO loanDAO = (LoanDAO) DAOFactory.create(Loan.class);
-			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.create(Customer.class);
+			LoanDAO loanDAO = (LoanDAO) __DaoFactory.create(Loan.class);
+			CustomerDAO customerDAO = (CustomerDAO) __DaoFactory.create(Customer.class);
 			Loan loan = loanDAO.findById(loanID);
 			Customer owner = customerDAO.findById(ownerID);
 			loan.removeOwner(owner);

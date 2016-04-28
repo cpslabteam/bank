@@ -8,9 +8,9 @@ import org.hibernate.criterion.Restrictions;
 
 import cpslab.bank.api.dao.CustomerDAO;
 import cpslab.bank.api.entities.Customer;
-import cpslab.util.db.hibernate.HibernateDAO;
+import cpslab.util.db.hibernate.HibernateDao;
 
-public class HibernateCustomerDAO extends HibernateDAO<Customer>implements CustomerDAO {
+public class HibernateCustomerDAO extends HibernateDao<Customer>implements CustomerDAO {
 
 	private final static String ACCOUNT_OWNERS_QUERY = "SELECT c FROM Account ac JOIN ac.owners c WHERE ac.id = :id";
 	private final static String LOAN_OWNERS_QUERY = "SELECT c FROM Loan l JOIN l.owners c WHERE l.id = :id";

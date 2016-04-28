@@ -11,9 +11,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import cpslab.bank.api.dao.CustomerDAO;
 import cpslab.bank.api.entities.Customer;
-import cpslab.util.db.DAOFactory;
-import cpslab.util.db.DatabaseTransaction;
-import cpslab.util.db.DatabaseTransactionManager;
+import cpslab.util.db.__DaoFactory;
+import cpslab.util.db.Transaction;
+import cpslab.util.db.TransactionFactory;
 
 public class BorrowerResource extends ServerResource {
 
@@ -26,11 +26,11 @@ public class BorrowerResource extends ServerResource {
 
 	@Get("application/json")
 	public Customer getBorrower() throws InterruptedException, JsonProcessingException, HibernateException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
+		Transaction tx = TransactionFactory.create();
 		try {
 			tx.begin();
 			
-			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.create(Customer.class);
+			CustomerDAO customerDAO = (CustomerDAO) __DaoFactory.create(Customer.class);
 			Customer borrower = customerDAO.findById(borrowerID);
 			tx.commit();
 			return borrower;
@@ -44,11 +44,11 @@ public class BorrowerResource extends ServerResource {
 	@Post("application/json")
 	public Customer updateCustomer(Customer borrower)
 			throws InterruptedException, JsonProcessingException, HibernateException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
+		Transaction tx = TransactionFactory.create();
 		try {
 			tx.begin();
 			
-			CustomerDAO borrowerDAO = (CustomerDAO) DAOFactory.create(Customer.class);
+			CustomerDAO borrowerDAO = (CustomerDAO) __DaoFactory.create(Customer.class);
 			Customer updatedCustomer = borrowerDAO.update(borrower);
 			tx.commit();
 			return updatedCustomer;
@@ -61,11 +61,11 @@ public class BorrowerResource extends ServerResource {
 
 	@Delete("application/json")
 	public void deleteCustomer() throws InterruptedException, JsonProcessingException, HibernateException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
+		Transaction tx = TransactionFactory.create();
 		try {
 			tx.begin();
 			
-			CustomerDAO borrowerDAO = (CustomerDAO) DAOFactory.create(Customer.class);
+			CustomerDAO borrowerDAO = (CustomerDAO) __DaoFactory.create(Customer.class);
 			Customer borrower = borrowerDAO.findById(borrowerID);
 			borrowerDAO.delete(borrower);
 			tx.commit();

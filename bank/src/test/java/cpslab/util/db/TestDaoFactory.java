@@ -3,10 +3,10 @@ package cpslab.util.db;
 import org.junit.Assert;
 import org.junit.Test;
 
+import capslab.util.db.spi.BaseDataEntity;
 import cpslab.bank.api.dao.AccountDAO;
 import cpslab.bank.api.entities.Account;
-import cpslab.util.db.hibernate.BaseDataEntity;
-import cpslab.util.db.hibernate.HibernateDAO;
+import cpslab.util.db.hibernate.HibernateDao;
 
 public class TestDaoFactory {
 
@@ -16,12 +16,12 @@ public class TestDaoFactory {
     }
 
     private static interface TesterDaoForEntity
-            extends GenericDAO<TesterDataEntity> {
+            extends Dao<TesterDataEntity> {
         // could have methods to access MyDataEntity
     }
 
     private static class HibernateTesterDao extends
-            HibernateDAO<TesterDataEntity>
+            HibernateDao<TesterDataEntity>
             implements TesterDaoForEntity {
         /**
          * Default constructor is required.
@@ -37,7 +37,7 @@ public class TestDaoFactory {
 
 //        MyDao dao = (MyDao) DAOFactory.create(MyDataEntity.class);
         
-        AccountDAO dao = (AccountDAO) DAOFactory.create(Account.class);
+        AccountDAO dao = (AccountDAO) __DaoFactory.create(Account.class);
 
         Assert.assertNotNull(dao);
     }

@@ -17,9 +17,9 @@ import cpslab.bank.api.dao.AccountDAO;
 import cpslab.bank.api.dao.BranchDAO;
 import cpslab.bank.api.entities.Account;
 import cpslab.bank.api.entities.Branch;
-import cpslab.util.db.DAOFactory;
-import cpslab.util.db.DatabaseTransaction;
-import cpslab.util.db.DatabaseTransactionManager;
+import cpslab.util.db.__DaoFactory;
+import cpslab.util.db.Transaction;
+import cpslab.util.db.TransactionFactory;
 
 public class BranchAccountsResource extends ServerResource {
 
@@ -32,11 +32,11 @@ public class BranchAccountsResource extends ServerResource {
 
 	@Get("application/json")
 	public List<Account> getAccounts() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
+		Transaction tx = TransactionFactory.create();
 		try {
 			tx.begin();
 			
-			AccountDAO accountDAO = (AccountDAO) DAOFactory.create(Account.class);
+			AccountDAO accountDAO = (AccountDAO) __DaoFactory.create(Account.class);
 			List<Account> accounts = accountDAO.findBranchAccounts(branchID);
 			tx.commit();
 			return accounts;
@@ -50,15 +50,15 @@ public class BranchAccountsResource extends ServerResource {
 	@Post("application/json")
 	public Account createAccount(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
+		Transaction tx = TransactionFactory.create();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String accountNumber = request.getString("account_number");
 			String balance = request.getString("balance");
 			tx.begin();
 			
-			AccountDAO accountDAO = (AccountDAO) DAOFactory.create(Account.class);
-			BranchDAO branchDAO = (BranchDAO) DAOFactory.create(Branch.class);
+			AccountDAO accountDAO = (AccountDAO) __DaoFactory.create(Account.class);
+			BranchDAO branchDAO = (BranchDAO) __DaoFactory.create(Branch.class);
 			Branch branch = branchDAO.findById(branchID);
 			Account account = new Account(accountNumber, branch, new BigDecimal(balance));
 			Account createdAccount = accountDAO.persist(account);

@@ -3,10 +3,10 @@ package cpslab.bank.api.dao;
 import java.util.List;
 
 import cpslab.bank.api.entities.Loan;
-import cpslab.util.db.GenericDAO;
+import cpslab.util.db.Dao;
 
 public interface LoanDAO
-        extends GenericDAO<Loan> {
+        extends Dao<Loan> {
 
     List<Loan> findBranchLoans(Long branchID);
 

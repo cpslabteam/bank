@@ -16,9 +16,9 @@ import cpslab.bank.api.dao.AccountDAO;
 import cpslab.bank.api.dao.CustomerDAO;
 import cpslab.bank.api.entities.Account;
 import cpslab.bank.api.entities.Customer;
-import cpslab.util.db.DAOFactory;
-import cpslab.util.db.DatabaseTransaction;
-import cpslab.util.db.DatabaseTransactionManager;
+import cpslab.util.db.__DaoFactory;
+import cpslab.util.db.Transaction;
+import cpslab.util.db.TransactionFactory;
 
 public class AccountOwnersResource extends ServerResource {
 
@@ -31,11 +31,11 @@ public class AccountOwnersResource extends ServerResource {
 
 	@Get("application/json")
 	public List<Customer> getOwners() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
+		Transaction tx = TransactionFactory.create();
 		try {
 			tx.begin();
 			
-			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.create(Customer.class);
+			CustomerDAO customerDAO = (CustomerDAO) __DaoFactory.create(Customer.class);
 			List<Customer> owners = customerDAO.findAccountOwners(accountID);
 			tx.commit();
 			return owners;
@@ -49,14 +49,14 @@ public class AccountOwnersResource extends ServerResource {
 	@Put("application/json")
 	public Customer addOwner(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
+		Transaction tx = TransactionFactory.create();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String ownerID = request.getString("id");
 			tx.begin();
 			
-			AccountDAO accountDAO = (AccountDAO) DAOFactory.create(Account.class);
-			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.create(Customer.class);
+			AccountDAO accountDAO = (AccountDAO) __DaoFactory.create(Account.class);
+			CustomerDAO customerDAO = (CustomerDAO) __DaoFactory.create(Customer.class);
 			Customer owner = customerDAO.findById(Long.valueOf(ownerID));
 			Account account = accountDAO.findById(accountID);
 			account.addOwner(owner);

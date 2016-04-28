@@ -15,9 +15,9 @@ import org.restlet.resource.ServerResource;
 
 import cpslab.bank.api.dao.LoanDAO;
 import cpslab.bank.api.entities.Loan;
-import cpslab.util.db.DAOFactory;
-import cpslab.util.db.DatabaseTransaction;
-import cpslab.util.db.DatabaseTransactionManager;
+import cpslab.util.db.__DaoFactory;
+import cpslab.util.db.Transaction;
+import cpslab.util.db.TransactionFactory;
 
 public class BranchLoanResource extends ServerResource {
 
@@ -32,11 +32,11 @@ public class BranchLoanResource extends ServerResource {
 
 	@Get("application/json")
 	public Loan getLoan() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
+		Transaction tx = TransactionFactory.create();
 		try {
 			tx.begin();
 			
-			LoanDAO loanDAO = (LoanDAO) DAOFactory.create(Loan.class);
+			LoanDAO loanDAO = (LoanDAO) __DaoFactory.create(Loan.class);
 			Loan loan = loanDAO.findBranchLoan(branchID, loanID);
 			tx.commit();
 			return loan;
@@ -50,14 +50,14 @@ public class BranchLoanResource extends ServerResource {
 	@Put("application/json")
 	public Loan updateLoan(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
+		Transaction tx = TransactionFactory.create();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String loanNumber = request.getString("loan_number");
 			String amount = request.getString("amount");
 			tx.begin();
 			
-			LoanDAO loanDAO = (LoanDAO) DAOFactory.create(Loan.class);
+			LoanDAO loanDAO = (LoanDAO) __DaoFactory.create(Loan.class);
 			Loan loan = loanDAO.findBranchLoan(branchID, loanID);
 			loan.setLoanNumber(loanNumber);
 			loan.setAmount(new BigDecimal(amount));
@@ -73,11 +73,11 @@ public class BranchLoanResource extends ServerResource {
 
 	@Delete("application/json")
 	public void deleteLoan() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
+		Transaction tx = TransactionFactory.create();
 		try {
 			tx.begin();
 			
-			LoanDAO loanDAO = (LoanDAO) DAOFactory.create(Loan.class);
+			LoanDAO loanDAO = (LoanDAO) __DaoFactory.create(Loan.class);
 			Loan loan = loanDAO.findBranchLoan(branchID, loanID);
 			loanDAO.delete(loan);
 			tx.commit();

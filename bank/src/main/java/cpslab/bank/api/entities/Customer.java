@@ -11,7 +11,7 @@ import javax.persistence.ManyToMany;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import cpslab.util.db.hibernate.BaseDataEntity;
+import capslab.util.db.spi.BaseDataEntity;
 
 /**
  * Represents the Customer object and defines the mapping of it's table in the

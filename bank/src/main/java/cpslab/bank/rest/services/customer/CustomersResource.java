@@ -13,19 +13,19 @@ import org.restlet.resource.ServerResource;
 
 import cpslab.bank.api.dao.CustomerDAO;
 import cpslab.bank.api.entities.Customer;
-import cpslab.util.db.DAOFactory;
-import cpslab.util.db.DatabaseTransaction;
-import cpslab.util.db.DatabaseTransactionManager;
+import cpslab.util.db.__DaoFactory;
+import cpslab.util.db.Transaction;
+import cpslab.util.db.TransactionFactory;
 
 public class CustomersResource extends ServerResource {
 
 	@Get("application/json")
 	public List<Customer> getCustomers() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
+		Transaction tx = TransactionFactory.create();
 		try {
 			tx.begin();
 			
-			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.create(Customer.class);
+			CustomerDAO customerDAO = (CustomerDAO) __DaoFactory.create(Customer.class);
 			List<Customer> customers = customerDAO.findAll();
 			tx.commit();
 			return customers;
@@ -39,7 +39,7 @@ public class CustomersResource extends ServerResource {
 	@Post("application/json")
 	public Customer createCustomer(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
+		Transaction tx = TransactionFactory.create();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String name = request.getString("name");
@@ -47,7 +47,7 @@ public class CustomersResource extends ServerResource {
 			String city = request.getString("city");
 			tx.begin();
 			
-			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.create(Customer.class);
+			CustomerDAO customerDAO = (CustomerDAO) __DaoFactory.create(Customer.class);
 			Customer customer = new Customer(name, street, city);
 			Customer createdCustomer = customerDAO.persist(customer);
 			tx.commit();

@@ -15,57 +15,70 @@ import cpslab.bank.api.dao.AccountDAO;
 import cpslab.bank.api.dao.BranchDAO;
 import cpslab.bank.api.entities.Account;
 import cpslab.bank.api.entities.Branch;
-import cpslab.util.db.DAOFactory;
-import cpslab.util.db.DatabaseTransaction;
-import cpslab.util.db.DatabaseTransactionManager;
+import cpslab.util.db.__DaoFactory;
+import cpslab.util.db.hibernate.HibernateRepository;
+import cpslab.util.db.Repository;
+import cpslab.util.db.RepositoryService;
+import cpslab.util.db.Transaction;
+import cpslab.util.db.TransactionFactory;
 
-public class AccountBranchResource extends ServerResource {
+public class AccountBranchResource extends
+        ServerResource {
 
-	private Long accountID;
+    {
+        // TODO: Verify if this is a good place to register the DAO
+        Repository r = RepositoryService.getInstance();
+        r.registerDao(Account.class, AccountDAO.class);
+    }
 
-	@Override
-	protected void doInit() throws ResourceException {
-		accountID = Long.valueOf(getAttribute("account"));
-	}
+    private Long accountID;
 
-	@Get("application/json")
-	public Branch getBranch() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
-		try {
-			tx.begin();
-			AccountDAO accountDAO = (AccountDAO) DAOFactory.create(Account.class);
-			Account account = accountDAO.findById(accountID);
-			Branch branch = account.getBranch();
-			tx.commit();
-			return branch;
-		} catch (Exception e) {
-			if (tx.canRollback())
-				tx.rollback();
-			throw e;
-		}
-	}
+    @Override
+    protected void doInit() throws ResourceException {
+        accountID = Long.valueOf(getAttribute("account"));
+    }
 
-	@Put("application/json")
-	public Branch changeBranch(Representation entity)
-			throws InterruptedException, IOException, HibernateException, JSONException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
-		try {
-			JSONObject request = new JSONObject(entity.getText());
-			String branchID = request.getString("id");
-			tx.begin();
-			AccountDAO accountDAO = (AccountDAO) DAOFactory.create(Account.class);
-			BranchDAO branchDAO = (BranchDAO) DAOFactory.create(Branch.class);
-			Account account = accountDAO.findById(accountID);
-			Branch branch = branchDAO.findById(Long.valueOf(branchID));
-			account.setBranch(branch);
-			accountDAO.update(account);
-			tx.commit();
-			return branch;
-		} catch (Exception e) {
-			if (tx.canRollback())
-				tx.rollback();
-			throw e;
-		}
-	}
+    // TODO: Migrar os restantes servicos baseados neste
+    @Get("application/json")
+    public Branch getBranch() throws InterruptedException, IOException, HibernateException {
+        Repository r = RepositoryService.getInstance();
+
+        try {
+            AccountDAO accountDAO = (AccountDAO) r.createDao(Account.class);
+
+            r.openTransaction();
+            Account account = accountDAO.findById(accountID);
+            Branch branch = account.getBranch();
+            r.closeTransaction();
+
+            return branch;
+        } catch (Exception e) {
+            r.rollbackTransaction();
+            throw e;
+        }
+    }
+
+    @Put("application/json")
+    public Branch changeBranch(Representation entity)
+            throws InterruptedException, IOException, HibernateException, JSONException {
+        Transaction tx = TransactionFactory.create();
+        try {
+            JSONObject request = new JSONObject(entity.getText());
+            String branchID = request.getString("id");
+            tx.begin();
+            AccountDAO accountDAO = (AccountDAO) __DaoFactory.create(Account.class);
+            BranchDAO branchDAO = (BranchDAO) __DaoFactory.create(Branch.class);
+            Account account = accountDAO.findById(accountID);
+            Branch branch = branchDAO.findById(Long.valueOf(branchID));
+            account.setBranch(branch);
+            accountDAO.update(account);
+            tx.commit();
+            return branch;
+        } catch (Exception e) {
+            if (tx.canRollback())
+                tx.rollback();
+            throw e;
+        }
+    }
 
 }

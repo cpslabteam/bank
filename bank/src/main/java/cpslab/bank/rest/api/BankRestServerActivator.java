@@ -27,8 +27,8 @@ import cpslab.bank.internal.dao.HibernateAccountDAO;
 import cpslab.bank.internal.dao.HibernateBranchDAO;
 import cpslab.bank.internal.dao.HibernateCustomerDAO;
 import cpslab.bank.internal.dao.HibernateLoanDAO;
-import cpslab.util.db.DAOFactory;
-import cpslab.util.rest.HibernateJacksonConverter;
+import cpslab.util.db.__DaoFactory;
+import cpslab.util.db.hibernate.jackson.HibernateJacksonConverter;
 
 public final class BankRestServerActivator extends
         Application {
@@ -57,10 +57,10 @@ public final class BankRestServerActivator extends
     }
 
     private void registerDaos() {
-        DAOFactory.registerDao(Account.class, HibernateAccountDAO.class);
-        DAOFactory.registerDao(Loan.class, HibernateLoanDAO.class);
-        DAOFactory.registerDao(Branch.class, HibernateBranchDAO.class);
-        DAOFactory.registerDao(Customer.class, HibernateCustomerDAO.class);
+        __DaoFactory.registerDao(Account.class, HibernateAccountDAO.class);
+        __DaoFactory.registerDao(Loan.class, HibernateLoanDAO.class);
+        __DaoFactory.registerDao(Branch.class, HibernateBranchDAO.class);
+        __DaoFactory.registerDao(Customer.class, HibernateCustomerDAO.class);
     }
 
     public static BankRestServerActivator getInstance() {

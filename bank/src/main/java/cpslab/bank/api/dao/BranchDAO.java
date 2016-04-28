@@ -1,8 +1,8 @@
 package cpslab.bank.api.dao;
 
 import cpslab.bank.api.entities.Branch;
-import cpslab.util.db.GenericDAO;
+import cpslab.util.db.Dao;
 
-public interface BranchDAO extends GenericDAO<Branch> {
+public interface BranchDAO extends Dao<Branch> {
 
 }

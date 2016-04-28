@@ -7,10 +7,10 @@ import org.hibernate.Query;
 
 import cpslab.bank.api.dao.LoanDAO;
 import cpslab.bank.api.entities.Loan;
-import cpslab.util.db.hibernate.HibernateDAO;
+import cpslab.util.db.hibernate.HibernateDao;
 
 public class HibernateLoanDAO extends
-        HibernateDAO<Loan>
+        HibernateDao<Loan>
         implements LoanDAO {
 
     private final static String BRANCH_LOANS_QUERY =

@@ -15,7 +15,7 @@ import org.hibernate.annotations.NaturalId;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import cpslab.util.db.hibernate.BaseDataEntity;
+import capslab.util.db.spi.BaseDataEntity;
 
 @Entity(name = "Account")
 public class Account extends BaseDataEntity {

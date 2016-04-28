@@ -14,19 +14,19 @@ import org.restlet.resource.ServerResource;
 
 import cpslab.bank.api.dao.BranchDAO;
 import cpslab.bank.api.entities.Branch;
-import cpslab.util.db.DAOFactory;
-import cpslab.util.db.DatabaseTransaction;
-import cpslab.util.db.DatabaseTransactionManager;
+import cpslab.util.db.__DaoFactory;
+import cpslab.util.db.Transaction;
+import cpslab.util.db.TransactionFactory;
 
 public class BranchesResource extends ServerResource {
 
 	@Get("application/json")
 	public List<Branch> getBranches() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
+		Transaction tx = TransactionFactory.create();
 		try {
 			tx.begin();
 			
-			BranchDAO branchDAO = (BranchDAO) DAOFactory.create(Branch.class);
+			BranchDAO branchDAO = (BranchDAO) __DaoFactory.create(Branch.class);
 			List<Branch> branches = branchDAO.findAll();
 			tx.commit();
 			return branches;
@@ -40,7 +40,7 @@ public class BranchesResource extends ServerResource {
 	@Post("application/json")
 	public Branch createBranch(Representation entity)
 			throws InterruptedException, HibernateException, JSONException, IOException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
+		Transaction tx = TransactionFactory.create();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String branchName = request.getString("name");
@@ -48,7 +48,7 @@ public class BranchesResource extends ServerResource {
 			String branchAssets = request.getString("assets");
 			tx.begin();
 			
-			BranchDAO branchDAO = (BranchDAO) DAOFactory.create(Branch.class);
+			BranchDAO branchDAO = (BranchDAO) __DaoFactory.create(Branch.class);
 			Branch branch = new Branch(branchName, branchCity, new BigDecimal(branchAssets));
 			Branch createdBranch = branchDAO.persist(branch);
 			tx.commit();

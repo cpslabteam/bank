@@ -11,9 +11,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import cpslab.bank.api.dao.CustomerDAO;
 import cpslab.bank.api.entities.Customer;
-import cpslab.util.db.DAOFactory;
-import cpslab.util.db.DatabaseTransaction;
-import cpslab.util.db.DatabaseTransactionManager;
+import cpslab.util.db.__DaoFactory;
+import cpslab.util.db.Transaction;
+import cpslab.util.db.TransactionFactory;
 
 public class DepositorResource extends ServerResource {
 
@@ -26,11 +26,11 @@ public class DepositorResource extends ServerResource {
 
 	@Get("application/json")
 	public Customer getDepositor() throws InterruptedException, JsonProcessingException, HibernateException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
+		Transaction tx = TransactionFactory.create();
 		try {
 			tx.begin();
 			
-			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.create(Customer.class);
+			CustomerDAO customerDAO = (CustomerDAO) __DaoFactory.create(Customer.class);
 			Customer depositor = customerDAO.findById(depositorID);
 			tx.commit();
 			return depositor;
@@ -44,11 +44,11 @@ public class DepositorResource extends ServerResource {
 	@Post("application/json")
 	public Customer updateCustomer(Customer depositor)
 			throws InterruptedException, JsonProcessingException, HibernateException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
+		Transaction tx = TransactionFactory.create();
 		try {
 			tx.begin();
 			
-			CustomerDAO depositorDAO = (CustomerDAO) DAOFactory.create(Customer.class);
+			CustomerDAO depositorDAO = (CustomerDAO) __DaoFactory.create(Customer.class);
 			Customer updatedCustomer = depositorDAO.update(depositor);
 			tx.commit();
 			return updatedCustomer;
@@ -61,11 +61,11 @@ public class DepositorResource extends ServerResource {
 
 	@Delete("application/json")
 	public void deleteCustomer() throws InterruptedException, JsonProcessingException, HibernateException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
+		Transaction tx = TransactionFactory.create();
 		try {
 			tx.begin();
 			
-			CustomerDAO depositorDAO = (CustomerDAO) DAOFactory.create(Customer.class);
+			CustomerDAO depositorDAO = (CustomerDAO) __DaoFactory.create(Customer.class);
 			Customer depositor = depositorDAO.findById(depositorID);
 			depositorDAO.delete(depositor);
 			tx.commit();

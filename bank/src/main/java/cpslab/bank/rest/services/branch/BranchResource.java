@@ -15,9 +15,9 @@ import org.restlet.resource.ServerResource;
 
 import cpslab.bank.api.dao.BranchDAO;
 import cpslab.bank.api.entities.Branch;
-import cpslab.util.db.DAOFactory;
-import cpslab.util.db.DatabaseTransaction;
-import cpslab.util.db.DatabaseTransactionManager;
+import cpslab.util.db.__DaoFactory;
+import cpslab.util.db.Transaction;
+import cpslab.util.db.TransactionFactory;
 
 public class BranchResource extends ServerResource {
 
@@ -30,11 +30,11 @@ public class BranchResource extends ServerResource {
 
 	@Get("application/json")
 	public Branch getBranch() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
+		Transaction tx = TransactionFactory.create();
 		try {
 			tx.begin();
 			
-			BranchDAO branchDAO = (BranchDAO) DAOFactory.create(Branch.class);
+			BranchDAO branchDAO = (BranchDAO) __DaoFactory.create(Branch.class);
 			Branch branch = branchDAO.findById(branchID);
 			tx.commit();
 			return branch;
@@ -48,7 +48,7 @@ public class BranchResource extends ServerResource {
 	@Put("application/json")
 	public Branch updateBranch(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
+		Transaction tx = TransactionFactory.create();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String name = request.getString("name");
@@ -56,7 +56,7 @@ public class BranchResource extends ServerResource {
 			String assets = request.getString("assets");
 			tx.begin();
 			
-			BranchDAO branchDAO = (BranchDAO) DAOFactory.create(Branch.class);
+			BranchDAO branchDAO = (BranchDAO) __DaoFactory.create(Branch.class);
 			Branch branch = branchDAO.findById(branchID);
 			branch.setName(name);
 			branch.setCity(city);
@@ -73,11 +73,11 @@ public class BranchResource extends ServerResource {
 
 	@Delete("application/json")
 	public void deleteBranch() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
+		Transaction tx = TransactionFactory.create();
 		try {
 			tx.begin();
 			
-			BranchDAO branchDAO = (BranchDAO) DAOFactory.create(Branch.class);
+			BranchDAO branchDAO = (BranchDAO) __DaoFactory.create(Branch.class);
 			Branch branch = branchDAO.findById(branchID);
 			branchDAO.delete(branch);
 			tx.commit();

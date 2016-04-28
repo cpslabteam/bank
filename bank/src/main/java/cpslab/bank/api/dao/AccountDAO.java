@@ -3,9 +3,9 @@ package cpslab.bank.api.dao;
 import java.util.List;
 
 import cpslab.bank.api.entities.Account;
-import cpslab.util.db.GenericDAO;
+import cpslab.util.db.Dao;
 
-public interface AccountDAO extends GenericDAO<Account> {
+public interface AccountDAO extends Dao<Account> {
 
 	public List<Account> findCustomerAccounts(Long customerID);
 	

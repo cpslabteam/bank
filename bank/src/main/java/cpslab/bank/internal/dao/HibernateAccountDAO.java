@@ -7,10 +7,10 @@ import org.hibernate.Query;
 
 import cpslab.bank.api.dao.AccountDAO;
 import cpslab.bank.api.entities.Account;
-import cpslab.util.db.hibernate.HibernateDAO;
+import cpslab.util.db.hibernate.HibernateDao;
 
 public class HibernateAccountDAO extends
-        HibernateDAO<Account>
+        HibernateDao<Account>
         implements AccountDAO {
 
     private final static String CUSTOMER_ACCOUNTS_QUERY =
@@ -34,6 +34,7 @@ public class HibernateAccountDAO extends
     @SuppressWarnings("unchecked")
     @Override
     public List<Account> findCustomerAccounts(Long customerID) {
+        
         Query query = getSession().createQuery(CUSTOMER_ACCOUNTS_QUERY);
         query.setLong("id", customerID);
         return query.list();

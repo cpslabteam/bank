@@ -17,9 +17,9 @@ import cpslab.bank.api.dao.BranchDAO;
 import cpslab.bank.api.dao.LoanDAO;
 import cpslab.bank.api.entities.Branch;
 import cpslab.bank.api.entities.Loan;
-import cpslab.util.db.DAOFactory;
-import cpslab.util.db.DatabaseTransaction;
-import cpslab.util.db.DatabaseTransactionManager;
+import cpslab.util.db.__DaoFactory;
+import cpslab.util.db.Transaction;
+import cpslab.util.db.TransactionFactory;
 
 public class BranchLoansResource extends ServerResource {
 
@@ -32,11 +32,11 @@ public class BranchLoansResource extends ServerResource {
 
 	@Get("application/json")
 	public List<Loan> getLoans() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
+		Transaction tx = TransactionFactory.create();
 		try {
 			tx.begin();
 			
-			LoanDAO loanDAO = (LoanDAO) DAOFactory.create(Loan.class);
+			LoanDAO loanDAO = (LoanDAO) __DaoFactory.create(Loan.class);
 			List<Loan> loans = loanDAO.findBranchLoans(branchID);
 			tx.commit();
 			return loans;
@@ -50,15 +50,15 @@ public class BranchLoansResource extends ServerResource {
 	@Post("application/json")
 	public Loan createLoan(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
+		Transaction tx = TransactionFactory.create();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String loanNumber = request.getString("loan_number");
 			String amount = request.getString("amount");
 			tx.begin();
 			
-			LoanDAO loanDAO = (LoanDAO) DAOFactory.create(Loan.class);
-			BranchDAO branchDAO = (BranchDAO) DAOFactory.create(Branch.class);
+			LoanDAO loanDAO = (LoanDAO) __DaoFactory.create(Loan.class);
+			BranchDAO branchDAO = (BranchDAO) __DaoFactory.create(Branch.class);
 			Branch branch = branchDAO.findById(branchID);
 			Loan loan = new Loan(loanNumber, branch, new BigDecimal(amount));
 			Loan createdLoan = loanDAO.persist(loan);

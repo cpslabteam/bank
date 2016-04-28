@@ -20,9 +20,9 @@ import cpslab.bank.api.dao.CustomerDAO;
 import cpslab.bank.api.entities.Account;
 import cpslab.bank.api.entities.Branch;
 import cpslab.bank.api.entities.Customer;
-import cpslab.util.db.DAOFactory;
-import cpslab.util.db.DatabaseTransaction;
-import cpslab.util.db.DatabaseTransactionManager;
+import cpslab.util.db.__DaoFactory;
+import cpslab.util.db.Transaction;
+import cpslab.util.db.TransactionFactory;
 
 public class CustomerAccountsResource extends ServerResource {
 
@@ -35,11 +35,11 @@ public class CustomerAccountsResource extends ServerResource {
 
 	@Get("application/json")
 	public List<Account> getAccounts() throws InterruptedException, IOException, HibernateException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
+		Transaction tx = TransactionFactory.create();
 		try {
 			tx.begin();
 			
-			AccountDAO accountDAO = (AccountDAO) DAOFactory.create(Account.class);
+			AccountDAO accountDAO = (AccountDAO) __DaoFactory.create(Account.class);
 			List<Account> accounts = accountDAO.findCustomerAccounts(customerID);
 			tx.commit();
 			return accounts;
@@ -53,14 +53,14 @@ public class CustomerAccountsResource extends ServerResource {
 	@Put("application/json")
 	public Account addAccount(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
+		Transaction tx = TransactionFactory.create();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String accountID = request.getString("id");
 			tx.begin();
 			
-			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.create(Customer.class);
-			AccountDAO accountDAO = (AccountDAO) DAOFactory.create(Account.class);
+			CustomerDAO customerDAO = (CustomerDAO) __DaoFactory.create(Customer.class);
+			AccountDAO accountDAO = (AccountDAO) __DaoFactory.create(Account.class);
 			Account account = accountDAO.findById(Long.valueOf(accountID));
 			Customer customer = customerDAO.findById(customerID);
 			customer.addAccount(account);
@@ -76,7 +76,7 @@ public class CustomerAccountsResource extends ServerResource {
 	@Post("application/json")
 	public Account createAccount(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
-		DatabaseTransaction tx = DatabaseTransactionManager.getTransaction();
+		Transaction tx = TransactionFactory.create();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String accountNumber = request.getString("account_number");
@@ -84,9 +84,9 @@ public class CustomerAccountsResource extends ServerResource {
 			String branchID = request.getString("branch_id");
 			tx.begin();
 			
-			AccountDAO accountDAO = (AccountDAO) DAOFactory.create(Account.class);
-			BranchDAO branchDAO = (BranchDAO) DAOFactory.create(Branch.class);
-			CustomerDAO customerDAO = (CustomerDAO) DAOFactory.create(Customer.class);
+			AccountDAO accountDAO = (AccountDAO) __DaoFactory.create(Account.class);
+			BranchDAO branchDAO = (BranchDAO) __DaoFactory.create(Branch.class);
+			CustomerDAO customerDAO = (CustomerDAO) __DaoFactory.create(Customer.class);
 			Customer customer = customerDAO.findById(customerID);
 			Branch branch = branchDAO.findById(Long.valueOf(branchID));
 			Account account = new Account(accountNumber, branch, new BigDecimal(balance));

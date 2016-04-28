@@ -5,8 +5,8 @@ import static org.junit.Assert.fail;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import cpslab.util.db.hibernate.BaseDataEntity;
-import cpslab.util.db.hibernate.HibernateDAO;
+import capslab.util.db.spi.BaseDataEntity;
+import cpslab.util.db.hibernate.HibernateDao;
 
 public class TestHibernateDao {
 
@@ -28,12 +28,12 @@ public class TestHibernateDao {
     }
 
     private static interface TesterDaoForEntity
-            extends GenericDAO<TesterEntity> {
+            extends Dao<TesterEntity> {
         // could have methods to access MyDataEntity
     }
 
     private static class HibernateTesterDao extends
-            HibernateDAO<TesterEntity>
+            HibernateDao<TesterEntity>
             implements TesterDaoForEntity {
         /**
          * Default constructor is required.
