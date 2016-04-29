@@ -19,15 +19,16 @@ import org.restlet.service.CorsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cpslab.bank.api.dao.AccountDAO;
+import cpslab.bank.api.dao.BranchDAO;
+import cpslab.bank.api.dao.CustomerDAO;
+import cpslab.bank.api.dao.LoanDAO;
 import cpslab.bank.api.entities.Account;
 import cpslab.bank.api.entities.Branch;
 import cpslab.bank.api.entities.Customer;
 import cpslab.bank.api.entities.Loan;
-import cpslab.bank.internal.dao.HibernateAccountDAO;
-import cpslab.bank.internal.dao.HibernateBranchDAO;
-import cpslab.bank.internal.dao.HibernateCustomerDAO;
-import cpslab.bank.internal.dao.HibernateLoanDAO;
-import cpslab.util.db.__DaoFactory;
+import cpslab.util.db.Repository;
+import cpslab.util.db.RepositoryService;
 import cpslab.util.db.hibernate.jackson.HibernateJacksonConverter;
 
 public final class BankRestServerActivator extends
@@ -57,10 +58,11 @@ public final class BankRestServerActivator extends
     }
 
     private void registerDaos() {
-        __DaoFactory.registerDao(Account.class, HibernateAccountDAO.class);
-        __DaoFactory.registerDao(Loan.class, HibernateLoanDAO.class);
-        __DaoFactory.registerDao(Branch.class, HibernateBranchDAO.class);
-        __DaoFactory.registerDao(Customer.class, HibernateCustomerDAO.class);
+        Repository r = RepositoryService.getInstance();
+        r.registerDao(Account.class, AccountDAO.class);
+        r.registerDao(Loan.class, LoanDAO.class);
+        r.registerDao(Branch.class, BranchDAO.class);
+        r.registerDao(Customer.class, CustomerDAO.class);
     }
 
     public static BankRestServerActivator getInstance() {

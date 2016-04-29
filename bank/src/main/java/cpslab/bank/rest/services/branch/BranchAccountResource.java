@@ -15,9 +15,8 @@ import org.restlet.resource.ServerResource;
 
 import cpslab.bank.api.dao.AccountDAO;
 import cpslab.bank.api.entities.Account;
-import cpslab.util.db.__DaoFactory;
-import cpslab.util.db.Transaction;
-import cpslab.util.db.TransactionFactory;
+import cpslab.util.db.Repository;
+import cpslab.util.db.RepositoryService;
 
 public class BranchAccountResource extends ServerResource {
 
@@ -32,17 +31,17 @@ public class BranchAccountResource extends ServerResource {
 
 	@Get("application/json")
 	public Account getAccount() throws InterruptedException, IOException, HibernateException {
-		Transaction tx = TransactionFactory.create();
+		Repository r = RepositoryService.getInstance();
 		try {
-			tx.begin();
+			r.openTransaction();
 			
-			AccountDAO accountDAO = (AccountDAO) __DaoFactory.create(Account.class);
+			AccountDAO accountDAO = (AccountDAO) r.createDao(Account.class);
 			Account account = accountDAO.findBranchAccount(branchID, accountID);
-			tx.commit();
+			r.closeTransaction();
 			return account;
 		} catch (Exception e) {
-			if (tx.canRollback())
-				tx.rollback();
+			r.rollbackTransaction();
+
 			throw e;
 		}
 	}
@@ -50,40 +49,40 @@ public class BranchAccountResource extends ServerResource {
 	@Put("application/json")
 	public Account updateAccount(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
-		Transaction tx = TransactionFactory.create();
+		Repository r = RepositoryService.getInstance();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String accountNumber = request.getString("account_number");
 			String balance = request.getString("balance");
-			tx.begin();
+			r.openTransaction();
 			
-			AccountDAO accountDAO = (AccountDAO) __DaoFactory.create(Account.class);
+			AccountDAO accountDAO = (AccountDAO) r.createDao(Account.class);
 			Account account = accountDAO.findBranchAccount(branchID, accountID);
 			account.setAccountNumber(accountNumber);
 			account.setBalance(new BigDecimal(balance));
 			Account updatedAccount = accountDAO.update(account);
-			tx.commit();
+			r.closeTransaction();
 			return updatedAccount;
 		} catch (Exception e) {
-			if (tx.canRollback())
-				tx.rollback();
+			r.rollbackTransaction();
+
 			throw e;
 		}
 	}
 
 	@Delete("application/json")
 	public void deleteAccount() throws InterruptedException, IOException, HibernateException {
-		Transaction tx = TransactionFactory.create();
+		Repository r = RepositoryService.getInstance();
 		try {
-			tx.begin();
+			r.openTransaction();
 			
-			AccountDAO accountDAO = (AccountDAO) __DaoFactory.create(Account.class);
+			AccountDAO accountDAO = (AccountDAO) r.createDao(Account.class);
 			Account account = accountDAO.findBranchAccount(branchID, accountID);
 			accountDAO.delete(account);
-			tx.commit();
+			r.closeTransaction();
 		} catch (Exception e) {
-			if (tx.canRollback())
-				tx.rollback();
+			r.rollbackTransaction();
+
 			throw e;
 		}
 	}

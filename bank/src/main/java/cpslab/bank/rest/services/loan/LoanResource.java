@@ -15,9 +15,8 @@ import org.restlet.resource.ServerResource;
 
 import cpslab.bank.api.dao.LoanDAO;
 import cpslab.bank.api.entities.Loan;
-import cpslab.util.db.__DaoFactory;
-import cpslab.util.db.Transaction;
-import cpslab.util.db.TransactionFactory;
+import cpslab.util.db.Repository;
+import cpslab.util.db.RepositoryService;
 
 public class LoanResource extends ServerResource {
 
@@ -30,17 +29,17 @@ public class LoanResource extends ServerResource {
 
 	@Get("application/json")
 	public Loan getLoan() throws InterruptedException, IOException, HibernateException {
-		Transaction tx = TransactionFactory.create();
+		Repository r = RepositoryService.getInstance();
 		try {
-			tx.begin();
+			r.openTransaction();
 			
-			LoanDAO loanDAO = (LoanDAO) __DaoFactory.create(Loan.class);
+			LoanDAO loanDAO = (LoanDAO) r.createDao(Loan.class);
 			Loan loan = loanDAO.findById(loanID);
-			tx.commit();
+			r.closeTransaction();
 			return loan;
 		} catch (Exception e) {
-			if (tx.canRollback())
-				tx.rollback();
+			r.rollbackTransaction();
+
 			throw e;
 		}
 	}
@@ -48,40 +47,40 @@ public class LoanResource extends ServerResource {
 	@Post("application/json")
 	public Loan updateLoan(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
-		Transaction tx = TransactionFactory.create();
+		Repository r = RepositoryService.getInstance();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String loanNumber = request.getString("loan_number");
 			String amount = request.getString("amount");
-			tx.begin();
+			r.openTransaction();
 			
-			LoanDAO loanDAO = (LoanDAO) __DaoFactory.create(Loan.class);
+			LoanDAO loanDAO = (LoanDAO) r.createDao(Loan.class);
 			Loan loan = loanDAO.findById(loanID);
 			loan.setLoanNumber(loanNumber);
 			loan.setAmount(new BigDecimal(amount));
 			Loan updatedLoan = loanDAO.update(loan);
-			tx.commit();
+			r.closeTransaction();
 			return updatedLoan;
 		} catch (Exception e) {
-			if (tx.canRollback())
-				tx.rollback();
+			r.rollbackTransaction();
+
 			throw e;
 		}
 	}
 
 	@Delete("application/json")
 	public void deleteLoan() throws InterruptedException, IOException, HibernateException {
-		Transaction tx = TransactionFactory.create();
+		Repository r = RepositoryService.getInstance();
 		try {
-			tx.begin();
+			r.openTransaction();
 			
-			LoanDAO loanDAO = (LoanDAO) __DaoFactory.create(Loan.class);
+			LoanDAO loanDAO = (LoanDAO) r.createDao(Loan.class);
 			Loan loan = loanDAO.findById(loanID);
 			loanDAO.delete(loan);
-			tx.commit();
+			r.closeTransaction();
 		} catch (Exception e) {
-			if (tx.canRollback())
-				tx.rollback();
+			r.rollbackTransaction();
+
 			throw e;
 		}
 	}

@@ -14,9 +14,8 @@ import org.restlet.resource.ServerResource;
 
 import cpslab.bank.api.dao.CustomerDAO;
 import cpslab.bank.api.entities.Customer;
-import cpslab.util.db.__DaoFactory;
-import cpslab.util.db.Transaction;
-import cpslab.util.db.TransactionFactory;
+import cpslab.util.db.Repository;
+import cpslab.util.db.RepositoryService;
 
 public class CustomerResource extends ServerResource {
 
@@ -29,17 +28,17 @@ public class CustomerResource extends ServerResource {
 
 	@Get("application/json")
 	public Customer getCustomer() throws InterruptedException, IOException, HibernateException {
-		Transaction tx = TransactionFactory.create();
+		Repository r = RepositoryService.getInstance();
 		try {
-			tx.begin();
+			r.openTransaction();
 			
-			CustomerDAO customerDAO = (CustomerDAO) __DaoFactory.create(Customer.class);
+			CustomerDAO customerDAO = (CustomerDAO) r.createDao(Customer.class);
 			Customer customer = customerDAO.findById(customerID);
-			tx.commit();
+			r.closeTransaction();
 			return customer;
 		} catch (Exception e) {
-			if (tx.canRollback())
-				tx.rollback();
+			r.rollbackTransaction();
+
 			throw e;
 		}
 	}
@@ -47,42 +46,42 @@ public class CustomerResource extends ServerResource {
 	@Post("application/json")
 	public Customer updateCustomer(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
-		Transaction tx = TransactionFactory.create();
+		Repository r = RepositoryService.getInstance();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String name = request.getString("name");
 			String street = request.getString("street");
 			String city = request.getString("city");
-			tx.begin();
+			r.openTransaction();
 			
-			CustomerDAO customerDAO = (CustomerDAO) __DaoFactory.create(Customer.class);
+			CustomerDAO customerDAO = (CustomerDAO) r.createDao(Customer.class);
 			Customer customer = customerDAO.findById(customerID);
 			customer.setName(name);
 			customer.setStreet(street);
 			customer.setCity(city);
 			Customer updatedCustomer = customerDAO.update(customer);
-			tx.commit();
+			r.closeTransaction();
 			return updatedCustomer;
 		} catch (Exception e) {
-			if (tx.canRollback())
-				tx.rollback();
+			r.rollbackTransaction();
+
 			throw e;
 		}
 	}
 
 	@Delete("application/json")
 	public void deleteCustomer() throws InterruptedException, IOException, HibernateException {
-		Transaction tx = TransactionFactory.create();
+		Repository r = RepositoryService.getInstance();
 		try {
-			tx.begin();
+			r.openTransaction();
 			
-			CustomerDAO customerDAO = (CustomerDAO) __DaoFactory.create(Customer.class);
+			CustomerDAO customerDAO = (CustomerDAO) r.createDao(Customer.class);
 			Customer customer = customerDAO.findById(customerID);
 			customerDAO.delete(customer);
-			tx.commit();
+			r.closeTransaction();
 		} catch (Exception e) {
-			if (tx.canRollback())
-				tx.rollback();
+			r.rollbackTransaction();
+
 			throw e;
 		}
 	}

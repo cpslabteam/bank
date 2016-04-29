@@ -37,7 +37,7 @@ public class TestDaoFactory {
 
 //        MyDao dao = (MyDao) DAOFactory.create(MyDataEntity.class);
         
-        AccountDAO dao = (AccountDAO) __DaoFactory.create(Account.class);
+        AccountDAO dao = (AccountDAO) r.createDao(Account.class);
 
         Assert.assertNotNull(dao);
     }

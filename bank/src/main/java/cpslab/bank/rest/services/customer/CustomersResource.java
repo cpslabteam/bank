@@ -13,25 +13,24 @@ import org.restlet.resource.ServerResource;
 
 import cpslab.bank.api.dao.CustomerDAO;
 import cpslab.bank.api.entities.Customer;
-import cpslab.util.db.__DaoFactory;
-import cpslab.util.db.Transaction;
-import cpslab.util.db.TransactionFactory;
+import cpslab.util.db.Repository;
+import cpslab.util.db.RepositoryService;
 
 public class CustomersResource extends ServerResource {
 
 	@Get("application/json")
 	public List<Customer> getCustomers() throws InterruptedException, IOException, HibernateException {
-		Transaction tx = TransactionFactory.create();
+		Repository r = RepositoryService.getInstance();
 		try {
-			tx.begin();
+			r.openTransaction();
 			
-			CustomerDAO customerDAO = (CustomerDAO) __DaoFactory.create(Customer.class);
+			CustomerDAO customerDAO = (CustomerDAO) r.createDao(Customer.class);
 			List<Customer> customers = customerDAO.findAll();
-			tx.commit();
+			r.closeTransaction();
 			return customers;
 		} catch (Exception e) {
-			if (tx.canRollback())
-				tx.rollback();
+			r.rollbackTransaction();
+
 			throw e;
 		}
 	}
@@ -39,22 +38,22 @@ public class CustomersResource extends ServerResource {
 	@Post("application/json")
 	public Customer createCustomer(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
-		Transaction tx = TransactionFactory.create();
+		Repository r = RepositoryService.getInstance();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String name = request.getString("name");
 			String street = request.getString("street");
 			String city = request.getString("city");
-			tx.begin();
+			r.openTransaction();
 			
-			CustomerDAO customerDAO = (CustomerDAO) __DaoFactory.create(Customer.class);
+			CustomerDAO customerDAO = (CustomerDAO) r.createDao(Customer.class);
 			Customer customer = new Customer(name, street, city);
 			Customer createdCustomer = customerDAO.persist(customer);
-			tx.commit();
+			r.closeTransaction();
 			return createdCustomer;
 		} catch (Exception e) {
-			if (tx.canRollback())
-				tx.rollback();
+			r.rollbackTransaction();
+
 			throw e;
 		}
 	}

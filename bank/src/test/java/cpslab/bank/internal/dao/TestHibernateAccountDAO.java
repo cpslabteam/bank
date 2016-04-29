@@ -24,7 +24,7 @@ public class TestHibernateAccountDAO {
 
     @Test
     public void test() {
-        AccountDAO dao = (AccountDAO) __DaoFactory.create(Account.class);
+        AccountDAO dao = (AccountDAO) r.createDao(Account.class);
         
 
     }

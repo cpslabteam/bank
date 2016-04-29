@@ -15,21 +15,11 @@ import cpslab.bank.api.dao.AccountDAO;
 import cpslab.bank.api.dao.BranchDAO;
 import cpslab.bank.api.entities.Account;
 import cpslab.bank.api.entities.Branch;
-import cpslab.util.db.__DaoFactory;
-import cpslab.util.db.hibernate.HibernateRepository;
 import cpslab.util.db.Repository;
 import cpslab.util.db.RepositoryService;
-import cpslab.util.db.Transaction;
-import cpslab.util.db.TransactionFactory;
 
 public class AccountBranchResource extends
         ServerResource {
-
-    {
-        // TODO: Verify if this is a good place to register the DAO
-        Repository r = RepositoryService.getInstance();
-        r.registerDao(Account.class, AccountDAO.class);
-    }
 
     private Long accountID;
 
@@ -38,7 +28,6 @@ public class AccountBranchResource extends
         accountID = Long.valueOf(getAttribute("account"));
     }
 
-    // TODO: Migrar os restantes servicos baseados neste
     @Get("application/json")
     public Branch getBranch() throws InterruptedException, IOException, HibernateException {
         Repository r = RepositoryService.getInstance();
@@ -61,22 +50,22 @@ public class AccountBranchResource extends
     @Put("application/json")
     public Branch changeBranch(Representation entity)
             throws InterruptedException, IOException, HibernateException, JSONException {
-        Transaction tx = TransactionFactory.create();
+    	Repository r = RepositoryService.getInstance();
         try {
             JSONObject request = new JSONObject(entity.getText());
             String branchID = request.getString("id");
-            tx.begin();
-            AccountDAO accountDAO = (AccountDAO) __DaoFactory.create(Account.class);
-            BranchDAO branchDAO = (BranchDAO) __DaoFactory.create(Branch.class);
+            AccountDAO accountDAO = (AccountDAO) r.createDao(Account.class);
+            BranchDAO branchDAO = (BranchDAO) r.createDao(Branch.class);
+            
+            r.openTransaction();
             Account account = accountDAO.findById(accountID);
             Branch branch = branchDAO.findById(Long.valueOf(branchID));
             account.setBranch(branch);
             accountDAO.update(account);
-            tx.commit();
+            r.closeTransaction();
             return branch;
         } catch (Exception e) {
-            if (tx.canRollback())
-                tx.rollback();
+            r.rollbackTransaction();
             throw e;
         }
     }

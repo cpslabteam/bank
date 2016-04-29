@@ -15,9 +15,8 @@ import org.restlet.resource.ServerResource;
 
 import cpslab.bank.api.dao.BranchDAO;
 import cpslab.bank.api.entities.Branch;
-import cpslab.util.db.__DaoFactory;
-import cpslab.util.db.Transaction;
-import cpslab.util.db.TransactionFactory;
+import cpslab.util.db.Repository;
+import cpslab.util.db.RepositoryService;
 
 public class BranchResource extends ServerResource {
 
@@ -30,17 +29,17 @@ public class BranchResource extends ServerResource {
 
 	@Get("application/json")
 	public Branch getBranch() throws InterruptedException, IOException, HibernateException {
-		Transaction tx = TransactionFactory.create();
+		Repository r = RepositoryService.getInstance();
 		try {
-			tx.begin();
+			r.openTransaction();
 			
-			BranchDAO branchDAO = (BranchDAO) __DaoFactory.create(Branch.class);
+			BranchDAO branchDAO = (BranchDAO) r.createDao(Branch.class);
 			Branch branch = branchDAO.findById(branchID);
-			tx.commit();
+			r.closeTransaction();
 			return branch;
 		} catch (Exception e) {
-			if (tx.canRollback())
-				tx.rollback();
+			r.rollbackTransaction();
+
 			throw e;
 		}
 	}
@@ -48,42 +47,42 @@ public class BranchResource extends ServerResource {
 	@Put("application/json")
 	public Branch updateBranch(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
-		Transaction tx = TransactionFactory.create();
+		Repository r = RepositoryService.getInstance();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String name = request.getString("name");
 			String city = request.getString("city");
 			String assets = request.getString("assets");
-			tx.begin();
+			r.openTransaction();
 			
-			BranchDAO branchDAO = (BranchDAO) __DaoFactory.create(Branch.class);
+			BranchDAO branchDAO = (BranchDAO) r.createDao(Branch.class);
 			Branch branch = branchDAO.findById(branchID);
 			branch.setName(name);
 			branch.setCity(city);
 			branch.setAssets(new BigDecimal(assets));
 			Branch updatedBranch = branchDAO.update(branch);
-			tx.commit();
+			r.closeTransaction();
 			return updatedBranch;
 		} catch (Exception e) {
-			if (tx.canRollback())
-				tx.rollback();
+			r.rollbackTransaction();
+
 			throw e;
 		}
 	}
 
 	@Delete("application/json")
 	public void deleteBranch() throws InterruptedException, IOException, HibernateException {
-		Transaction tx = TransactionFactory.create();
+		Repository r = RepositoryService.getInstance();
 		try {
-			tx.begin();
+			r.openTransaction();
 			
-			BranchDAO branchDAO = (BranchDAO) __DaoFactory.create(Branch.class);
+			BranchDAO branchDAO = (BranchDAO) r.createDao(Branch.class);
 			Branch branch = branchDAO.findById(branchID);
 			branchDAO.delete(branch);
-			tx.commit();
+			r.closeTransaction();
 		} catch (Exception e) {
-			if (tx.canRollback())
-				tx.rollback();
+			r.rollbackTransaction();
+
 			throw e;
 		}
 	}

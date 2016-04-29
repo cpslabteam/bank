@@ -15,9 +15,8 @@ import cpslab.bank.api.dao.BranchDAO;
 import cpslab.bank.api.dao.LoanDAO;
 import cpslab.bank.api.entities.Branch;
 import cpslab.bank.api.entities.Loan;
-import cpslab.util.db.__DaoFactory;
-import cpslab.util.db.Transaction;
-import cpslab.util.db.TransactionFactory;
+import cpslab.util.db.Repository;
+import cpslab.util.db.RepositoryService;
 
 public class LoanBranchResource extends ServerResource {
 
@@ -30,18 +29,18 @@ public class LoanBranchResource extends ServerResource {
 
 	@Get("application/json")
 	public Branch getBranch() throws InterruptedException, IOException, HibernateException {
-		Transaction tx = TransactionFactory.create();
+		Repository r = RepositoryService.getInstance();
 		try {
-			tx.begin();
+			r.openTransaction();
 			
-			LoanDAO loanDAO = (LoanDAO) __DaoFactory.create(Loan.class);
+			LoanDAO loanDAO = (LoanDAO) r.createDao(Loan.class);
 			Loan loan = loanDAO.findById(loanID);
 			Branch branch = loan.getBranch();
-			tx.commit();
+			r.closeTransaction();
 			return branch;
 		} catch (Exception e) {
-			if (tx.canRollback())
-				tx.rollback();
+			r.rollbackTransaction();
+
 			throw e;
 		}
 	}
@@ -49,23 +48,23 @@ public class LoanBranchResource extends ServerResource {
 	@Put("application/json")
 	public Branch changeBranch(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
-		Transaction tx = TransactionFactory.create();
+		Repository r = RepositoryService.getInstance();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String branchID = request.getString("id");
-			tx.begin();
+			r.openTransaction();
 			
-			LoanDAO loanDAO = (LoanDAO) __DaoFactory.create(Loan.class);
-			BranchDAO branchDAO = (BranchDAO) __DaoFactory.create(Branch.class);
+			LoanDAO loanDAO = (LoanDAO) r.createDao(Loan.class);
+			BranchDAO branchDAO = (BranchDAO) r.createDao(Branch.class);
 			Loan loan = loanDAO.findById(loanID);
 			Branch branch = branchDAO.findById(Long.valueOf(branchID));
 			loan.setBranch(branch);
 			loanDAO.update(loan);
-			tx.commit();
+			r.closeTransaction();
 			return branch;
 		} catch (Exception e) {
-			if (tx.canRollback())
-				tx.rollback();
+			r.rollbackTransaction();
+
 			throw e;
 		}
 	}

@@ -13,9 +13,8 @@ import org.restlet.resource.ServerResource;
 
 import cpslab.bank.api.dao.AccountDAO;
 import cpslab.bank.api.entities.Account;
-import cpslab.util.db.__DaoFactory;
-import cpslab.util.db.Transaction;
-import cpslab.util.db.TransactionFactory;
+import cpslab.util.db.Repository;
+import cpslab.util.db.RepositoryService;
 
 public class CustomerAccountDepositResource extends ServerResource {
 
@@ -31,22 +30,22 @@ public class CustomerAccountDepositResource extends ServerResource {
 	@Post("application/json")
 	public Account deposit(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
-		Transaction tx = TransactionFactory.create();
+		Repository r = RepositoryService.getInstance();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String amount = request.getString("amount");
-			tx.begin();
+			r.openTransaction();
 			
-			AccountDAO accountDAO = (AccountDAO) __DaoFactory.create(Account.class);
+			AccountDAO accountDAO = (AccountDAO) r.createDao(Account.class);
 			Account account = accountDAO.findCustomerAccount(customerID, accountID);
 			BigDecimal newBalance = account.getBalance().add(new BigDecimal(amount));
 			account.setBalance(newBalance);
 			Account updatedAccount = accountDAO.update(account);
-			tx.commit();
+			r.closeTransaction();
 			return updatedAccount;
 		} catch (Exception e) {
-			if (tx.canRollback())
-				tx.rollback();
+			r.rollbackTransaction();
+
 			throw e;
 		}
 	}

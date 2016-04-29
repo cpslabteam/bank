@@ -11,26 +11,25 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import cpslab.bank.api.dao.CustomerDAO;
 import cpslab.bank.api.entities.Customer;
-import cpslab.util.db.__DaoFactory;
-import cpslab.util.db.Transaction;
-import cpslab.util.db.TransactionFactory;
+import cpslab.util.db.Repository;
+import cpslab.util.db.RepositoryService;
 
 public class DepositorsResource extends ServerResource {
 
 	@Get("application/json")
 	public List<Customer> getDepositors(Representation entity)
 			throws InterruptedException, JsonProcessingException, HibernateException {
-		Transaction tx = TransactionFactory.create();
+		Repository r = RepositoryService.getInstance();
 		try {
-			tx.begin();
+			r.openTransaction();
 			
-			CustomerDAO customerDAO = (CustomerDAO) __DaoFactory.create(Customer.class);
+			CustomerDAO customerDAO = (CustomerDAO) r.createDao(Customer.class);
 			List<Customer> depositors = customerDAO.findDepositors();
-			tx.commit();
+			r.closeTransaction();
 			return depositors;
 		} catch (Exception e) {
-			if (tx.canRollback())
-				tx.rollback();
+			r.rollbackTransaction();
+
 			throw e;
 		}
 	}

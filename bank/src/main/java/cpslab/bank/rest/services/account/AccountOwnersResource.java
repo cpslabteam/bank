@@ -16,9 +16,8 @@ import cpslab.bank.api.dao.AccountDAO;
 import cpslab.bank.api.dao.CustomerDAO;
 import cpslab.bank.api.entities.Account;
 import cpslab.bank.api.entities.Customer;
-import cpslab.util.db.__DaoFactory;
-import cpslab.util.db.Transaction;
-import cpslab.util.db.TransactionFactory;
+import cpslab.util.db.Repository;
+import cpslab.util.db.RepositoryService;
 
 public class AccountOwnersResource extends ServerResource {
 
@@ -31,17 +30,17 @@ public class AccountOwnersResource extends ServerResource {
 
 	@Get("application/json")
 	public List<Customer> getOwners() throws InterruptedException, IOException, HibernateException {
-		Transaction tx = TransactionFactory.create();
+		Repository r = RepositoryService.getInstance();
 		try {
-			tx.begin();
+			r.openTransaction();
 			
-			CustomerDAO customerDAO = (CustomerDAO) __DaoFactory.create(Customer.class);
+			CustomerDAO customerDAO = (CustomerDAO) r.createDao(Customer.class);
 			List<Customer> owners = customerDAO.findAccountOwners(accountID);
-			tx.commit();
+			r.closeTransaction();
 			return owners;
 		} catch (Exception e) {
-			if (tx.canRollback())
-				tx.rollback();
+			r.rollbackTransaction();
+
 			throw e;
 		}
 	}
@@ -49,22 +48,22 @@ public class AccountOwnersResource extends ServerResource {
 	@Put("application/json")
 	public Customer addOwner(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
-		Transaction tx = TransactionFactory.create();
+		Repository r = RepositoryService.getInstance();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String ownerID = request.getString("id");
-			tx.begin();
+			r.openTransaction();
 			
-			AccountDAO accountDAO = (AccountDAO) __DaoFactory.create(Account.class);
-			CustomerDAO customerDAO = (CustomerDAO) __DaoFactory.create(Customer.class);
+			AccountDAO accountDAO = (AccountDAO) r.createDao(Account.class);
+			CustomerDAO customerDAO = (CustomerDAO) r.createDao(Customer.class);
 			Customer owner = customerDAO.findById(Long.valueOf(ownerID));
 			Account account = accountDAO.findById(accountID);
 			account.addOwner(owner);
-			tx.commit();
+			r.closeTransaction();
 			return owner;
 		} catch (Exception e) {
-			if (tx.canRollback())
-				tx.rollback();
+			r.rollbackTransaction();
+
 			throw e;
 		}
 	}

@@ -14,25 +14,24 @@ import org.restlet.resource.ServerResource;
 
 import cpslab.bank.api.dao.BranchDAO;
 import cpslab.bank.api.entities.Branch;
-import cpslab.util.db.__DaoFactory;
-import cpslab.util.db.Transaction;
-import cpslab.util.db.TransactionFactory;
+import cpslab.util.db.Repository;
+import cpslab.util.db.RepositoryService;
 
 public class BranchesResource extends ServerResource {
 
 	@Get("application/json")
 	public List<Branch> getBranches() throws InterruptedException, IOException, HibernateException {
-		Transaction tx = TransactionFactory.create();
+		Repository r = RepositoryService.getInstance();
 		try {
-			tx.begin();
+			r.openTransaction();
 			
-			BranchDAO branchDAO = (BranchDAO) __DaoFactory.create(Branch.class);
+			BranchDAO branchDAO = (BranchDAO) r.createDao(Branch.class);
 			List<Branch> branches = branchDAO.findAll();
-			tx.commit();
+			r.closeTransaction();
 			return branches;
 		} catch (Exception e) {
-			if (tx.canRollback())
-				tx.rollback();
+			r.rollbackTransaction();
+
 			throw e;
 		}
 	}
@@ -40,23 +39,23 @@ public class BranchesResource extends ServerResource {
 	@Post("application/json")
 	public Branch createBranch(Representation entity)
 			throws InterruptedException, HibernateException, JSONException, IOException {
-		Transaction tx = TransactionFactory.create();
+		Repository r = RepositoryService.getInstance();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String branchName = request.getString("name");
 			String branchCity = request.getString("city");
 			String branchAssets = request.getString("assets");
-			tx.begin();
+			r.openTransaction();
 			
-			BranchDAO branchDAO = (BranchDAO) __DaoFactory.create(Branch.class);
+			BranchDAO branchDAO = (BranchDAO) r.createDao(Branch.class);
 			Branch branch = new Branch(branchName, branchCity, new BigDecimal(branchAssets));
 			Branch createdBranch = branchDAO.persist(branch);
-			tx.commit();
+			r.closeTransaction();
 			return createdBranch;
 		} catch (Exception e) {
 			System.out.println(e);
-			if (tx.canRollback())
-				tx.rollback();
+			r.rollbackTransaction();
+
 			throw e;
 		}
 	}

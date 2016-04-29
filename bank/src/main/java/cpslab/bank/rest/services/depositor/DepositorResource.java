@@ -11,9 +11,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import cpslab.bank.api.dao.CustomerDAO;
 import cpslab.bank.api.entities.Customer;
-import cpslab.util.db.__DaoFactory;
-import cpslab.util.db.Transaction;
-import cpslab.util.db.TransactionFactory;
+import cpslab.util.db.Repository;
+import cpslab.util.db.RepositoryService;
 
 public class DepositorResource extends ServerResource {
 
@@ -26,17 +25,17 @@ public class DepositorResource extends ServerResource {
 
 	@Get("application/json")
 	public Customer getDepositor() throws InterruptedException, JsonProcessingException, HibernateException {
-		Transaction tx = TransactionFactory.create();
+		Repository r = RepositoryService.getInstance();
 		try {
-			tx.begin();
+			r.openTransaction();
 			
-			CustomerDAO customerDAO = (CustomerDAO) __DaoFactory.create(Customer.class);
+			CustomerDAO customerDAO = (CustomerDAO) r.createDao(Customer.class);
 			Customer depositor = customerDAO.findById(depositorID);
-			tx.commit();
+			r.closeTransaction();
 			return depositor;
 		} catch (Exception e) {
-			if (tx.canRollback())
-				tx.rollback();
+			r.rollbackTransaction();
+
 			throw e;
 		}
 	}
@@ -44,34 +43,34 @@ public class DepositorResource extends ServerResource {
 	@Post("application/json")
 	public Customer updateCustomer(Customer depositor)
 			throws InterruptedException, JsonProcessingException, HibernateException {
-		Transaction tx = TransactionFactory.create();
+		Repository r = RepositoryService.getInstance();
 		try {
-			tx.begin();
+			r.openTransaction();
 			
-			CustomerDAO depositorDAO = (CustomerDAO) __DaoFactory.create(Customer.class);
+			CustomerDAO depositorDAO = (CustomerDAO) r.createDao(Customer.class);
 			Customer updatedCustomer = depositorDAO.update(depositor);
-			tx.commit();
+			r.closeTransaction();
 			return updatedCustomer;
 		} catch (Exception e) {
-			if (tx.canRollback())
-				tx.rollback();
+			r.rollbackTransaction();
+
 			throw e;
 		}
 	}
 
 	@Delete("application/json")
 	public void deleteCustomer() throws InterruptedException, JsonProcessingException, HibernateException {
-		Transaction tx = TransactionFactory.create();
+		Repository r = RepositoryService.getInstance();
 		try {
-			tx.begin();
+			r.openTransaction();
 			
-			CustomerDAO depositorDAO = (CustomerDAO) __DaoFactory.create(Customer.class);
+			CustomerDAO depositorDAO = (CustomerDAO) r.createDao(Customer.class);
 			Customer depositor = depositorDAO.findById(depositorID);
 			depositorDAO.delete(depositor);
-			tx.commit();
+			r.closeTransaction();
 		} catch (Exception e) {
-			if (tx.canRollback())
-				tx.rollback();
+			r.rollbackTransaction();
+
 			throw e;
 		}
 	}

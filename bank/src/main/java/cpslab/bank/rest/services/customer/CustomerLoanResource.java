@@ -12,9 +12,8 @@ import cpslab.bank.api.dao.CustomerDAO;
 import cpslab.bank.api.dao.LoanDAO;
 import cpslab.bank.api.entities.Customer;
 import cpslab.bank.api.entities.Loan;
-import cpslab.util.db.__DaoFactory;
-import cpslab.util.db.Transaction;
-import cpslab.util.db.TransactionFactory;
+import cpslab.util.db.Repository;
+import cpslab.util.db.RepositoryService;
 
 public class CustomerLoanResource extends ServerResource {
 
@@ -29,36 +28,36 @@ public class CustomerLoanResource extends ServerResource {
 
 	@Get("application/json")
 	public Loan getLoan() throws InterruptedException, IOException, HibernateException {
-		Transaction tx = TransactionFactory.create();
+		Repository r = RepositoryService.getInstance();
 		try {
-			tx.begin();
+			r.openTransaction();
 			
-			LoanDAO loanDAO = (LoanDAO) __DaoFactory.create(Loan.class);
+			LoanDAO loanDAO = (LoanDAO) r.createDao(Loan.class);
 			Loan loan = loanDAO.findCustomerLoan(customerID, loanID);
-			tx.commit();
+			r.closeTransaction();
 			return loan;
 		} catch (Exception e) {
-			if (tx.canRollback())
-				tx.rollback();
+			r.rollbackTransaction();
+
 			throw e;
 		}
 	}
 
 	@Delete("application/json")
 	public void removeLoan() throws InterruptedException, IOException, HibernateException {
-		Transaction tx = TransactionFactory.create();
+		Repository r = RepositoryService.getInstance();
 		try {
-			tx.begin();
+			r.openTransaction();
 			
-			LoanDAO loanDAO = (LoanDAO) __DaoFactory.create(Loan.class);
-			CustomerDAO customerDAO = (CustomerDAO) __DaoFactory.create(Customer.class);
+			LoanDAO loanDAO = (LoanDAO) r.createDao(Loan.class);
+			CustomerDAO customerDAO = (CustomerDAO) r.createDao(Customer.class);
 			Loan loan = loanDAO.findCustomerLoan(customerID, loanID);
 			Customer customer = customerDAO.findById(customerID);
 			customer.removeLoan(loan);
-			tx.commit();
+			r.closeTransaction();
 		} catch (Exception e) {
-			if (tx.canRollback())
-				tx.rollback();
+			r.rollbackTransaction();
+
 			throw e;
 		}
 	}

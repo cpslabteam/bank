@@ -12,9 +12,8 @@ import cpslab.bank.api.dao.AccountDAO;
 import cpslab.bank.api.dao.CustomerDAO;
 import cpslab.bank.api.entities.Account;
 import cpslab.bank.api.entities.Customer;
-import cpslab.util.db.__DaoFactory;
-import cpslab.util.db.Transaction;
-import cpslab.util.db.TransactionFactory;
+import cpslab.util.db.Repository;
+import cpslab.util.db.RepositoryService;
 
 public class CustomerAccountResource extends ServerResource {
 
@@ -29,36 +28,36 @@ public class CustomerAccountResource extends ServerResource {
 
 	@Get("application/json")
 	public Account getAccount() throws InterruptedException, IOException, HibernateException {
-		Transaction tx = TransactionFactory.create();
+		Repository r = RepositoryService.getInstance();
 		try {
-			tx.begin();
+			r.openTransaction();
 			
-			AccountDAO accountDAO = (AccountDAO) __DaoFactory.create(Account.class);
+			AccountDAO accountDAO = (AccountDAO) r.createDao(Account.class);
 			Account account = accountDAO.findCustomerAccount(customerID, accountID);
-			tx.commit();
+			r.closeTransaction();
 			return account;
 		} catch (Exception e) {
-			if (tx.canRollback())
-				tx.rollback();
+			r.rollbackTransaction();
+
 			throw e;
 		}
 	}
 
 	@Delete("application/json")
 	public void removeAccount() throws InterruptedException, IOException, HibernateException {
-		Transaction tx = TransactionFactory.create();
+		Repository r = RepositoryService.getInstance();
 		try {
-			tx.begin();
+			r.openTransaction();
 			
-			AccountDAO accountDAO = (AccountDAO) __DaoFactory.create(Account.class);
-			CustomerDAO customerDAO = (CustomerDAO) __DaoFactory.create(Customer.class);
+			AccountDAO accountDAO = (AccountDAO) r.createDao(Account.class);
+			CustomerDAO customerDAO = (CustomerDAO) r.createDao(Customer.class);
 			Account account = accountDAO.findCustomerAccount(customerID, accountID);
 			Customer customer = customerDAO.findById(customerID);
 			customer.removeAccount(account);
-			tx.commit();
+			r.closeTransaction();
 		} catch (Exception e) {
-			if (tx.canRollback())
-				tx.rollback();
+			r.rollbackTransaction();
+
 			throw e;
 		}
 	}

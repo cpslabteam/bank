@@ -12,9 +12,8 @@ import cpslab.bank.api.dao.AccountDAO;
 import cpslab.bank.api.dao.CustomerDAO;
 import cpslab.bank.api.entities.Account;
 import cpslab.bank.api.entities.Customer;
-import cpslab.util.db.__DaoFactory;
-import cpslab.util.db.Transaction;
-import cpslab.util.db.TransactionFactory;
+import cpslab.util.db.Repository;
+import cpslab.util.db.RepositoryService;
 
 public class AccountOwnerResource extends ServerResource {
 
@@ -29,34 +28,34 @@ public class AccountOwnerResource extends ServerResource {
 
 	@Get("application/json")
 	public Customer getOwner() throws InterruptedException, IOException, HibernateException {
-		Transaction tx = TransactionFactory.create();
+		Repository r = RepositoryService.getInstance();
 		try {
-			tx.begin();
-			CustomerDAO customerDAO = (CustomerDAO) __DaoFactory.create(Customer.class);
+			r.openTransaction();
+			CustomerDAO customerDAO = (CustomerDAO) r.createDao(Customer.class);
 			Customer owner = customerDAO.findAccountOwner(accountID, ownerID);
-			tx.commit();
+			r.closeTransaction();
 			return owner;
 		} catch (Exception e) {
-			if (tx.canRollback())
-				tx.rollback();
+			r.rollbackTransaction();
+
 			throw e;
 		}
 	}
 
 	@Delete("application/json")
 	public void removeOwner() throws InterruptedException, IOException, HibernateException {
-		Transaction tx = TransactionFactory.create();
+		Repository r = RepositoryService.getInstance();
 		try {
-			tx.begin();
-			AccountDAO accountDAO = (AccountDAO) __DaoFactory.create(Account.class);
-			CustomerDAO customerDAO = (CustomerDAO) __DaoFactory.create(Customer.class);
+			r.openTransaction();
+			AccountDAO accountDAO = (AccountDAO) r.createDao(Account.class);
+			CustomerDAO customerDAO = (CustomerDAO) r.createDao(Customer.class);
 			Account account = accountDAO.findById(accountID);
 			Customer owner = customerDAO.findById(ownerID);
 			account.removeOwner(owner);
-			tx.commit();
+			r.closeTransaction();
 		} catch (Exception e) {
-			if (tx.canRollback())
-				tx.rollback();
+			r.rollbackTransaction();
+
 			throw e;
 		}
 	}

@@ -16,25 +16,24 @@ import cpslab.bank.api.dao.AccountDAO;
 import cpslab.bank.api.dao.BranchDAO;
 import cpslab.bank.api.entities.Account;
 import cpslab.bank.api.entities.Branch;
-import cpslab.util.db.__DaoFactory;
-import cpslab.util.db.Transaction;
-import cpslab.util.db.TransactionFactory;
+import cpslab.util.db.Repository;
+import cpslab.util.db.RepositoryService;
 
 public class AccountsResource extends ServerResource {
 
 	@Get("application/json")
 	public List<Account> getAccounts() throws InterruptedException, IOException, HibernateException {
-		Transaction tx = TransactionFactory.create();
+		Repository r = RepositoryService.getInstance();
 		try {
-			tx.begin();
+			r.openTransaction();
 			
-			AccountDAO accountDAO = (AccountDAO) __DaoFactory.create(Account.class);
+			AccountDAO accountDAO = (AccountDAO) r.createDao(Account.class);
 			List<Account> accounts = accountDAO.findAll();
-			tx.commit();			
+			r.closeTransaction();			
 			return accounts;
 		} catch (Exception e) {
-			if (tx.canRollback())
-				tx.rollback();
+			r.rollbackTransaction();
+
 			throw e;
 		}
 	}
@@ -42,25 +41,25 @@ public class AccountsResource extends ServerResource {
 	@Post("application/json")
 	public Account createAccount(Representation entity)
 			throws InterruptedException, IOException, HibernateException, JSONException {
-		Transaction tx = TransactionFactory.create();
+		Repository r = RepositoryService.getInstance();
 		try {
 			JSONObject request = new JSONObject(entity.getText());
 			String accountNumber = request.getString("account_number");
 			String balance = request.getString("balance");
 			String branchID = request.getString("branch_id");
-			tx.begin();
+			r.openTransaction();
 			
-			AccountDAO accountDAO = (AccountDAO) __DaoFactory.create(Account.class);
-			BranchDAO branchDAO = (BranchDAO) __DaoFactory.create(Branch.class);
+			AccountDAO accountDAO = (AccountDAO) r.createDao(Account.class);
+			BranchDAO branchDAO = (BranchDAO) r.createDao(Branch.class);
 			Branch branch = branchDAO.findById(Long.valueOf(branchID));
 			Account account = new Account(accountNumber, branch, new BigDecimal(balance));
 			Account createdAccount = accountDAO.persist(account);
-			tx.commit();
+			r.closeTransaction();
 			return createdAccount;
 		} catch (Exception e) {
 			System.out.println(e);
-			if (tx.canRollback())
-				tx.rollback();
+			r.rollbackTransaction();
+
 			throw e;
 		}
 	}
