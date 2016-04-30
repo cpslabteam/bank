@@ -9,8 +9,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
-import org.hibernate.annotations.NaturalId;
-
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import capslab.util.db.spi.BaseDataEntity;
@@ -19,7 +17,6 @@ import capslab.util.db.spi.BaseDataEntity;
 public class Branch extends BaseDataEntity {
 
 	@Column(name = "name", nullable = false)
-	@NaturalId(mutable = true)
 	private String name;
 
 	@Column(name = "city", nullable = false)

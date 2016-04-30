@@ -22,14 +22,15 @@ import cpslab.util.db.RepositoryService;
 public class AccountsResource extends ServerResource {
 
 	@Get("application/json")
-	public List<Account> getAccounts() throws InterruptedException, IOException, HibernateException {
+	public List<Account> getAccounts()
+			throws InterruptedException, IOException, HibernateException {
 		Repository r = RepositoryService.getInstance();
 		try {
 			r.openTransaction();
-			
+
 			AccountDAO accountDAO = (AccountDAO) r.createDao(Account.class);
 			List<Account> accounts = accountDAO.findAll();
-			r.closeTransaction();			
+			r.closeTransaction();
 			return accounts;
 		} catch (Exception e) {
 			r.rollbackTransaction();
@@ -48,7 +49,7 @@ public class AccountsResource extends ServerResource {
 			String balance = request.getString("balance");
 			String branchID = request.getString("branch_id");
 			r.openTransaction();
-			
+
 			AccountDAO accountDAO = (AccountDAO) r.createDao(Account.class);
 			BranchDAO branchDAO = (BranchDAO) r.createDao(Branch.class);
 			Branch branch = branchDAO.findById(Long.valueOf(branchID));

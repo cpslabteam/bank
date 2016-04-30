@@ -11,8 +11,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
-import org.hibernate.annotations.NaturalId;
-
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import capslab.util.db.spi.BaseDataEntity;
@@ -21,7 +19,6 @@ import capslab.util.db.spi.BaseDataEntity;
 public class Loan extends BaseDataEntity {
 
 	@Column(name = "loan_number")
-	@NaturalId
 	private String loanNumber;
 
 	@JsonSerialize(as = BaseDataEntity.class)

@@ -19,14 +19,14 @@ import org.restlet.service.CorsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cpslab.bank.api.dao.AccountDAO;
-import cpslab.bank.api.dao.BranchDAO;
-import cpslab.bank.api.dao.CustomerDAO;
-import cpslab.bank.api.dao.LoanDAO;
 import cpslab.bank.api.entities.Account;
 import cpslab.bank.api.entities.Branch;
 import cpslab.bank.api.entities.Customer;
 import cpslab.bank.api.entities.Loan;
+import cpslab.bank.internal.dao.HibernateAccountDAO;
+import cpslab.bank.internal.dao.HibernateBranchDAO;
+import cpslab.bank.internal.dao.HibernateCustomerDAO;
+import cpslab.bank.internal.dao.HibernateLoanDAO;
 import cpslab.util.db.Repository;
 import cpslab.util.db.RepositoryService;
 import cpslab.util.db.hibernate.jackson.HibernateJacksonConverter;
@@ -43,6 +43,12 @@ public final class BankRestServerActivator extends
     private static final int SERVER_PORT = 9192;
 
     private static final String ROOT_ADDRESS = "http://localhost:" + SERVER_PORT;
+    
+    private static final String DATABASE_URL = "localhost:5432/bank";
+    
+    private static final String DATABASE_USERNAME = "postgres";
+    
+    private static final String DATABASE_PASSWORD = "root";
 
     public static void close() throws Exception {
         new Thread() {
@@ -58,11 +64,12 @@ public final class BankRestServerActivator extends
     }
 
     private void registerDaos() {
+    	RepositoryService.initializeRepository(DATABASE_URL, DATABASE_USERNAME, DATABASE_PASSWORD);
         Repository r = RepositoryService.getInstance();
-        r.registerDao(Account.class, AccountDAO.class);
-        r.registerDao(Loan.class, LoanDAO.class);
-        r.registerDao(Branch.class, BranchDAO.class);
-        r.registerDao(Customer.class, CustomerDAO.class);
+        r.registerDao(Account.class, HibernateAccountDAO.class);
+        r.registerDao(Loan.class, HibernateLoanDAO.class);
+        r.registerDao(Branch.class, HibernateBranchDAO.class);
+        r.registerDao(Customer.class, HibernateCustomerDAO.class);
     }
 
     public static BankRestServerActivator getInstance() {

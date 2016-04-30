@@ -11,8 +11,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
-import org.hibernate.annotations.NaturalId;
-
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import capslab.util.db.spi.BaseDataEntity;
@@ -20,7 +18,6 @@ import capslab.util.db.spi.BaseDataEntity;
 @Entity(name = "Account")
 public class Account extends BaseDataEntity {
 
-	@NaturalId
 	@Column(name = "account_number")
 	private String accountNumber;
 
