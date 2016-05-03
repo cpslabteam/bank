@@ -15,22 +15,5 @@
 		<property name="dialect">org.hibernate.dialect.PostgreSQLDialect
 		</property>
 
-		<!-- Echo all executed SQL to stdout -->
-		<property name="show_sql">true</property>
-		<property name="format_sql">true</property>
-
-		<!-- Drop and re-create the database schema on startup -->
-		<property name="hbm2ddl.auto">validate</property>
-
-		<!-- One session per thread of execution -->
-		<property name="current_session_context_class">thread</property>
-
-		<!-- Mappings -->
-		<mapping class="cpslab.bank.api.entities.BaseDataObject"></mapping>
-		<mapping class="cpslab.bank.api.entities.Customer"></mapping>
-		<mapping class="cpslab.bank.api.entities.Account"></mapping>
-		<mapping class="cpslab.bank.api.entities.Loan"></mapping>
-		<mapping class="cpslab.bank.api.entities.Branch"></mapping>
-
 	</session-factory>
 </hibernate-configuration>

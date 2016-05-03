@@ -26,9 +26,7 @@ import cpslab.bank.internal.dao.HibernateBranchDAO;
 import cpslab.bank.internal.dao.HibernateCustomerDAO;
 import cpslab.bank.internal.dao.HibernateLoanDAO;
 import cpslab.util.db.Repository;
-import cpslab.util.db.Repository.Dialect;
 import cpslab.util.db.RepositoryService;
-import cpslab.util.db.RepositoryService.Orm;
 import cpslab.util.db.hibernate.jackson.HibernateJacksonConverter;
 
 public final class BankRestServerActivator extends Application {
@@ -43,16 +41,6 @@ public final class BankRestServerActivator extends Application {
 
 	private static final String ROOT_ADDRESS = "http://localhost:" + SERVER_PORT;
 
-	private final String DATABASE_URL = "localhost:5432/bank";
-
-	private final String DATABASE_USERNAME = "postgres";
-
-	private final String DATABASE_PASSWORD = "root";
-
-	private final Dialect DATABASE_DIALECT = Dialect.POSTGRESQL;
-
-	private final Orm DATABASE_ORM = Orm.HIBERNATE;
-
 	public static void close() throws Exception {
 		new Thread() {
 			public void run() {
@@ -64,11 +52,6 @@ public final class BankRestServerActivator extends Application {
 				}
 			}
 		}.start();
-	}
-
-	private void initializeRepository() {
-		RepositoryService.initializeRepository(DATABASE_ORM, DATABASE_DIALECT, DATABASE_URL,
-				DATABASE_USERNAME, DATABASE_PASSWORD);
 	}
 
 	private void registerDaos() {
@@ -141,7 +124,6 @@ public final class BankRestServerActivator extends Application {
 	}
 
 	private BankRestServerActivator() {
-		initializeRepository();
 		registerDaos();
 		configureCorsService();
 		setStatusService(new BankStatusService());
