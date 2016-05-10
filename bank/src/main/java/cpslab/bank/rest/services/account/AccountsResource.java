@@ -10,13 +10,13 @@ import cpslab.bank.api.dao.BranchDAO;
 import cpslab.bank.api.entities.Account;
 import cpslab.bank.api.entities.Branch;
 import cpslab.bank.jsonserialization.BankJsonSerializer;
-import cpslab.bank.rest.services.BaseServerResource;
 import cpslab.util.db.Repository;
 import cpslab.util.db.RepositoryService;
+import cpslab.util.rest.RestJSONServicesProvider;
 import cpslab.util.rest.services.JsonGetService;
 import cpslab.util.rest.services.JsonPostService;
 
-public class AccountsResource extends BaseServerResource
+public class AccountsResource extends RestJSONServicesProvider
 		implements JsonGetService, JsonPostService {
 
 	private Repository repository = RepositoryService.getInstance();

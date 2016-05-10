@@ -4,6 +4,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
+import org.hibernate.ObjectNotFoundException;
+import org.hibernate.exception.ConstraintViolationException;
+import org.json.JSONException;
 import org.restlet.Application;
 import org.restlet.Component;
 import org.restlet.Restlet;
@@ -25,9 +28,13 @@ import cpslab.bank.internal.dao.HibernateAccountDAO;
 import cpslab.bank.internal.dao.HibernateBranchDAO;
 import cpslab.bank.internal.dao.HibernateCustomerDAO;
 import cpslab.bank.internal.dao.HibernateLoanDAO;
+import cpslab.bank.rest.handlers.hibernate.ConstraintViolationExceptionHandler;
+import cpslab.bank.rest.handlers.hibernate.ObjectNotFoundExceptionHandler;
+import cpslab.bank.rest.handlers.json.JSONExceptionHandler;
 import cpslab.util.db.Repository;
 import cpslab.util.db.RepositoryService;
 import cpslab.util.db.hibernate.jackson.HibernateJacksonConverter;
+import cpslab.util.rest.ServiceExceptionHandlerManager;
 
 public final class BankRestServerActivator extends Application {
 
@@ -62,6 +69,15 @@ public final class BankRestServerActivator extends Application {
 		r.registerDao(Customer.class, HibernateCustomerDAO.class);
 	}
 
+	private void registerServiceExceptionHandlers() {
+		ServiceExceptionHandlerManager.registerHandler(ConstraintViolationException.class,
+				ConstraintViolationExceptionHandler.class);
+		ServiceExceptionHandlerManager.registerHandler(ObjectNotFoundException.class,
+				ObjectNotFoundExceptionHandler.class);
+		ServiceExceptionHandlerManager.registerHandler(JSONException.class,
+				JSONExceptionHandler.class);
+	}
+
 	public static BankRestServerActivator getInstance() {
 		return singleton;
 	}
@@ -83,23 +99,19 @@ public final class BankRestServerActivator extends Application {
 	private static void printAvailableEndpoints() {
 		String intro = "You can use this REST API by addressing the following endpoints:\n";
 		String endpoint = ("	" + ROOT_ADDRESS + "%s\n");
-		String endpoints = DeclaredServerResources	.getDeclaredServerResourcesURLs()
-													.stream()
-													.map(url -> String.format(endpoint, url))
-													.reduce("", String::concat);
+		String endpoints = DeclaredServerResources.getDeclaredServerResourcesURLs().stream()
+				.map(url -> String.format(endpoint, url)).reduce("", String::concat);
 		logger.info(intro + endpoints);
 	}
 
 	private static void serverAttach() {
-		component	.getDefaultHost()
-					.attach(getInstance());
+		component.getDefaultHost().attach(getInstance());
 	}
 
 	private static void serverStart() throws InterruptedException {
 		component = new Component();
 
-		component	.getServers()
-					.add(Protocol.HTTP, SERVER_PORT);
+		component.getServers().add(Protocol.HTTP, SERVER_PORT);
 
 		boolean serverBound = false;
 		while (!serverBound) {
@@ -125,14 +137,14 @@ public final class BankRestServerActivator extends Application {
 
 	private BankRestServerActivator() {
 		registerDaos();
+		registerServiceExceptionHandlers();
 		configureCorsService();
 		setStatusService(new BankStatusService());
 		setHibernateJacksonConverter();
 	}
 
 	private void setHibernateJacksonConverter() {
-		List<ConverterHelper> converters = Engine	.getInstance()
-													.getRegisteredConverters();
+		List<ConverterHelper> converters = Engine.getInstance().getRegisteredConverters();
 		JacksonConverter jacksonConverter = new JacksonConverter();
 		for (ConverterHelper converter : converters) {
 			if (converter instanceof JacksonConverter) {
@@ -159,8 +171,8 @@ public final class BankRestServerActivator extends Application {
 	@Override
 	public synchronized Restlet createInboundRoot() {
 		final Router router = new Router(getContext());
-		DeclaredServerResources	.getDeclaredServerResources()
-								.forEach((url, resource) -> router.attach(url, resource));
+		DeclaredServerResources.getDeclaredServerResources()
+				.forEach((url, resource) -> router.attach(url, resource));
 		return router;
 	}
 }
