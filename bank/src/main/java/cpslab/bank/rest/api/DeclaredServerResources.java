@@ -2,17 +2,12 @@ package cpslab.bank.rest.api;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
-
-import org.restlet.resource.ServerResource;
 
 import cpslab.bank.rest.services.account.AccountBranchResource;
 import cpslab.bank.rest.services.account.AccountOwnerResource;
 import cpslab.bank.rest.services.account.AccountOwnersResource;
 import cpslab.bank.rest.services.account.AccountResource;
 import cpslab.bank.rest.services.account.AccountsResource;
-import cpslab.bank.rest.services.borrower.BorrowerResource;
-import cpslab.bank.rest.services.borrower.BorrowersResource;
 import cpslab.bank.rest.services.branch.BranchAccountResource;
 import cpslab.bank.rest.services.branch.BranchAccountsResource;
 import cpslab.bank.rest.services.branch.BranchLoanResource;
@@ -28,17 +23,16 @@ import cpslab.bank.rest.services.customer.CustomerLoanResource;
 import cpslab.bank.rest.services.customer.CustomerLoansResource;
 import cpslab.bank.rest.services.customer.CustomerResource;
 import cpslab.bank.rest.services.customer.CustomersResource;
-import cpslab.bank.rest.services.depositor.DepositorResource;
-import cpslab.bank.rest.services.depositor.DepositorsResource;
 import cpslab.bank.rest.services.loan.LoanBranchResource;
 import cpslab.bank.rest.services.loan.LoanOwnerResource;
 import cpslab.bank.rest.services.loan.LoanOwnersResource;
 import cpslab.bank.rest.services.loan.LoanResource;
 import cpslab.bank.rest.services.loan.LoansResource;
+import cpslab.util.rest.RestService;
 
 public final class DeclaredServerResources {
 
-	private static Map<String, Class<? extends ServerResource>> serverResources;
+	private static Map<String, Class<? extends RestService>> serverResources;
 
 	static {
 		serverResources = new LinkedHashMap<>();
@@ -74,19 +68,9 @@ public final class DeclaredServerResources {
 		serverResources.put("/customers/{customer}/loans", CustomerLoansResource.class);
 		serverResources.put("/customers/{customer}/loans/{loan}", CustomerLoanResource.class);
 		serverResources.put("/customers/{customer}/loans/{loan}/deposit", CustomerLoanDepositResource.class);
-
-		serverResources.put("/depositors", DepositorsResource.class);
-		serverResources.put("/depositors/{depositor}", DepositorResource.class);
-
-		serverResources.put("/borrowers", BorrowersResource.class);
-		serverResources.put("/borrowers/{borrower}", BorrowerResource.class);
 	}
 
-	public static Map<String, Class<? extends ServerResource>> getDeclaredServerResources() {
+	public static Map<String, Class<? extends RestService>> getDeclaredServerResources() {
 		return serverResources;
-	}
-
-	public static Set<String> getDeclaredServerResourcesURLs() {
-		return serverResources.keySet();
 	}
 }
