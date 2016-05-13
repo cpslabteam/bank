@@ -1,89 +1,55 @@
 package cpslab.bank.rest.services.branch;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 
-import org.hibernate.HibernateException;
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.restlet.representation.Representation;
-import org.restlet.resource.Delete;
-import org.restlet.resource.Get;
-import org.restlet.resource.Put;
-import org.restlet.resource.ResourceException;
-import org.restlet.resource.ServerResource;
 
 import cpslab.bank.api.dao.AccountDAO;
 import cpslab.bank.api.entities.Account;
-import cpslab.util.db.Repository;
-import cpslab.util.db.RepositoryService;
+import cpslab.bank.jsonserialization.EntityJsonSerializer;
+import cpslab.bank.rest.services.BaseResource;
+import cpslab.util.rest.services.JsonDeleteService;
+import cpslab.util.rest.services.JsonGetService;
+import cpslab.util.rest.services.JsonPutService;
 
-public class BranchAccountResource extends ServerResource {
-
-	private Long branchID;
-	private Long accountID;
+public class BranchAccountResource extends BaseResource
+		implements JsonGetService, JsonPutService, JsonDeleteService {
 
 	@Override
-	protected void doInit() throws ResourceException {
-		branchID = Long.valueOf(getAttribute("branch"));
-		accountID = Long.valueOf(getAttribute("account"));
+	public String handleGet() throws Throwable {
+		getRepository().openTransaction();
+		AccountDAO accountDAO = (AccountDAO) getRepository().createDao(Account.class);
+		Account account =
+				accountDAO.findBranchAccount(getIdAttribute("branch"), getIdAttribute("account"));
+		String response = EntityJsonSerializer.serialize(account);
+		getRepository().closeTransaction();
+		return response;
 	}
 
-	@Get("application/json")
-	public Account getAccount() throws InterruptedException, IOException, HibernateException {
-		Repository r = RepositoryService.getInstance();
-		try {
-			r.openTransaction();
-			
-			AccountDAO accountDAO = (AccountDAO) r.createDao(Account.class);
-			Account account = accountDAO.findBranchAccount(branchID, accountID);
-			r.closeTransaction();
-			return account;
-		} catch (Exception e) {
-			r.rollbackTransaction();
-
-			throw e;
-		}
+	@Override
+	public String handlePut(JSONObject requestParams) throws Throwable {
+		String accountNumber = requestParams.getString("account_number");
+		String balance = requestParams.getString("balance");
+		getRepository().openTransaction();
+		AccountDAO accountDAO = (AccountDAO) getRepository().createDao(Account.class);
+		Account account =
+				accountDAO.findBranchAccount(getIdAttribute("branch"), getIdAttribute("account"));
+		account.setAccountNumber(accountNumber);
+		account.setBalance(new BigDecimal(balance));
+		Account updatedAccount = accountDAO.update(account);
+		String response = EntityJsonSerializer.serialize(updatedAccount);
+		getRepository().closeTransaction();
+		return response;
 	}
 
-	@Put("application/json")
-	public Account updateAccount(Representation entity)
-			throws InterruptedException, IOException, HibernateException, JSONException {
-		Repository r = RepositoryService.getInstance();
-		try {
-			JSONObject request = new JSONObject(entity.getText());
-			String accountNumber = request.getString("account_number");
-			String balance = request.getString("balance");
-			r.openTransaction();
-			
-			AccountDAO accountDAO = (AccountDAO) r.createDao(Account.class);
-			Account account = accountDAO.findBranchAccount(branchID, accountID);
-			account.setAccountNumber(accountNumber);
-			account.setBalance(new BigDecimal(balance));
-			Account updatedAccount = accountDAO.update(account);
-			r.closeTransaction();
-			return updatedAccount;
-		} catch (Exception e) {
-			r.rollbackTransaction();
-
-			throw e;
-		}
-	}
-
-	@Delete("application/json")
-	public void deleteAccount() throws InterruptedException, IOException, HibernateException {
-		Repository r = RepositoryService.getInstance();
-		try {
-			r.openTransaction();
-			
-			AccountDAO accountDAO = (AccountDAO) r.createDao(Account.class);
-			Account account = accountDAO.findBranchAccount(branchID, accountID);
-			accountDAO.delete(account);
-			r.closeTransaction();
-		} catch (Exception e) {
-			r.rollbackTransaction();
-
-			throw e;
-		}
+	@Override
+	public String handleDelete(JSONObject requestParams) throws Throwable {
+		getRepository().openTransaction();
+		AccountDAO accountDAO = (AccountDAO) getRepository().createDao(Account.class);
+		Account account =
+				accountDAO.findBranchAccount(getIdAttribute("branch"), getIdAttribute("account"));
+		boolean success = accountDAO.deleteById(account.getId());
+		getRepository().closeTransaction();
+		return new JSONObject().put("success", success).toString();
 	}
 }

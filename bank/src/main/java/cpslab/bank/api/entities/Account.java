@@ -44,14 +44,12 @@ public class Account extends BaseDataEntity {
 		owners = new HashSet<>();
 	}
 
-	public void addOwner(Customer owner) {
-		owners.add(owner);
-		owner.getAccounts().add(this);
+	public boolean addOwner(Customer owner) {
+		return owners.add(owner) && owner.getAccounts().add(this);
 	}
-	
-	public void removeOwner(Customer owner){
-		owners.remove(owner);
-		owner.getAccounts().remove(this);
+
+	public boolean removeOwner(Customer owner) {
+		return owners.remove(owner) && owner.getAccounts().remove(this);
 	}
 
 	@Override
@@ -101,8 +99,8 @@ public class Account extends BaseDataEntity {
 
 	@Override
 	public String toString() {
-		return "Account [id=" + getId() + ", accountNumber=" + accountNumber + ", branch=" + branch + ", balance="
-				+ balance + "]";
+		return "Account [id=" + getId() + ", accountNumber=" + accountNumber + ", branch=" + branch
+				+ ", balance=" + balance + "]";
 	}
 
 }

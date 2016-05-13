@@ -1,73 +1,44 @@
 package cpslab.bank.rest.services.branch;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
-import org.hibernate.HibernateException;
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.restlet.representation.Representation;
-import org.restlet.resource.Get;
-import org.restlet.resource.Post;
-import org.restlet.resource.ResourceException;
-import org.restlet.resource.ServerResource;
 
 import cpslab.bank.api.dao.BranchDAO;
 import cpslab.bank.api.dao.LoanDAO;
 import cpslab.bank.api.entities.Branch;
 import cpslab.bank.api.entities.Loan;
-import cpslab.util.db.Repository;
-import cpslab.util.db.RepositoryService;
+import cpslab.bank.jsonserialization.EntityJsonSerializer;
+import cpslab.bank.rest.services.BaseResource;
+import cpslab.util.rest.services.JsonGetService;
+import cpslab.util.rest.services.JsonPostService;
 
-public class BranchLoansResource extends ServerResource {
-
-	private Long branchID;
+public class BranchLoansResource extends BaseResource implements JsonGetService, JsonPostService {
 
 	@Override
-	protected void doInit() throws ResourceException {
-		branchID = Long.valueOf(getAttribute("branch"));
+	public String handleGet() throws Throwable {
+		getRepository().openTransaction();
+		LoanDAO loanDAO = (LoanDAO) getRepository().createDao(Loan.class);
+		List<Loan> loans = loanDAO.findBranchLoans(getIdAttribute("branch"));
+		String response = EntityJsonSerializer.serialize(loans);
+		getRepository().closeTransaction();
+		return response;
 	}
 
-	@Get("application/json")
-	public List<Loan> getLoans() throws InterruptedException, IOException, HibernateException {
-		Repository r = RepositoryService.getInstance();
-		try {
-			r.openTransaction();
-			
-			LoanDAO loanDAO = (LoanDAO) r.createDao(Loan.class);
-			List<Loan> loans = loanDAO.findBranchLoans(branchID);
-			r.closeTransaction();
-			return loans;
-		} catch (Exception e) {
-			r.rollbackTransaction();
-
-			throw e;
-		}
+	@Override
+	public String handlePost(JSONObject requestParams) throws Throwable {
+		String loanNumber = requestParams.getString("loan_number");
+		String amount = requestParams.getString("amount");
+		getRepository().openTransaction();
+		LoanDAO loanDAO = (LoanDAO) getRepository().createDao(Loan.class);
+		BranchDAO branchDAO = (BranchDAO) getRepository().createDao(Branch.class);
+		Branch branch = branchDAO.loadById(getIdAttribute("branch"));
+		Loan loan = new Loan(loanNumber, branch, new BigDecimal(amount));
+		Loan createdLoan = loanDAO.persist(loan);
+		String response = EntityJsonSerializer.serialize(createdLoan);
+		getRepository().closeTransaction();
+		return response;
 	}
 
-	@Post("application/json")
-	public Loan createLoan(Representation entity)
-			throws InterruptedException, IOException, HibernateException, JSONException {
-		Repository r = RepositoryService.getInstance();
-		try {
-			JSONObject request = new JSONObject(entity.getText());
-			String loanNumber = request.getString("loan_number");
-			String amount = request.getString("amount");
-			r.openTransaction();
-			
-			LoanDAO loanDAO = (LoanDAO) r.createDao(Loan.class);
-			BranchDAO branchDAO = (BranchDAO) r.createDao(Branch.class);
-			Branch branch = branchDAO.findById(branchID);
-			Loan loan = new Loan(loanNumber, branch, new BigDecimal(amount));
-			Loan createdLoan = loanDAO.persist(loan);
-			r.closeTransaction();
-			return createdLoan;
-		} catch (Exception e) {
-			System.out.println(e);
-			r.rollbackTransaction();
-
-			throw e;
-		}
-	}
 }

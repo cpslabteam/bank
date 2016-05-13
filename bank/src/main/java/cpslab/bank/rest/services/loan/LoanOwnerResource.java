@@ -1,65 +1,37 @@
 package cpslab.bank.rest.services.loan;
 
-import java.io.IOException;
-
-import org.hibernate.HibernateException;
-import org.restlet.resource.Delete;
-import org.restlet.resource.Get;
-import org.restlet.resource.ResourceException;
-import org.restlet.resource.ServerResource;
+import org.json.JSONObject;
 
 import cpslab.bank.api.dao.CustomerDAO;
 import cpslab.bank.api.dao.LoanDAO;
 import cpslab.bank.api.entities.Customer;
 import cpslab.bank.api.entities.Loan;
-import cpslab.util.db.Repository;
-import cpslab.util.db.RepositoryService;
+import cpslab.bank.jsonserialization.EntityJsonSerializer;
+import cpslab.bank.rest.services.BaseResource;
+import cpslab.util.rest.services.JsonDeleteService;
+import cpslab.util.rest.services.JsonGetService;
 
-public class LoanOwnerResource extends ServerResource {
-
-	private Long ownerID;
-	private Long loanID;
+public class LoanOwnerResource extends BaseResource implements JsonGetService, JsonDeleteService {
 
 	@Override
-	protected void doInit() throws ResourceException {
-		ownerID = Long.valueOf(getAttribute("owner"));
-		loanID = Long.valueOf(getAttribute("loan"));
+	public String handleGet() throws Throwable {
+		getRepository().openTransaction();
+		CustomerDAO customerDAO = (CustomerDAO) getRepository().createDao(Customer.class);
+		Customer owner = customerDAO.findLoanOwner(getIdAttribute("loan"), getIdAttribute("owner"));
+		String response = EntityJsonSerializer.serialize(owner);
+		getRepository().closeTransaction();
+		return response;
 	}
 
-	@Get("application/json")
-	public Customer getOwner() throws InterruptedException, IOException, HibernateException {
-		Repository r = RepositoryService.getInstance();
-		try {
-			r.openTransaction();
-			
-			CustomerDAO customerDAO = (CustomerDAO) r.createDao(Customer.class);
-			Customer owner = customerDAO.findLoanOwner(loanID, ownerID);
-			r.closeTransaction();
-			return owner;
-		} catch (Exception e) {
-			r.rollbackTransaction();
-
-			throw e;
-		}
+	@Override
+	public String handleDelete(JSONObject requestParams) throws Throwable {
+		getRepository().openTransaction();
+		LoanDAO loanDAO = (LoanDAO) getRepository().createDao(Loan.class);
+		CustomerDAO customerDAO = (CustomerDAO) getRepository().createDao(Customer.class);
+		Loan loan = loanDAO.loadById(getIdAttribute("loan"));
+		Customer owner = customerDAO.loadById(getIdAttribute("owner"));
+		boolean success = loan.removeOwner(owner);
+		getRepository().closeTransaction();
+		return new JSONObject().put("success", success).toString();
 	}
-
-	@Delete("application/json")
-	public void removeOwner() throws InterruptedException, IOException, HibernateException {
-		Repository r = RepositoryService.getInstance();
-		try {
-			r.openTransaction();
-			
-			LoanDAO loanDAO = (LoanDAO) r.createDao(Loan.class);
-			CustomerDAO customerDAO = (CustomerDAO) r.createDao(Customer.class);
-			Loan loan = loanDAO.findById(loanID);
-			Customer owner = customerDAO.findById(ownerID);
-			loan.removeOwner(owner);
-			r.closeTransaction();
-		} catch (Exception e) {
-			r.rollbackTransaction();
-
-			throw e;
-		}
-	}
-
 }

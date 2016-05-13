@@ -47,7 +47,7 @@ public class HibernateAccountDAO extends HibernateDao<Account>implements Account
 		if (account != null) {
 			return account;
 		} else {
-			throw new ObjectNotFoundException(accountID, getPersistentClass().getName());
+			throw new ObjectNotFoundException(accountID, getPersistentClass().getSimpleName());
 		}
 	}
 
@@ -68,7 +68,7 @@ public class HibernateAccountDAO extends HibernateDao<Account>implements Account
 		if (account != null) {
 			return account;
 		} else {
-			throw new ObjectNotFoundException(accountID, getPersistentClass().getName());
+			throw new ObjectNotFoundException(accountID, getPersistentClass().getSimpleName());
 		}
 	}
 

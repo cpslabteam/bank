@@ -90,19 +90,18 @@ public class Loan extends BaseDataEntity {
 	public void setLoanNumber(String loanNumber) {
 		this.loanNumber = loanNumber;
 	}
-	
-	public void addOwner(Customer owner){
-		owners.add(owner);
-		owner.getLoans().add(this);
+
+	public boolean addOwner(Customer owner) {
+		return owners.add(owner) && owner.getLoans().add(this);
 	}
-	
-	public void removeOwner(Customer owner){
-		owners.remove(owner);
-		owner.getLoans().remove(this);
+
+	public boolean removeOwner(Customer owner) {
+		return owners.remove(owner) && owner.getLoans().remove(this);
 	}
 
 	@Override
 	public String toString() {
-		return "Loan [id=" + getId() + ", loanNumber=" + loanNumber + ", branch=" + branch + ", amount=" + amount + "]";
+		return "Loan [id=" + getId() + ", loanNumber=" + loanNumber + ", branch=" + branch
+				+ ", amount=" + amount + "]";
 	}
 }

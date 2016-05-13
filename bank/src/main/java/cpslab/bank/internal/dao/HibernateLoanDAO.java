@@ -39,7 +39,7 @@ public class HibernateLoanDAO extends
         if (loan != null) {
             return loan;
         } else {
-            throw new ObjectNotFoundException(loanID, getPersistentClass().getName());
+            throw new ObjectNotFoundException(loanID, getPersistentClass().getSimpleName());
         }
     }
 
@@ -60,7 +60,7 @@ public class HibernateLoanDAO extends
         if (loan != null) {
             return loan;
         } else {
-            throw new ObjectNotFoundException(loanID, getPersistentClass().getName());
+            throw new ObjectNotFoundException(loanID, getPersistentClass().getSimpleName());
         }
     }
 

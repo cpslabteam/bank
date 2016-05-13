@@ -1,88 +1,53 @@
 package cpslab.bank.rest.services.customer;
 
-import java.io.IOException;
-
-import org.hibernate.HibernateException;
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.restlet.representation.Representation;
-import org.restlet.resource.Delete;
-import org.restlet.resource.Get;
-import org.restlet.resource.Post;
-import org.restlet.resource.ResourceException;
-import org.restlet.resource.ServerResource;
 
 import cpslab.bank.api.dao.CustomerDAO;
 import cpslab.bank.api.entities.Customer;
-import cpslab.util.db.Repository;
-import cpslab.util.db.RepositoryService;
+import cpslab.bank.jsonserialization.EntityJsonSerializer;
+import cpslab.bank.rest.services.BaseResource;
+import cpslab.util.rest.services.JsonDeleteService;
+import cpslab.util.rest.services.JsonGetService;
+import cpslab.util.rest.services.JsonPutService;
 
-public class CustomerResource extends ServerResource {
-
-	private Long customerID;
+public class CustomerResource extends BaseResource
+		implements JsonGetService, JsonPutService, JsonDeleteService {
 
 	@Override
-	protected void doInit() throws ResourceException {
-		customerID = Long.valueOf(getAttribute("customer"));
+	public String handleGet() throws Throwable {
+		getRepository().openTransaction();
+		CustomerDAO customerDAO = (CustomerDAO) getRepository().createDao(Customer.class);
+		Customer customer = customerDAO.loadById(getIdAttribute("customer"));
+		String response = EntityJsonSerializer.serialize(customer);
+		getRepository().closeTransaction();
+		return response;
 	}
 
-	@Get("application/json")
-	public Customer getCustomer() throws InterruptedException, IOException, HibernateException {
-		Repository r = RepositoryService.getInstance();
-		try {
-			r.openTransaction();
-			
-			CustomerDAO customerDAO = (CustomerDAO) r.createDao(Customer.class);
-			Customer customer = customerDAO.findById(customerID);
-			r.closeTransaction();
-			return customer;
-		} catch (Exception e) {
-			r.rollbackTransaction();
-
-			throw e;
-		}
+	@Override
+	public String handlePut(JSONObject requestParams) throws Throwable {
+		String name = requestParams.getString("name");
+		String street = requestParams.getString("street");
+		String city = requestParams.getString("city");
+		getRepository().openTransaction();
+		CustomerDAO customerDAO = (CustomerDAO) getRepository().createDao(Customer.class);
+		Customer customer = customerDAO.loadById(getIdAttribute("customer"));
+		customer.setName(name);
+		customer.setStreet(street);
+		customer.setCity(city);
+		Customer updatedCustomer = customerDAO.update(customer);
+		String response = EntityJsonSerializer.serialize(updatedCustomer);
+		getRepository().closeTransaction();
+		return response;
 	}
 
-	@Post("application/json")
-	public Customer updateCustomer(Representation entity)
-			throws InterruptedException, IOException, HibernateException, JSONException {
-		Repository r = RepositoryService.getInstance();
-		try {
-			JSONObject request = new JSONObject(entity.getText());
-			String name = request.getString("name");
-			String street = request.getString("street");
-			String city = request.getString("city");
-			r.openTransaction();
-			
-			CustomerDAO customerDAO = (CustomerDAO) r.createDao(Customer.class);
-			Customer customer = customerDAO.findById(customerID);
-			customer.setName(name);
-			customer.setStreet(street);
-			customer.setCity(city);
-			Customer updatedCustomer = customerDAO.update(customer);
-			r.closeTransaction();
-			return updatedCustomer;
-		} catch (Exception e) {
-			r.rollbackTransaction();
-
-			throw e;
-		}
+	@Override
+	public String handleDelete(JSONObject requestParams) throws Throwable {
+		getRepository().openTransaction();
+		CustomerDAO customerDAO = (CustomerDAO) getRepository().createDao(Customer.class);
+		Customer customer = customerDAO.loadById(getIdAttribute("customer"));
+		boolean success = customerDAO.deleteById(customer.getId());
+		getRepository().closeTransaction();
+		return new JSONObject().put("success", success).toString();
 	}
 
-	@Delete("application/json")
-	public void deleteCustomer() throws InterruptedException, IOException, HibernateException {
-		Repository r = RepositoryService.getInstance();
-		try {
-			r.openTransaction();
-			
-			CustomerDAO customerDAO = (CustomerDAO) r.createDao(Customer.class);
-			Customer customer = customerDAO.findById(customerID);
-			customerDAO.delete(customer);
-			r.closeTransaction();
-		} catch (Exception e) {
-			r.rollbackTransaction();
-
-			throw e;
-		}
-	}
 }

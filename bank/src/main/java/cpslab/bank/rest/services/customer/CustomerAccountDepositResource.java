@@ -1,52 +1,29 @@
 package cpslab.bank.rest.services.customer;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 
-import org.hibernate.HibernateException;
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.restlet.representation.Representation;
-import org.restlet.resource.Post;
-import org.restlet.resource.ResourceException;
-import org.restlet.resource.ServerResource;
 
 import cpslab.bank.api.dao.AccountDAO;
 import cpslab.bank.api.entities.Account;
-import cpslab.util.db.Repository;
-import cpslab.util.db.RepositoryService;
+import cpslab.bank.jsonserialization.EntityJsonSerializer;
+import cpslab.bank.rest.services.BaseResource;
+import cpslab.util.rest.services.JsonPostService;
 
-public class CustomerAccountDepositResource extends ServerResource {
-
-	private Long customerID;
-	private Long accountID;
+public class CustomerAccountDepositResource extends BaseResource implements JsonPostService {
 
 	@Override
-	protected void doInit() throws ResourceException {
-		customerID = Long.valueOf(getAttribute("customer"));
-		accountID = Long.valueOf(getAttribute("account"));
-	}
-
-	@Post("application/json")
-	public Account deposit(Representation entity)
-			throws InterruptedException, IOException, HibernateException, JSONException {
-		Repository r = RepositoryService.getInstance();
-		try {
-			JSONObject request = new JSONObject(entity.getText());
-			String amount = request.getString("amount");
-			r.openTransaction();
-			
-			AccountDAO accountDAO = (AccountDAO) r.createDao(Account.class);
-			Account account = accountDAO.findCustomerAccount(customerID, accountID);
-			BigDecimal newBalance = account.getBalance().add(new BigDecimal(amount));
-			account.setBalance(newBalance);
-			Account updatedAccount = accountDAO.update(account);
-			r.closeTransaction();
-			return updatedAccount;
-		} catch (Exception e) {
-			r.rollbackTransaction();
-
-			throw e;
-		}
+	public String handlePost(JSONObject requestParams) throws Throwable {
+		String amount = requestParams.getString("amount");
+		getRepository().openTransaction();
+		AccountDAO accountDAO = (AccountDAO) getRepository().createDao(Account.class);
+		Account account = accountDAO.findCustomerAccount(getIdAttribute("customer"),
+				getIdAttribute("account"));
+		BigDecimal newBalance = account.getBalance().add(new BigDecimal(amount));
+		account.setBalance(newBalance);
+		Account updatedAccount = accountDAO.update(account);
+		String response = EntityJsonSerializer.serialize(updatedAccount);
+		getRepository().closeTransaction();
+		return response;
 	}
 }

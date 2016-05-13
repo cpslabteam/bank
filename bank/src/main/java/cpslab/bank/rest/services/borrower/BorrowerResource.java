@@ -30,7 +30,7 @@ public class BorrowerResource extends ServerResource {
 			r.openTransaction();
 			
 			CustomerDAO customerDAO = (CustomerDAO) r.createDao(Customer.class);
-			Customer borrower = customerDAO.findById(borrowerID);
+			Customer borrower = customerDAO.loadById(borrowerID);
 			r.closeTransaction();
 			return borrower;
 		} catch (Exception e) {
@@ -65,7 +65,7 @@ public class BorrowerResource extends ServerResource {
 			r.openTransaction();
 			
 			CustomerDAO borrowerDAO = (CustomerDAO) r.createDao(Customer.class);
-			Customer borrower = borrowerDAO.findById(borrowerID);
+			Customer borrower = borrowerDAO.loadById(borrowerID);
 			borrowerDAO.delete(borrower);
 			r.closeTransaction();
 		} catch (Exception e) {

@@ -54,20 +54,20 @@ public class Customer extends BaseDataEntity {
 		this.loans = new HashSet<>();
 	}
 
-	public void addAccount(Account account) {
-		accounts.add(account);
+	public boolean addAccount(Account account) {
+		return accounts.add(account);
 	}
-	
-	public void removeAccount(Account account){
-		accounts.remove(account);
+
+	public boolean removeAccount(Account account) {
+		return accounts.remove(account);
 	}
-	
-	public void addLoan(Loan loan){
-		loans.add(loan);
+
+	public boolean addLoan(Loan loan) {
+		return loans.add(loan);
 	}
-	
-	public void removeLoan(Loan loan){
-		loans.remove(loan);
+
+	public boolean removeLoan(Loan loan) {
+		return loans.remove(loan);
 	}
 
 	@Override
@@ -79,7 +79,8 @@ public class Customer extends BaseDataEntity {
 			return false;
 		}
 		Customer customer = (Customer) obj;
-		return Objects.equals(name, customer.getName()) && Objects.equals(street, customer.getStreet())
+		return Objects.equals(name, customer.getName())
+				&& Objects.equals(street, customer.getStreet())
 				&& Objects.equals(city, customer.getCity());
 	}
 
@@ -122,7 +123,8 @@ public class Customer extends BaseDataEntity {
 
 	@Override
 	public String toString() {
-		return "Customer [id=" + getId() + ", name=" + name + ", street=" + street + ", city=" + city + "]";
+		return "Customer [id=" + getId() + ", name=" + name + ", street=" + street + ", city="
+				+ city + "]";
 	}
 
 }

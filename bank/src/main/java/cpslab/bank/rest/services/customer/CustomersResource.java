@@ -1,61 +1,39 @@
 package cpslab.bank.rest.services.customer;
 
-import java.io.IOException;
 import java.util.List;
 
-import org.hibernate.HibernateException;
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.restlet.representation.Representation;
-import org.restlet.resource.Get;
-import org.restlet.resource.Post;
-import org.restlet.resource.ServerResource;
 
 import cpslab.bank.api.dao.CustomerDAO;
 import cpslab.bank.api.entities.Customer;
-import cpslab.util.db.Repository;
-import cpslab.util.db.RepositoryService;
+import cpslab.bank.jsonserialization.EntityJsonSerializer;
+import cpslab.bank.rest.services.BaseResource;
+import cpslab.util.rest.services.JsonGetService;
+import cpslab.util.rest.services.JsonPostService;
 
-public class CustomersResource extends ServerResource {
+public class CustomersResource extends BaseResource implements JsonGetService, JsonPostService {
 
-	@Get("application/json")
-	public List<Customer> getCustomers() throws InterruptedException, IOException, HibernateException {
-		Repository r = RepositoryService.getInstance();
-		try {
-			r.openTransaction();
-			
-			CustomerDAO customerDAO = (CustomerDAO) r.createDao(Customer.class);
-			List<Customer> customers = customerDAO.findAll();
-			r.closeTransaction();
-			return customers;
-		} catch (Exception e) {
-			r.rollbackTransaction();
-
-			throw e;
-		}
+	@Override
+	public String handleGet() throws Throwable {
+		getRepository().openTransaction();
+		CustomerDAO customerDAO = (CustomerDAO) getRepository().createDao(Customer.class);
+		List<Customer> customers = customerDAO.findAll();
+		String response = EntityJsonSerializer.serialize(customers);
+		getRepository().closeTransaction();
+		return response;
 	}
 
-	@Post("application/json")
-	public Customer createCustomer(Representation entity)
-			throws InterruptedException, IOException, HibernateException, JSONException {
-		Repository r = RepositoryService.getInstance();
-		try {
-			JSONObject request = new JSONObject(entity.getText());
-			String name = request.getString("name");
-			String street = request.getString("street");
-			String city = request.getString("city");
-			r.openTransaction();
-			
-			CustomerDAO customerDAO = (CustomerDAO) r.createDao(Customer.class);
-			Customer customer = new Customer(name, street, city);
-			Customer createdCustomer = customerDAO.persist(customer);
-			r.closeTransaction();
-			return createdCustomer;
-		} catch (Exception e) {
-			r.rollbackTransaction();
-
-			throw e;
-		}
+	@Override
+	public String handlePost(JSONObject requestParams) throws Throwable {
+		String name = requestParams.getString("name");
+		String street = requestParams.getString("street");
+		String city = requestParams.getString("city");
+		getRepository().openTransaction();
+		CustomerDAO customerDAO = (CustomerDAO) getRepository().createDao(Customer.class);
+		Customer customer = new Customer(name, street, city);
+		Customer createdCustomer = customerDAO.persist(customer);
+		String response = EntityJsonSerializer.serialize(createdCustomer);
+		getRepository().closeTransaction();
+		return response;
 	}
-
 }

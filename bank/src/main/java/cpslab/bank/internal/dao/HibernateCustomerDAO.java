@@ -52,7 +52,7 @@ public class HibernateCustomerDAO extends HibernateDao<Customer>implements Custo
 		if (owner != null) {
 			return owner;
 		} else {
-			throw new ObjectNotFoundException(ownerID, getPersistentClass().getName());
+			throw new ObjectNotFoundException(ownerID, getPersistentClass().getSimpleName());
 		}
 	}
 
@@ -65,7 +65,7 @@ public class HibernateCustomerDAO extends HibernateDao<Customer>implements Custo
 		if (owner != null) {
 			return owner;
 		} else {
-			throw new ObjectNotFoundException(ownerID, getPersistentClass().getName());
+			throw new ObjectNotFoundException(ownerID, getPersistentClass().getSimpleName());
 		}
 	}
 
