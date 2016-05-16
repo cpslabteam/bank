@@ -1,21 +1,14 @@
-var accountControllers = angular.module('accountControllers', []);
+(function(window, document, undefined) {
+  bankApp.controller('AccountListCtrl', ['$scope', 'utils', 'accountSrv',
+    function(
+      $scope, utils, accountSrv) {
+      $scope.accounts = [];
+      accountSrv.getListAccounts()
+        .then(handleSuccess, utils.handleServerError);
 
-function genericErrorCallback(response) {
-  console.log(response);
-  var title = response.status + " " + response.statusText + ": " + response.data
-    .error.title;
-  var message = response.data.error.message;
-  var rld = confirm(title + "\n" + message + "\n" + "Refresh?");
-  if (rld)
-    location.reload(true);
-};
-
-generalControllers.controller('AccountListCtrl', ['$scope', '$http', function(
-  $scope, $http) {
-  var url = "http://localhost:9192/accounts";
-  $scope.accounts = [];
-  $http.get(url)
-    .then(function(response) {
-      $scope.accounts = response.data;
-    }, genericErrorCallback);
-}]);
+      function handleSuccess(response) {
+        $scope.accounts = response.data;
+      }
+    }
+  ]);
+})(window, document);
