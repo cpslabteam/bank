@@ -1,4 +1,7 @@
-var bankApp = angular.module('bankApp', ['ngRoute', 'bankControllers']);
+var bankApp = angular.module('bankApp', ['ngRoute', 'generalControllers',
+  'accountControllers', 'loanControllers', 'branchControllers',
+  'customerControllers'
+]);
 
 bankApp.config(['$routeProvider',
   function($routeProvider) {
@@ -10,6 +13,14 @@ bankApp.config(['$routeProvider',
       .when('/accounts', {
         templateUrl: 'html/account-list.html',
         controller: 'AccountListCtrl'
+      })
+      .when('/loans', {
+        templateUrl: 'html/loan-list.html',
+        controller: 'LoanListCtrl'
+      })
+      .when('/branches', {
+        templateUrl: 'html/branch-list.html',
+        controller: 'BranchListCtrl'
       })
       .
     otherwise({

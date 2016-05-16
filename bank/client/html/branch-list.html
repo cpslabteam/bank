@@ -1,20 +1,22 @@
 <div class="container">
   <div class="page-header">
-    <h1>Account List</h1>
+    <h1>Branch List</h1>
   </div>
   <div class="row">
     <div class="col-xs-6">
       <table class="table table-striped">
         <thead>
           <tr>
-            <th>Account Number</th>
-            <th>Balance</th>
+            <th>Name</th>
+            <th>City</th>
+            <th>Assets</th>
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="account in accounts">
-            <td>{{account.accountNumber}}</td>
-            <td>{{account.balance | currency}}</td>
+          <tr ng-repeat="branch in branches">
+            <td>{{branch.name}}</td>
+            <td>{{branch.city}}</td>
+            <td>{{branch.assets | currency}}</td>
           </tr>
         </tbody>
       </table>
