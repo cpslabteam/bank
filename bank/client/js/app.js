@@ -7,6 +7,10 @@ bankApp.config(['$routeProvider',
         templateUrl: 'html/customer-list.html',
         controller: 'CustomerListCtrl'
       })
+      .when('/accounts', {
+        templateUrl: 'html/account-list.html',
+        controller: 'AccountListCtrl'
+      })
       .
     otherwise({
       redirectTo: '/customers'
