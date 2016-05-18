@@ -4,15 +4,23 @@
   </div>
   <div class="row">
     <div class="col-xs-6">
-      <table class="table table-striped">
+      <table class="table table-striped" ng-controller="OrderCtrl" ng-init="init('loanNumber')">
         <thead>
           <tr>
-            <th>Loan Number</th>
-            <th>Amount</th>
+            <th ng-click="order('loanNumber')">
+              Loan Number
+              <span class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
+                ng-show="isOrdered('loanNumber')"></span>
+            </th>
+            <th ng-click="order('amount')">
+              Amount
+              <span class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
+                ng-show="isOrdered('amount')"></span>
+            </th>
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="loan in loans">
+          <tr ng-repeat="loan in loans | orderBy:predicate:reverse">
             <td>{{loan.loanNumber}}</td>
             <td>{{loan.amount | currency}}</td>
           </tr>
