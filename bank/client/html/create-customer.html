@@ -1,0 +1,34 @@
+<div class="container">
+  <div class="page-header">
+    <h1>Create customer</h1>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <form novalidate class="angular-form" role="create customer" name="form" ng-submit="create(form.$valid)">
+        <div class="form-group">
+          <label for="name">Name: </label>
+          <input type="text" class="form-control" ng-model="customer.name" name="name" required>
+          <div ng-show="form.$submitted && form.name.$error.required">
+            Name is required
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="city">City: </label>
+          <input type="text" class="form-control" ng-model="customer.city" name="city" required>
+          <div ng-show="form.$submitted && form.city.$error.required">
+            City is required
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="street">Street: </label>
+          <input type="text" class="form-control" ng-model="customer.street" name="street"
+            required>
+          <div ng-show="form.$submitted && form.street.$error.required">
+            Street is required
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>

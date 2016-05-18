@@ -1,0 +1,42 @@
+<div class="container">
+  <div class="page-header">
+    <h1>Create account</h1>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <form novalidate class="angular-form" role="create account" name="form" ng-submit="create(form.$valid)">
+        <div class="form-group">
+          <label for="account_number">Account Number: </label>
+          <input type="text" class="form-control" ng-model="account.account_number" name="account_number"
+            required>
+          <div ng-show="form.$submitted && form.account_number.$error.required">
+            Account Number is required
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="balance">Balance: </label>
+          <input type="number" class="form-control" ng-model="account.balance" name="balance"
+            required>
+          <div ng-show="form.$submitted">
+            <div ng-show="form.balance.$error.required">
+              Balance is required
+            </div>
+            <div ng-show="form.balance.$error.number">
+              Balance must be a number
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="Branch">Branch: </label>
+          <select class="form-control" name="branch" ng-model="account.branch_id" required>
+            <option ng-repeat="branch in branches | orderBy:'name'" value="{{branch.id}}">{{branch.name}}</option>
+          </select>
+          <div ng-show="form.$submitted && form.branch.$error.required">
+            Branch is required
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
