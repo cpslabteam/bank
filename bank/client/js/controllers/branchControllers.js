@@ -14,7 +14,7 @@
 
   bankApp.controller('CreateBranchCtrl', ['$scope', '$location', 'utils',
     'branchSrv',
-    function($scope, $location, utils, customerSrv) {
+    function($scope, $location, utils, branchSrv) {
       $scope.branch = {};
 
       $scope.create = function(valid) {
@@ -27,7 +27,7 @@
       function handleSuccess(response) {
         $scope.branch = {};
         alert("Branch created!");
-        $location.path("/branchs");
+        $location.path("/branches/list");
       };
     }
   ]);

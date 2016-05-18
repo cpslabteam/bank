@@ -16,7 +16,7 @@
       return $http.get(serverDomain + "/branches");
     };
     this.createBranch = function (branch) {
-      return $http.post(serverDomain+"/branchs", branch);
+      return $http.post(serverDomain+"/branches", branch);
     };
   }]);
 
@@ -30,7 +30,7 @@
     };
   }]);
 
-  bankApp.service('loansSrv', ['$http', 'utils', function($http, utils) {
+  bankApp.service('loanSrv', ['$http', 'utils', function($http, utils) {
     this.getListLoans = function() {
       return $http.get(serverDomain + "/loans");
     };

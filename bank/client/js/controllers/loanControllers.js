@@ -1,8 +1,8 @@
 (function(window, document, undefined) {
-  bankApp.controller('LoanListCtrl', ['$scope', 'utils', 'loansSrv', function(
-    $scope, utils, loansSrv) {
+  bankApp.controller('LoanListCtrl', ['$scope', 'utils', 'loanSrv', function(
+    $scope, utils, loanSrv) {
     $scope.loans = [];
-    loansSrv.getListLoans()
+    loanSrv.getListLoans()
       .then(handleSuccess, utils.handleServerError);
 
     function handleSuccess(response) {
@@ -11,21 +11,32 @@
   }]);
 
   bankApp.controller('CreateLoanCtrl', ['$scope', '$location', 'utils',
-    'loanSrv',
-    function($scope, $location, utils, customerSrv) {
-      $scope.loan = {};
+    'loanSrv', 'branchSrv',
+    function($scope, $location, utils, loanSrv, branchSrv) {
+      init();
+
+      function init() {
+        $scope.loan = {};
+        $scope.branches = [];
+        branchSrv.getListBranches()
+          .then(handleSuccessBranchList, utils.handleServerError);
+      };
 
       $scope.create = function(valid) {
         if (valid) {
           loanSrv.createLoan($scope.loan)
-            .then(handleSuccess, utils.handleServerError);
+            .then(handleSuccessCreate, utils.handleServerError);
         }
       };
 
-      function handleSuccess(response) {
+      function handleSuccessCreate(response) {
         $scope.loan = {};
         alert("Loan created!");
-        $location.path("/loans");
+        $location.path("/loans/list");
+      };
+
+      function handleSuccessBranchList(response) {
+        $scope.branches = response.data;
       };
     }
   ]);
