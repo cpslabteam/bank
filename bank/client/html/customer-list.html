@@ -9,19 +9,20 @@
           <tr>
             <th ng-click="order('name')">
               Name
-              <span class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
-                ng-show="isOrdered('name')"></span>
+              <i class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
+                ng-show="isOrdered('name')"></i>
             </th>
             <th ng-click="order('city')">
               City
-              <span class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
-                ng-show="isOrdered('city')"></span>
+              <i class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
+                ng-show="isOrdered('city')"></i>
             </th>
             <th ng-click="order('street')">
               Street
-              <span class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
-                ng-show="isOrdered('street')"></span>
+              <i class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
+                ng-show="isOrdered('street')"></i>
             </th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -29,6 +30,9 @@
             <td>{{customer.name}}</td>
             <td>{{customer.city}}</td>
             <td>{{customer.street}}</td>
+            <td>
+              <button class="btn btn-info btn-xs" ng-click="details(customer.id)" title="Details"><i class="glyphicon glyphicon-plus-sign"></i></button>
+            </td>
           </tr>
         </tbody>
       </table>

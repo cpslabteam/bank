@@ -25,15 +25,15 @@ public class CustomerResource extends BaseResource
 
 	@Override
 	public String handlePut(JSONObject requestParams) throws Throwable {
-		String name = requestParams.getString("name");
-		String street = requestParams.getString("street");
-		String city = requestParams.getString("city");
 		getRepository().openTransaction();
 		CustomerDAO customerDAO = (CustomerDAO) getRepository().createDao(Customer.class);
 		Customer customer = customerDAO.loadById(getIdAttribute("customer"));
-		customer.setName(name);
-		customer.setStreet(street);
-		customer.setCity(city);
+		if (requestParams.has("name"))
+			customer.setName(requestParams.getString("name"));
+		if (requestParams.has("street"))
+			customer.setStreet(requestParams.getString("street"));
+		if (requestParams.has("city"))
+			customer.setCity(requestParams.getString("city"));
 		Customer updatedCustomer = customerDAO.update(customer);
 		String response = EntityJsonSerializer.serialize(updatedCustomer);
 		getRepository().closeTransaction();

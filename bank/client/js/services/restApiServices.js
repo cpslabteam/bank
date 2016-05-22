@@ -6,8 +6,8 @@
       return $http.get(serverDomain + "/accounts");
     };
 
-    this.createAccount = function (account) {
-      return $http.post(serverDomain+"/accounts", account);
+    this.createAccount = function(account) {
+      return $http.post(serverDomain + "/accounts", account);
     };
   }]);
 
@@ -15,8 +15,8 @@
     this.getListBranches = function() {
       return $http.get(serverDomain + "/branches");
     };
-    this.createBranch = function (branch) {
-      return $http.post(serverDomain+"/branches", branch);
+    this.createBranch = function(branch) {
+      return $http.post(serverDomain + "/branches", branch);
     };
   }]);
 
@@ -25,8 +25,28 @@
       return $http.get(serverDomain + "/customers");
     };
 
-    this.createCustomer = function (customer) {
-      return $http.post(serverDomain+"/customers", customer);
+    this.createCustomer = function(customer) {
+      return $http.post(serverDomain + "/customers", customer);
+    };
+
+    this.getCustomer = function(id) {
+      return $http.get(serverDomain + "/customers/" + id);
+    };
+
+    this.updateCustomer = function(update, id) {
+      return $http.put(serverDomain + "/customers/" + id, update)
+    };
+
+    this.deleteCustomer = function (id) {
+      return $http.delete(serverDomain + "/customers/" + id);
+    };
+
+    this.getCustomerAccounts = function (id) {
+      return $http.get(serverDomain + "/customers/" + id + "/accounts");
+    };
+
+    this.getCustomerLoans = function (id) {
+      return $http.get(serverDomain + "/customers/" + id + "/loans");
     };
   }]);
 
@@ -34,8 +54,8 @@
     this.getListLoans = function() {
       return $http.get(serverDomain + "/loans");
     };
-    this.createLoan = function (loan) {
-      return $http.post(serverDomain+"/loans", loan);
+    this.createLoan = function(loan) {
+      return $http.post(serverDomain + "/loans", loan);
     };
   }]);
 })(window, document);
