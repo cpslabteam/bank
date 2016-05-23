@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import capslab.util.db.spi.BaseDataEntity;
+import cpslab.util.db.spi.BaseDataEntity;
 
 @Entity(name = "Account")
 public class Account extends BaseDataEntity {

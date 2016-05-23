@@ -59,7 +59,7 @@
 		<dependency>
 			<groupId>cpslab.util</groupId>
 			<artifactId>util</artifactId>
-			<version>0.0.5-SNAPSHOT</version>
+			<version>0.0.6-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Testing and logging fundamentals -->

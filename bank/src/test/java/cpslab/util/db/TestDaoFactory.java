@@ -3,10 +3,10 @@ package cpslab.util.db;
 import org.junit.Assert;
 import org.junit.Test;
 
-import capslab.util.db.spi.BaseDataEntity;
 import cpslab.bank.api.dao.AccountDAO;
 import cpslab.bank.api.entities.Account;
 import cpslab.util.db.hibernate.HibernateDao;
+import cpslab.util.db.spi.BaseDataEntity;
 
 public class TestDaoFactory {
 

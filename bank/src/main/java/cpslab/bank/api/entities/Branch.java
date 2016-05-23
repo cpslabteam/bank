@@ -11,7 +11,7 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import capslab.util.db.spi.BaseDataEntity;
+import cpslab.util.db.spi.BaseDataEntity;
 
 @Entity(name = "Branch")
 public class Branch extends BaseDataEntity {

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module.Feature;
 
-import capslab.util.db.spi.BaseDataEntity;
+import cpslab.util.db.spi.BaseDataEntity;
 
 /**
  * Serializes Database entity objects or collections of database entity objects.

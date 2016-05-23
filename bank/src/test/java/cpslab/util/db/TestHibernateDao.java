@@ -1,12 +1,10 @@
 package cpslab.util.db;
 
-import static org.junit.Assert.fail;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import capslab.util.db.spi.BaseDataEntity;
 import cpslab.util.db.hibernate.HibernateDao;
+import cpslab.util.db.spi.BaseDataEntity;
 
 public class TestHibernateDao {
 

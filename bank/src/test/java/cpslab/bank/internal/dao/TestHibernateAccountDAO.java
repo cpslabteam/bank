@@ -5,7 +5,6 @@ import org.junit.Test;
 
 import cpslab.bank.api.dao.AccountDAO;
 import cpslab.bank.api.entities.Account;
-import cpslab.util.db.__DaoFactory;
 import cpslab.util.db.hibernate.HibernateRepository;
 
 public class TestHibernateAccountDAO {
