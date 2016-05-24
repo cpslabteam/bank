@@ -16,12 +16,18 @@ public class BranchesResource extends BaseResource implements JsonGetService, Js
 
 	@Override
 	public String handleGet() throws Throwable {
-		getRepository().openTransaction();
-		BranchDAO branchDAO = (BranchDAO) getRepository().createDao(Branch.class);
-		List<Branch> branches = branchDAO.findAll();
-		String response = EntityJsonSerializer.serialize(branches);
-		getRepository().closeTransaction();
-		return response;
+		long transactionId = getRepository().openTransaction();
+		try {
+			BranchDAO branchDAO =
+					(BranchDAO) getRepository().createDao(Branch.class, transactionId);
+			List<Branch> branches = branchDAO.findAll();
+			String response = EntityJsonSerializer.serialize(branches);
+			getRepository().closeTransaction(transactionId);
+			return response;
+		} catch (Exception e) {
+			rollbackTransactionIfActive(transactionId);
+			throw e;
+		}
 	}
 
 	@Override
@@ -29,12 +35,18 @@ public class BranchesResource extends BaseResource implements JsonGetService, Js
 		String branchName = requestParams.getString("name");
 		String branchCity = requestParams.getString("city");
 		String branchAssets = requestParams.getString("assets");
-		getRepository().openTransaction();
-		BranchDAO branchDAO = (BranchDAO) getRepository().createDao(Branch.class);
-		Branch branch = new Branch(branchName, branchCity, new BigDecimal(branchAssets));
-		Branch createdBranch = branchDAO.persist(branch);
-		String response = EntityJsonSerializer.serialize(createdBranch);
-		getRepository().closeTransaction();
-		return response;
+		long transactionId = getRepository().openTransaction();
+		try {
+			BranchDAO branchDAO =
+					(BranchDAO) getRepository().createDao(Branch.class, transactionId);
+			Branch branch = new Branch(branchName, branchCity, new BigDecimal(branchAssets));
+			Branch createdBranch = branchDAO.persist(branch);
+			String response = EntityJsonSerializer.serialize(createdBranch);
+			getRepository().closeTransaction(transactionId);
+			return response;
+		} catch (Exception e) {
+			rollbackTransactionIfActive(transactionId);
+			throw e;
+		}
 	}
 }

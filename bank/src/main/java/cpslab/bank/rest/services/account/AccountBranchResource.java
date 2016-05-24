@@ -15,28 +15,41 @@ public class AccountBranchResource extends BaseResource implements JsonGetServic
 
 	@Override
 	public String handleGet() throws Throwable {
-		AccountDAO accountDAO = (AccountDAO) getRepository().createDao(Account.class);
-		getRepository().openTransaction();
-		Account account = accountDAO.loadById(getIdAttribute("account"));
-		Branch branch = account.getBranch();
-		String response = EntityJsonSerializer.serialize(branch);
-		getRepository().closeTransaction();
-		return response;
+		long transactionId = getRepository().openTransaction();
+		try {
+			AccountDAO accountDAO =
+					(AccountDAO) getRepository().createDao((Account.class), transactionId);
+			Account account = accountDAO.loadById(getIdAttribute("account"));
+			Branch branch = account.getBranch();
+			String response = EntityJsonSerializer.serialize(branch);
+			getRepository().closeTransaction(transactionId);
+			return response;
+		} catch (Exception e) {
+			rollbackTransactionIfActive(transactionId);
+			throw e;
+		}
 	}
 
 	@Override
 	public String handlePut(JSONObject requestParams) throws Throwable {
 		long branchID = requestParams.getLong("id");
-		AccountDAO accountDAO = (AccountDAO) getRepository().createDao(Account.class);
-		BranchDAO branchDAO = (BranchDAO) getRepository().createDao(Branch.class);
-		getRepository().openTransaction();
-		Account account = accountDAO.loadById(getIdAttribute("account"));
-		Branch branch = branchDAO.loadById(branchID);
-		account.setBranch(branch);
-		accountDAO.update(account);
-		String response = EntityJsonSerializer.serialize(branch);
-		getRepository().closeTransaction();
-		return response;
+		long transactionId = getRepository().openTransaction();
+		try {
+			AccountDAO accountDAO =
+					(AccountDAO) getRepository().createDao((Account.class), transactionId);
+			BranchDAO branchDAO =
+					(BranchDAO) getRepository().createDao((Branch.class), transactionId);
+			Account account = accountDAO.loadById(getIdAttribute("account"));
+			Branch branch = branchDAO.loadById(branchID);
+			account.setBranch(branch);
+			accountDAO.update(account);
+			String response = EntityJsonSerializer.serialize(branch);
+			getRepository().closeTransaction(transactionId);
+			return response;
+		} catch (Exception e) {
+			rollbackTransactionIfActive(transactionId);
+			throw e;
+		}
 	}
 
 }

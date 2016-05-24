@@ -17,36 +17,51 @@ public class LoanResource extends BaseResource
 
 	@Override
 	public String handleGet() throws Throwable {
-		getRepository().openTransaction();
-		LoanDAO loanDAO = (LoanDAO) getRepository().createDao(Loan.class);
-		Loan loan = loanDAO.loadById(getIdAttribute("loan"));
-		String response = EntityJsonSerializer.serialize(loan);
-		getRepository().closeTransaction();
-		return response;
+		long transactionId = getRepository().openTransaction();
+		try {
+			LoanDAO loanDAO = (LoanDAO) getRepository().createDao(Loan.class, transactionId);
+			Loan loan = loanDAO.loadById(getIdAttribute("loan"));
+			String response = EntityJsonSerializer.serialize(loan);
+			getRepository().closeTransaction(transactionId);
+			return response;
+		} catch (Exception e) {
+			rollbackTransactionIfActive(transactionId);
+			throw e;
+		}
 	}
 
 	@Override
 	public String handlePut(JSONObject requestParams) throws Throwable {
 		String loanNumber = requestParams.getString("loan_number");
 		String amount = requestParams.getString("amount");
-		getRepository().openTransaction();
-		LoanDAO loanDAO = (LoanDAO) getRepository().createDao(Loan.class);
-		Loan loan = loanDAO.loadById(getIdAttribute("loan"));
-		loan.setLoanNumber(loanNumber);
-		loan.setAmount(new BigDecimal(amount));
-		Loan updatedLoan = loanDAO.update(loan);
-		String response = EntityJsonSerializer.serialize(updatedLoan);
-		getRepository().closeTransaction();
-		return response;
+		long transactionId = getRepository().openTransaction();
+		try {
+			LoanDAO loanDAO = (LoanDAO) getRepository().createDao(Loan.class, transactionId);
+			Loan loan = loanDAO.loadById(getIdAttribute("loan"));
+			loan.setLoanNumber(loanNumber);
+			loan.setAmount(new BigDecimal(amount));
+			Loan updatedLoan = loanDAO.update(loan);
+			String response = EntityJsonSerializer.serialize(updatedLoan);
+			getRepository().closeTransaction(transactionId);
+			return response;
+		} catch (Exception e) {
+			rollbackTransactionIfActive(transactionId);
+			throw e;
+		}
 	}
 
 	@Override
 	public String handleDelete(JSONObject requestParams) throws Throwable {
-		getRepository().openTransaction();
-		LoanDAO loanDAO = (LoanDAO) getRepository().createDao(Loan.class);
-		Loan loan = loanDAO.loadById(getIdAttribute("loan"));
-		boolean success = loanDAO.deleteById(loan.getId());
-		getRepository().closeTransaction();
-		return new JSONObject().put("success", success).toString();
+		long transactionId = getRepository().openTransaction();
+		try {
+			LoanDAO loanDAO = (LoanDAO) getRepository().createDao(Loan.class, transactionId);
+			Loan loan = loanDAO.loadById(getIdAttribute("loan"));
+			boolean success = loanDAO.deleteById(loan.getId());
+			getRepository().closeTransaction(transactionId);
+			return new JSONObject().put("success", success).toString();
+		} catch (Exception e) {
+			rollbackTransactionIfActive(transactionId);
+			throw e;
+		}
 	}
 }

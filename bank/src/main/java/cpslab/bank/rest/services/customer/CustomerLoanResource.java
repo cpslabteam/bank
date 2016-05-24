@@ -16,23 +16,36 @@ public class CustomerLoanResource extends BaseResource
 
 	@Override
 	public String handleGet() throws Throwable {
-		getRepository().openTransaction();
-		LoanDAO loanDAO = (LoanDAO) getRepository().createDao(Loan.class);
-		Loan loan = loanDAO.findCustomerLoan(getIdAttribute("customer"), getIdAttribute("loan"));
-		String response = EntityJsonSerializer.serialize(loan);
-		getRepository().closeTransaction();
-		return response;
+		long transactionId = getRepository().openTransaction();
+		try {
+			LoanDAO loanDAO = (LoanDAO) getRepository().createDao(Loan.class, transactionId);
+			Loan loan =
+					loanDAO.findCustomerLoan(getIdAttribute("customer"), getIdAttribute("loan"));
+			String response = EntityJsonSerializer.serialize(loan);
+			getRepository().closeTransaction(transactionId);
+			return response;
+		} catch (Exception e) {
+			rollbackTransactionIfActive(transactionId);
+			throw e;
+		}
 	}
 
 	@Override
 	public String handleDelete(JSONObject requestParams) throws Throwable {
-		getRepository().openTransaction();
-		LoanDAO loanDAO = (LoanDAO) getRepository().createDao(Loan.class);
-		CustomerDAO customerDAO = (CustomerDAO) getRepository().createDao(Customer.class);
-		Loan loan = loanDAO.findCustomerLoan(getIdAttribute("customer"), getIdAttribute("loan"));
-		Customer customer = customerDAO.loadById(getIdAttribute("customer"));
-		boolean success = customer.removeLoan(loan);
-		getRepository().closeTransaction();
-		return new JSONObject().put("success", success).toString();
+		long transactionId = getRepository().openTransaction();
+		try {
+			LoanDAO loanDAO = (LoanDAO) getRepository().createDao(Loan.class, transactionId);
+			CustomerDAO customerDAO =
+					(CustomerDAO) getRepository().createDao(Customer.class, transactionId);
+			Loan loan =
+					loanDAO.findCustomerLoan(getIdAttribute("customer"), getIdAttribute("loan"));
+			Customer customer = customerDAO.loadById(getIdAttribute("customer"));
+			boolean success = customer.removeLoan(loan);
+			getRepository().closeTransaction(transactionId);
+			return new JSONObject().put("success", success).toString();
+		} catch (Exception e) {
+			rollbackTransactionIfActive(transactionId);
+			throw e;
+		}
 	}
 }

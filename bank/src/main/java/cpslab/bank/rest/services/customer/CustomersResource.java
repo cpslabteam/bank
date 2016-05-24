@@ -15,12 +15,18 @@ public class CustomersResource extends BaseResource implements JsonGetService, J
 
 	@Override
 	public String handleGet() throws Throwable {
-		getRepository().openTransaction();
-		CustomerDAO customerDAO = (CustomerDAO) getRepository().createDao(Customer.class);
-		List<Customer> customers = customerDAO.findAll();
-		String response = EntityJsonSerializer.serialize(customers);
-		getRepository().closeTransaction();
-		return response;
+		long transactionId = getRepository().openTransaction();
+		try {
+			CustomerDAO customerDAO =
+					(CustomerDAO) getRepository().createDao(Customer.class, transactionId);
+			List<Customer> customers = customerDAO.findAll();
+			String response = EntityJsonSerializer.serialize(customers);
+			getRepository().closeTransaction(transactionId);
+			return response;
+		} catch (Exception e) {
+			rollbackTransactionIfActive(transactionId);
+			throw e;
+		}
 	}
 
 	@Override
@@ -28,12 +34,18 @@ public class CustomersResource extends BaseResource implements JsonGetService, J
 		String name = requestParams.getString("name");
 		String street = requestParams.getString("street");
 		String city = requestParams.getString("city");
-		getRepository().openTransaction();
-		CustomerDAO customerDAO = (CustomerDAO) getRepository().createDao(Customer.class);
-		Customer customer = new Customer(name, street, city);
-		Customer createdCustomer = customerDAO.persist(customer);
-		String response = EntityJsonSerializer.serialize(createdCustomer);
-		getRepository().closeTransaction();
-		return response;
+		long transactionId = getRepository().openTransaction();
+		try {
+			CustomerDAO customerDAO =
+					(CustomerDAO) getRepository().createDao((Customer.class), transactionId);
+			Customer customer = new Customer(name, street, city);
+			Customer createdCustomer = customerDAO.persist(customer);
+			String response = EntityJsonSerializer.serialize(createdCustomer);
+			getRepository().closeTransaction(transactionId);
+			return response;
+		} catch (Exception e) {
+			rollbackTransactionIfActive(transactionId);
+			throw e;
+		}
 	}
 }

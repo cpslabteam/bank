@@ -22,26 +22,39 @@ public class CustomerAccountsResource extends BaseResource
 
 	@Override
 	public String handleGet() throws Throwable {
-		getRepository().openTransaction();
-		AccountDAO accountDAO = (AccountDAO) getRepository().createDao(Account.class);
-		List<Account> accounts = accountDAO.findCustomerAccounts(getIdAttribute("customer"));
-		String response = EntityJsonSerializer.serialize(accounts);
-		getRepository().closeTransaction();
-		return response;
+		long transactionId = getRepository().openTransaction();
+		try {
+			AccountDAO accountDAO =
+					(AccountDAO) getRepository().createDao(Account.class, transactionId);
+			List<Account> accounts = accountDAO.findCustomerAccounts(getIdAttribute("customer"));
+			String response = EntityJsonSerializer.serialize(accounts);
+			getRepository().closeTransaction(transactionId);
+			return response;
+		} catch (Exception e) {
+			rollbackTransactionIfActive(transactionId);
+			throw e;
+		}
 	}
 
 	@Override
 	public String handlePost(JSONObject requestParams) throws Throwable {
 		long accountID = requestParams.getLong("id");
-		getRepository().openTransaction();
-		CustomerDAO customerDAO = (CustomerDAO) getRepository().createDao(Customer.class);
-		AccountDAO accountDAO = (AccountDAO) getRepository().createDao(Account.class);
-		Account account = accountDAO.loadById(accountID);
-		Customer customer = customerDAO.loadById(getIdAttribute("customer"));
-		customer.addAccount(account);
-		String response = EntityJsonSerializer.serialize(account);
-		getRepository().closeTransaction();
-		return response;
+		long transactionId = getRepository().openTransaction();
+		try {
+			CustomerDAO customerDAO =
+					(CustomerDAO) getRepository().createDao(Customer.class, transactionId);
+			AccountDAO accountDAO =
+					(AccountDAO) getRepository().createDao(Account.class, transactionId);
+			Account account = accountDAO.loadById(accountID);
+			Customer customer = customerDAO.loadById(getIdAttribute("customer"));
+			customer.addAccount(account);
+			String response = EntityJsonSerializer.serialize(account);
+			getRepository().closeTransaction(transactionId);
+			return response;
+		} catch (Exception e) {
+			rollbackTransactionIfActive(transactionId);
+			throw e;
+		}
 	}
 
 	@Override
@@ -49,17 +62,25 @@ public class CustomerAccountsResource extends BaseResource
 		String accountNumber = requestParams.getString("account_number");
 		String balance = requestParams.getString("balance");
 		long branchID = requestParams.getLong("branch_id");
-		getRepository().openTransaction();
-		AccountDAO accountDAO = (AccountDAO) getRepository().createDao(Account.class);
-		BranchDAO branchDAO = (BranchDAO) getRepository().createDao(Branch.class);
-		CustomerDAO customerDAO = (CustomerDAO) getRepository().createDao(Customer.class);
-		Customer customer = customerDAO.loadById(getIdAttribute("customer"));
-		Branch branch = branchDAO.loadById(branchID);
-		Account account = new Account(accountNumber, branch, new BigDecimal(balance));
-		Account createdAccount = accountDAO.persist(account);
-		customer.addAccount(createdAccount);
-		String response = EntityJsonSerializer.serialize(createdAccount);
-		getRepository().closeTransaction();
-		return response;
+		long transactionId = getRepository().openTransaction();
+		try {
+			AccountDAO accountDAO =
+					(AccountDAO) getRepository().createDao(Account.class, transactionId);
+			BranchDAO branchDAO =
+					(BranchDAO) getRepository().createDao(Branch.class, transactionId);
+			CustomerDAO customerDAO =
+					(CustomerDAO) getRepository().createDao(Customer.class, transactionId);
+			Customer customer = customerDAO.loadById(getIdAttribute("customer"));
+			Branch branch = branchDAO.loadById(branchID);
+			Account account = new Account(accountNumber, branch, new BigDecimal(balance));
+			Account createdAccount = accountDAO.persist(account);
+			customer.addAccount(createdAccount);
+			String response = EntityJsonSerializer.serialize(createdAccount);
+			getRepository().closeTransaction(transactionId);
+			return response;
+		} catch (Exception e) {
+			rollbackTransactionIfActive(transactionId);
+			throw e;
+		}
 	}
 }

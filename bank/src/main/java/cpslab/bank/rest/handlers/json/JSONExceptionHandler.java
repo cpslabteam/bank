@@ -6,19 +6,17 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cpslab.bank.rest.handlers.BaseHandler;
 import cpslab.util.rest.ErrorStatus;
 import cpslab.util.rest.RestService.HTTPErrorCode;
 import cpslab.util.rest.ServiceExceptionHandler;
 
-public class JSONExceptionHandler extends BaseHandler implements ServiceExceptionHandler {
+public class JSONExceptionHandler implements ServiceExceptionHandler {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	private final String PROPERTY_NOT_FOUND_PATTERN = ".+\\[\"(?<property>.+)\"\\] not found.+";
 
 	@Override
 	public ErrorStatus handle(Throwable throwable) {
-		rollbackTransactionIfActive();
 		logger.error("JSONException: " + throwable.getMessage());
 		String description;
 		Matcher m = Pattern.compile(PROPERTY_NOT_FOUND_PATTERN).matcher(throwable.getMessage());

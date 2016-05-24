@@ -16,23 +16,38 @@ public class CustomerAccountResource extends BaseResource
 
 	@Override
 	public String handleGet() throws Throwable {
-		getRepository().openTransaction();
-		AccountDAO accountDAO = (AccountDAO) getRepository().createDao(Account.class);
-		Account account = accountDAO.findCustomerAccount(getIdAttribute("customer"), getIdAttribute("account"));
-		String response = EntityJsonSerializer.serialize(account);
-		getRepository().closeTransaction();
-		return response;
+		long transactionId = getRepository().openTransaction();
+		try {
+			AccountDAO accountDAO =
+					(AccountDAO) getRepository().createDao(Account.class, transactionId);
+			Account account = accountDAO.findCustomerAccount(getIdAttribute("customer"),
+					getIdAttribute("account"));
+			String response = EntityJsonSerializer.serialize(account);
+			getRepository().closeTransaction(transactionId);
+			return response;
+		} catch (Exception e) {
+			rollbackTransactionIfActive(transactionId);
+			throw e;
+		}
 	}
 
 	@Override
 	public String handleDelete(JSONObject requestParams) throws Throwable {
-		getRepository().openTransaction();
-		AccountDAO accountDAO = (AccountDAO) getRepository().createDao(Account.class);
-		CustomerDAO customerDAO = (CustomerDAO) getRepository().createDao(Customer.class);
-		Account account = accountDAO.findCustomerAccount(getIdAttribute("customer"), getIdAttribute("account"));
-		Customer customer = customerDAO.loadById(getIdAttribute("customer"));
-		boolean success = customer.removeAccount(account);
-		getRepository().closeTransaction();
-		return new JSONObject().put("success", success).toString();
+		long transactionId = getRepository().openTransaction();
+		try {
+			AccountDAO accountDAO =
+					(AccountDAO) getRepository().createDao(Account.class, transactionId);
+			CustomerDAO customerDAO =
+					(CustomerDAO) getRepository().createDao(Customer.class, transactionId);
+			Account account = accountDAO.findCustomerAccount(getIdAttribute("customer"),
+					getIdAttribute("account"));
+			Customer customer = customerDAO.loadById(getIdAttribute("customer"));
+			boolean success = customer.removeAccount(account);
+			getRepository().closeTransaction(transactionId);
+			return new JSONObject().put("success", success).toString();
+		} catch (Exception e) {
+			rollbackTransactionIfActive(transactionId);
+			throw e;
+		}
 	}
 }

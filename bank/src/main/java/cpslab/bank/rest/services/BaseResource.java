@@ -16,4 +16,8 @@ public class BaseResource extends RestJSONServicesProvider {
 		return Long.valueOf(getAttribute(name));
 	}
 
+	public void rollbackTransactionIfActive(long id) {
+		if (repository.isTransactionActive(id))
+			repository.rollbackTransaction(id);
+	}
 }

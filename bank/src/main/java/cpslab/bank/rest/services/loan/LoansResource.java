@@ -18,12 +18,17 @@ public class LoansResource extends BaseResource implements JsonGetService, JsonP
 
 	@Override
 	public String handleGet() throws Throwable {
-		getRepository().openTransaction();
-		LoanDAO loanDAO = (LoanDAO) getRepository().createDao(Loan.class);
-		List<Loan> loans = loanDAO.findAll();
-		String response = EntityJsonSerializer.serialize(loans);
-		getRepository().closeTransaction();
-		return response;
+		long transactionId = getRepository().openTransaction();
+		try {
+			LoanDAO loanDAO = (LoanDAO) getRepository().createDao(Loan.class, transactionId);
+			List<Loan> loans = loanDAO.findAll();
+			String response = EntityJsonSerializer.serialize(loans);
+			getRepository().closeTransaction(transactionId);
+			return response;
+		} catch (Exception e) {
+			rollbackTransactionIfActive(transactionId);
+			throw e;
+		}
 	}
 
 	@Override
@@ -31,14 +36,20 @@ public class LoansResource extends BaseResource implements JsonGetService, JsonP
 		String loanNumber = requestParams.getString("loan_number");
 		String amount = requestParams.getString("amount");
 		long branchID = requestParams.getLong("branch_id");
-		getRepository().openTransaction();
-		LoanDAO loanDAO = (LoanDAO) getRepository().createDao(Loan.class);
-		BranchDAO branchDAO = (BranchDAO) getRepository().createDao(Branch.class);
-		Branch branch = branchDAO.loadById(branchID);
-		Loan loan = new Loan(loanNumber, branch, new BigDecimal(amount));
-		Loan createdLoan = loanDAO.persist(loan);
-		String response = EntityJsonSerializer.serialize(createdLoan);
-		getRepository().closeTransaction();
-		return response;
+		long transactionId = getRepository().openTransaction();
+		try {
+			LoanDAO loanDAO = (LoanDAO) getRepository().createDao(Loan.class, transactionId);
+			BranchDAO branchDAO =
+					(BranchDAO) getRepository().createDao(Branch.class, transactionId);
+			Branch branch = branchDAO.loadById(branchID);
+			Loan loan = new Loan(loanNumber, branch, new BigDecimal(amount));
+			Loan createdLoan = loanDAO.persist(loan);
+			String response = EntityJsonSerializer.serialize(createdLoan);
+			getRepository().closeTransaction(transactionId);
+			return response;
+		} catch (Exception e) {
+			rollbackTransactionIfActive(transactionId);
+			throw e;
+		}
 	}
 }

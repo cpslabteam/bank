@@ -15,14 +15,20 @@ public class CustomerLoanDepositResource extends BaseResource implements JsonPos
 	@Override
 	public String handlePost(JSONObject requestParams) throws Throwable {
 		String amount = requestParams.getString("amount");
-		getRepository().openTransaction();
-		LoanDAO loanDAO = (LoanDAO) getRepository().createDao(Loan.class);
-		Loan loan = loanDAO.findCustomerLoan(getIdAttribute("customer"), getIdAttribute("loan"));
-		BigDecimal newAmount = loan.getAmount().add(new BigDecimal(amount));
-		loan.setAmount(newAmount);
-		Loan updatedLoan = loanDAO.update(loan);
-		String response = EntityJsonSerializer.serialize(updatedLoan);
-		getRepository().closeTransaction();
-		return response;
+		long transactionId = getRepository().openTransaction();
+		try {
+			LoanDAO loanDAO = (LoanDAO) getRepository().createDao(Loan.class, transactionId);
+			Loan loan =
+					loanDAO.findCustomerLoan(getIdAttribute("customer"), getIdAttribute("loan"));
+			BigDecimal newAmount = loan.getAmount().add(new BigDecimal(amount));
+			loan.setAmount(newAmount);
+			Loan updatedLoan = loanDAO.update(loan);
+			String response = EntityJsonSerializer.serialize(updatedLoan);
+			getRepository().closeTransaction(transactionId);
+			return response;
+		} catch (Exception e) {
+			rollbackTransactionIfActive(transactionId);
+			throw e;
+		}
 	}
 }

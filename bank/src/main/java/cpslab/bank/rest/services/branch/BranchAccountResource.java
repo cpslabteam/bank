@@ -17,39 +17,57 @@ public class BranchAccountResource extends BaseResource
 
 	@Override
 	public String handleGet() throws Throwable {
-		getRepository().openTransaction();
-		AccountDAO accountDAO = (AccountDAO) getRepository().createDao(Account.class);
-		Account account =
-				accountDAO.findBranchAccount(getIdAttribute("branch"), getIdAttribute("account"));
-		String response = EntityJsonSerializer.serialize(account);
-		getRepository().closeTransaction();
-		return response;
+		long transactionId = getRepository().openTransaction();
+		try {
+			AccountDAO accountDAO =
+					(AccountDAO) getRepository().createDao(Account.class, transactionId);
+			Account account = accountDAO.findBranchAccount(getIdAttribute("branch"),
+					getIdAttribute("account"));
+			String response = EntityJsonSerializer.serialize(account);
+			getRepository().closeTransaction(transactionId);
+			return response;
+		} catch (Exception e) {
+			rollbackTransactionIfActive(transactionId);
+			throw e;
+		}
 	}
 
 	@Override
 	public String handlePut(JSONObject requestParams) throws Throwable {
 		String accountNumber = requestParams.getString("account_number");
 		String balance = requestParams.getString("balance");
-		getRepository().openTransaction();
-		AccountDAO accountDAO = (AccountDAO) getRepository().createDao(Account.class);
-		Account account =
-				accountDAO.findBranchAccount(getIdAttribute("branch"), getIdAttribute("account"));
-		account.setAccountNumber(accountNumber);
-		account.setBalance(new BigDecimal(balance));
-		Account updatedAccount = accountDAO.update(account);
-		String response = EntityJsonSerializer.serialize(updatedAccount);
-		getRepository().closeTransaction();
-		return response;
+		long transactionId = getRepository().openTransaction();
+		try {
+			AccountDAO accountDAO =
+					(AccountDAO) getRepository().createDao(Account.class, transactionId);
+			Account account = accountDAO.findBranchAccount(getIdAttribute("branch"),
+					getIdAttribute("account"));
+			account.setAccountNumber(accountNumber);
+			account.setBalance(new BigDecimal(balance));
+			Account updatedAccount = accountDAO.update(account);
+			String response = EntityJsonSerializer.serialize(updatedAccount);
+			getRepository().closeTransaction(transactionId);
+			return response;
+		} catch (Exception e) {
+			rollbackTransactionIfActive(transactionId);
+			throw e;
+		}
 	}
 
 	@Override
 	public String handleDelete(JSONObject requestParams) throws Throwable {
-		getRepository().openTransaction();
-		AccountDAO accountDAO = (AccountDAO) getRepository().createDao(Account.class);
-		Account account =
-				accountDAO.findBranchAccount(getIdAttribute("branch"), getIdAttribute("account"));
-		boolean success = accountDAO.deleteById(account.getId());
-		getRepository().closeTransaction();
-		return new JSONObject().put("success", success).toString();
+		long transactionId = getRepository().openTransaction();
+		try {
+			AccountDAO accountDAO =
+					(AccountDAO) getRepository().createDao(Account.class, transactionId);
+			Account account = accountDAO.findBranchAccount(getIdAttribute("branch"),
+					getIdAttribute("account"));
+			boolean success = accountDAO.deleteById(account.getId());
+			getRepository().closeTransaction(transactionId);
+			return new JSONObject().put("success", success).toString();
+		} catch (Exception e) {
+			rollbackTransactionIfActive(transactionId);
+			throw e;
+		}
 	}
 }

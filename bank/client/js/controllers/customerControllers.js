@@ -46,11 +46,17 @@
         $scope.customer = {};
         customerSrv.getCustomer($routeParams.customerId)
           .then(handleSuccessGetCustomer, utils.handleServerError);
+        customerSrv.getCustomerAccounts($routeParams.customerId)
+          .then(handleSuccessGetCustomerAccounts, utils.handleServerError);
         $scope.originalValues = [];
       };
 
       function handleSuccessGetCustomer(response) {
         $scope.customer = response.data;
+      };
+
+      function handleSuccessGetCustomerAccounts(response) {
+        $scope.customer.accounts = response.data;
       };
 
       $scope.hasAccounts = function() {

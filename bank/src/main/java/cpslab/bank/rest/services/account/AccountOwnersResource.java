@@ -17,26 +17,39 @@ public class AccountOwnersResource extends BaseResource implements JsonGetServic
 
 	@Override
 	public String handleGet() throws Throwable {
-		getRepository().openTransaction();
-		CustomerDAO customerDAO = (CustomerDAO) getRepository().createDao(Customer.class);
-		List<Customer> owners = customerDAO.findAccountOwners(getIdAttribute("account"));
-		String response = EntityJsonSerializer.serialize(owners);
-		getRepository().closeTransaction();
-		return response;
+		long transactionId = getRepository().openTransaction();
+		try {
+			CustomerDAO customerDAO =
+					(CustomerDAO) getRepository().createDao(Customer.class, transactionId);
+			List<Customer> owners = customerDAO.findAccountOwners(getIdAttribute("account"));
+			String response = EntityJsonSerializer.serialize(owners);
+			getRepository().closeTransaction(transactionId);
+			return response;
+		} catch (Exception e) {
+			rollbackTransactionIfActive(transactionId);
+			throw e;
+		}
 	}
 
 	@Override
 	public String handlePut(JSONObject requestParams) throws Throwable {
 		long ownerID = requestParams.getLong("id");
-		getRepository().openTransaction();
-		AccountDAO accountDAO = (AccountDAO) getRepository().createDao(Account.class);
-		CustomerDAO customerDAO = (CustomerDAO) getRepository().createDao(Customer.class);
-		Customer owner = customerDAO.loadById(ownerID);
-		Account account = accountDAO.loadById(getIdAttribute("account"));
-		account.addOwner(owner);
-		String response = EntityJsonSerializer.serialize(owner);
-		getRepository().closeTransaction();
-		return response;
+		long transactionId = getRepository().openTransaction();
+		try {
+			AccountDAO accountDAO =
+					(AccountDAO) getRepository().createDao(Account.class, transactionId);
+			CustomerDAO customerDAO =
+					(CustomerDAO) getRepository().createDao(Customer.class, transactionId);
+			Customer owner = customerDAO.loadById(ownerID);
+			Account account = accountDAO.loadById(getIdAttribute("account"));
+			account.addOwner(owner);
+			String response = EntityJsonSerializer.serialize(owner);
+			getRepository().closeTransaction(transactionId);
+			return response;
+		} catch (Exception e) {
+			rollbackTransactionIfActive(transactionId);
+			throw e;
+		}
 	}
 
 }

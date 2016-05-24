@@ -19,26 +19,39 @@ public class BranchAccountsResource extends BaseResource
 
 	@Override
 	public String handleGet() throws Throwable {
-		getRepository().openTransaction();
-		AccountDAO accountDAO = (AccountDAO) getRepository().createDao(Account.class);
-		List<Account> accounts = accountDAO.findBranchAccounts(getIdAttribute("branch"));
-		String response = EntityJsonSerializer.serialize(accounts);
-		getRepository().closeTransaction();
-		return response;
+		long transactionId = getRepository().openTransaction();
+		try {
+			AccountDAO accountDAO =
+					(AccountDAO) getRepository().createDao(Account.class, transactionId);
+			List<Account> accounts = accountDAO.findBranchAccounts(getIdAttribute("branch"));
+			String response = EntityJsonSerializer.serialize(accounts);
+			getRepository().closeTransaction(transactionId);
+			return response;
+		} catch (Exception e) {
+			rollbackTransactionIfActive(transactionId);
+			throw e;
+		}
 	}
 
 	@Override
 	public String handlePost(JSONObject requestParams) throws Throwable {
 		String accountNumber = requestParams.getString("account_number");
 		String balance = requestParams.getString("balance");
-		getRepository().openTransaction();
-		AccountDAO accountDAO = (AccountDAO) getRepository().createDao(Account.class);
-		BranchDAO branchDAO = (BranchDAO) getRepository().createDao(Branch.class);
-		Branch branch = branchDAO.loadById(getIdAttribute("branch"));
-		Account account = new Account(accountNumber, branch, new BigDecimal(balance));
-		Account createdAccount = accountDAO.persist(account);
-		String response = EntityJsonSerializer.serialize(createdAccount);
-		getRepository().closeTransaction();
-		return response;
+		long transactionId = getRepository().openTransaction();
+		try {
+			AccountDAO accountDAO =
+					(AccountDAO) getRepository().createDao(Account.class, transactionId);
+			BranchDAO branchDAO =
+					(BranchDAO) getRepository().createDao(Branch.class, transactionId);
+			Branch branch = branchDAO.loadById(getIdAttribute("branch"));
+			Account account = new Account(accountNumber, branch, new BigDecimal(balance));
+			Account createdAccount = accountDAO.persist(account);
+			String response = EntityJsonSerializer.serialize(createdAccount);
+			getRepository().closeTransaction(transactionId);
+			return response;
+		} catch (Exception e) {
+			rollbackTransactionIfActive(transactionId);
+			throw e;
+		}
 	}
 }

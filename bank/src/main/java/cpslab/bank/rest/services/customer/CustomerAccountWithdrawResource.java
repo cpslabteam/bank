@@ -10,20 +10,26 @@ import cpslab.bank.jsonserialization.EntityJsonSerializer;
 import cpslab.bank.rest.services.BaseResource;
 import cpslab.util.rest.services.JsonPostService;
 
-public class CustomerAccountWithdrawResource  extends BaseResource implements JsonPostService {
+public class CustomerAccountWithdrawResource extends BaseResource implements JsonPostService {
 
 	@Override
 	public String handlePost(JSONObject requestParams) throws Throwable {
 		String amount = requestParams.getString("amount");
-		getRepository().openTransaction();
-		AccountDAO accountDAO = (AccountDAO) getRepository().createDao(Account.class);
-		Account account = accountDAO.findCustomerAccount(getIdAttribute("customer"),
-				getIdAttribute("account"));
-		BigDecimal newBalance = account.getBalance().subtract(new BigDecimal(amount));
-		account.setBalance(newBalance);
-		Account updatedAccount = accountDAO.update(account);
-		String response = EntityJsonSerializer.serialize(updatedAccount);
-		getRepository().closeTransaction();
-		return response;
+		long transactionId = getRepository().openTransaction();
+		try {
+			AccountDAO accountDAO =
+					(AccountDAO) getRepository().createDao(Account.class, transactionId);
+			Account account = accountDAO.findCustomerAccount(getIdAttribute("customer"),
+					getIdAttribute("account"));
+			BigDecimal newBalance = account.getBalance().subtract(new BigDecimal(amount));
+			account.setBalance(newBalance);
+			Account updatedAccount = accountDAO.update(account);
+			String response = EntityJsonSerializer.serialize(updatedAccount);
+			getRepository().closeTransaction(transactionId);
+			return response;
+		} catch (Exception e) {
+			rollbackTransactionIfActive(transactionId);
+			throw e;
+		}
 	}
 }
