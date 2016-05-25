@@ -14,6 +14,10 @@
       $scope.details = function(customerId) {
         $location.path('customers/' + customerId);
       };
+
+      $scope.createCustomer = function () {
+        $location.path('customers/create');
+      };
     }
   ]);
 
@@ -48,6 +52,8 @@
           .then(handleSuccessGetCustomer, utils.handleServerError);
         customerSrv.getCustomerAccounts($routeParams.customerId)
           .then(handleSuccessGetCustomerAccounts, utils.handleServerError);
+        customerSrv.getCustomerLoans($routeParams.customerId)
+          .then(handleSuccessGetCustomerLoans, utils.handleServerError);
         $scope.originalValues = [];
       };
 
@@ -57,6 +63,10 @@
 
       function handleSuccessGetCustomerAccounts(response) {
         $scope.customer.accounts = response.data;
+      };
+
+       function handleSuccessGetCustomerLoans(response) {
+        $scope.customer.loans = response.data;
       };
 
       $scope.hasAccounts = function() {

@@ -132,9 +132,9 @@
               </tr>
             </theader>
             <tbody>
-              <tr ng-repeat="accounts in customer.accounts | orderBy:predicate:reverse">
+              <tr ng-repeat="account in customer.accounts | orderBy:predicate:reverse">
                 <td>{{account.accountNumber}}</td>
-                <td>{{account.balance}}</td>
+                <td>{{account.balance | currency}}</td>
                 <td>
                   <button class="btn btn-xs btn-info" title="Details"><i class="glyphicon glyphicon-plus-sign"></i></button>
                 </td>
@@ -172,7 +172,7 @@
             <tbody>
               <tr ng-repeat="loan in customer.loans | orderBy:predicate:reverse">
                 <td>{{loan.loanNumber}}</td>
-                <td>{{loan.amount}}</td>
+                <td>{{loan.amount | currency}}</td>
                 <td>
                   <button class="btn btn-xs btn-info" title="Details"><i class="glyphicon glyphicon-plus-sign"></i></button>
                 </td>

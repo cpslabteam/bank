@@ -1,7 +1,7 @@
 (function(window, document, undefined) {
-  bankApp.controller('AccountListCtrl', ['$scope', 'utils', 'accountSrv',
+  bankApp.controller('AccountListCtrl', ['$scope', '$location', 'utils', 'accountSrv',
     function(
-      $scope, utils, accountSrv) {
+      $scope, $location, utils, accountSrv) {
       init();
 
       function init() {
@@ -12,6 +12,10 @@
 
       function handleSuccess(response) {
         $scope.accounts = response.data;
+      };
+
+      $scope.createAccount = function () {
+        $location.path("/accounts/create");
       };
     }
   ]);

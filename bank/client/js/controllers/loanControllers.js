@@ -1,14 +1,21 @@
 (function(window, document, undefined) {
-  bankApp.controller('LoanListCtrl', ['$scope', 'utils', 'loanSrv', function(
-    $scope, utils, loanSrv) {
-    $scope.loans = [];
-    loanSrv.getListLoans()
-      .then(handleSuccess, utils.handleServerError);
+  bankApp.controller('LoanListCtrl', ['$scope', '$location', 'utils',
+    'loanSrv',
+    function(
+      $scope, $location, utils, loanSrv) {
+      $scope.loans = [];
+      loanSrv.getListLoans()
+        .then(handleSuccess, utils.handleServerError);
 
-    function handleSuccess(response) {
-      $scope.loans = response.data;
+      function handleSuccess(response) {
+        $scope.loans = response.data;
+      };
+
+      $scope.createLoan = function() {
+        $location.path("/loans/create");
+      };
     }
-  }]);
+  ]);
 
   bankApp.controller('CreateLoanCtrl', ['$scope', '$location', 'utils',
     'loanSrv', 'branchSrv',
