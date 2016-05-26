@@ -78,8 +78,33 @@
     this.getListLoans = function() {
       return $http.get(serverDomain + "/loans");
     };
+
     this.createLoan = function(loan) {
       return $http.post(serverDomain + "/loans", loan);
+    };
+
+    this.getLoan = function(id) {
+      return $http.get(serverDomain + "/loans/" + id);
+    };
+
+    this.updateLoan = function(update, id) {
+      return $http.put(serverDomain + "/loans/" + id, update);
+    };
+
+    this.updateLoanBranch = function(update, id) {
+      return $http.put(serverDomain + "/loans/" + id + "/branch", update);
+    };
+
+    this.deleteLoan = function (id) {
+      return $http.delete(serverDomain + "/loans/" + id);
+    };
+
+    this.getLoanOwners = function (id) {
+      return $http.get(serverDomain + "/loans/" + id + "/owners");
+    };
+
+    this.getLoanBranch = function (id) {
+      return $http.get(serverDomain + "/loans/" + id + "/branch");
     };
   }]);
 })(window, document);
