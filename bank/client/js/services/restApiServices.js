@@ -9,6 +9,30 @@
     this.createAccount = function(account) {
       return $http.post(serverDomain + "/accounts", account);
     };
+
+    this.getAccount = function(id) {
+      return $http.get(serverDomain + "/accounts/" + id);
+    };
+
+    this.updateAccount = function(update, id) {
+      return $http.put(serverDomain + "/accounts/" + id, update);
+    };
+
+    this.updateAccountBranch = function(update, id) {
+      return $http.put(serverDomain + "/accounts/" + id + "/branch", update);
+    };
+
+    this.deleteAccount = function (id) {
+      return $http.delete(serverDomain + "/accounts/" + id);
+    };
+
+    this.getAccountOwners = function (id) {
+      return $http.get(serverDomain + "/accounts/" + id + "/owners");
+    };
+
+    this.getAccountBranch = function (id) {
+      return $http.get(serverDomain + "/accounts/" + id + "/branch");
+    };
   }]);
 
   bankApp.service('branchSrv', ['$http', 'utils', function($http, utils) {

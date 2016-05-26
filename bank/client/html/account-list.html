@@ -23,12 +23,16 @@
               <span class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
                 ng-show="isOrdered('balance')"></span>
             </th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
           <tr ng-repeat="account in accounts | orderBy:predicate:reverse">
             <td>{{account.accountNumber}}</td>
             <td>{{account.balance | currency}}</td>
+            <td>
+              <button class="btn btn-info btn-xs" ng-click="details(account.id)" title="Details"><i class="glyphicon glyphicon-plus-sign"></i></button>
+            </td>
           </tr>
         </tbody>
       </table>

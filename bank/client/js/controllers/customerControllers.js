@@ -15,7 +15,7 @@
         $location.path('customers/' + customerId);
       };
 
-      $scope.createCustomer = function () {
+      $scope.createCustomer = function() {
         $location.path('customers/create');
       };
     }
@@ -42,31 +42,38 @@
   ]);
 
   bankApp.controller('CustomerDetailsCtrl', ['$scope', '$routeParams',
-    '$location', 'utils', 'customerSrv',
-    function($scope, $routeParams, $location, utils, customerSrv) {
+    '$location', '$timeout', 'utils', 'customerSrv',
+    function($scope, $routeParams, $location, $timeout, utils,
+      customerSrv) {
       init();
 
       function init() {
         $scope.customer = {};
+        $scope.originalValues = [];
         customerSrv.getCustomer($routeParams.customerId)
           .then(handleSuccessGetCustomer, utils.handleServerError);
         customerSrv.getCustomerAccounts($routeParams.customerId)
           .then(handleSuccessGetCustomerAccounts, utils.handleServerError);
         customerSrv.getCustomerLoans($routeParams.customerId)
           .then(handleSuccessGetCustomerLoans, utils.handleServerError);
-        $scope.originalValues = [];
       };
 
       function handleSuccessGetCustomer(response) {
-        $scope.customer = response.data;
+        $timeout(function() {
+          $scope.customer = response.data;
+        });
       };
 
       function handleSuccessGetCustomerAccounts(response) {
-        $scope.customer.accounts = response.data;
+        $timeout(function() {
+          $scope.customer.accounts = response.data;
+        });
       };
 
-       function handleSuccessGetCustomerLoans(response) {
-        $scope.customer.loans = response.data;
+      function handleSuccessGetCustomerLoans(response) {
+        $timeout(function() {
+          $scope.customer.loans = response.data;
+        });
       };
 
       $scope.hasAccounts = function() {
@@ -112,8 +119,10 @@
       function handleSuccessUpdateCustomer(property) {
         return function(response) {
           $scope.originalValues[property] = undefined;
-          $scope.customer[property] = response.data[property];
-        }
+          $timeout(function() {
+            $scope.customer[property] = response.data[property];
+          });
+        };
       };
 
       function handleSuccessDeleteCustomer(response) {

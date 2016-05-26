@@ -1,0 +1,170 @@
+<div class="container">
+  <div class="page-header">
+    <ul class="list-inline">
+      <li>
+        <h1>Account Details</h1></li>
+      <li>
+        <button class="btn btn-danger" ng-click="deleteAccount()">Delete</button>
+      </li>
+    </ul>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <ul class="list-group">
+        <li class="list-group-item">
+          <div class="row">
+            <h4 class="list-group-item-heading col-xs-10">
+              Account Number
+            </h4>
+            <button class="btn btn-primary btn-xs" title="Edit" ng-show="!isEditable('accountNumber')"
+              ng-click="setEditable('accountNumber')">
+              <i class="glyphicon glyphicon-pencil"></i>
+            </button>
+          </div>
+          <p class="list-group-item-text" ng-show="!isEditable('accountNumber')">{{account.accountNumber}}</p>
+          <form class="angular-form" name="form" ng-submit="saveEdit(form.$valid, 'accountNumber')"
+            ng-show="isEditable('accountNumber')">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="New account number" ng-model="account.accountNumber"
+                name="accountNumber" required>
+              <span class="input-group-btn">
+              <button class="btn btn-success" type="submit">
+                <i class="glyphicon glyphicon-ok"></i>
+              </button>
+              <button class="btn btn-danger" type="button" ng-click="cancelEdit('accountNumber')">
+                <i class="glyphicon glyphicon-remove"></i>
+              </button>
+            </span>
+            </div>
+            <div ng-show="form.$submitted && form.accountNumber.$error.required">
+              Account Number is required
+            </div>
+          </form>
+        </li>
+
+        <li class="list-group-item">
+          <div class="row">
+            <h4 class="list-group-item-heading col-xs-10">
+              Balance
+            </h4>
+            <button class="btn btn-primary btn-xs" title="Edit" ng-show="!isEditable('balance')"
+              ng-click="setEditable('balance')">
+              <i class="glyphicon glyphicon-pencil"></i>
+            </button>
+          </div>
+          <p class="list-group-item-text" ng-show="!isEditable('balance')">{{account.balance | currency}}</p>
+          <form class="angular-form" name="form" ng-submit="saveEdit(form.$valid, 'balance')"
+            ng-show="isEditable('balance')">
+            <div class="input-group">
+              <input type="number" class="form-control" placeholder="New balance" ng-model="account.balance"
+                name="balance" required>
+              <span class="input-group-btn">
+              <button class="btn btn-success" type="submit">
+                <i class="glyphicon glyphicon-ok"></i>
+              </button>
+              <button class="btn btn-danger" type="button" ng-click="cancelEdit('balance')">
+                <i class="glyphicon glyphicon-remove"></i>
+              </button>
+            </span>
+            </div>
+            <div ng-show="form.$submitted">
+              <div ng-show="form.balance.$error.required">
+                Balance is required
+              </div>
+              <div ng-show="form.balance.$error.number">
+                Balance must be a number
+              </div>
+            </div>
+          </form>
+        </li>
+
+        <li class="list-group-item">
+          <div class="row">
+            <h4 class="list-group-item-heading col-xs-10">
+              Branch
+            </h4>
+            <button class="btn btn-primary btn-xs" title="Edit" ng-show="!isEditable('branch')"
+              ng-click="setEditable('branch')">
+              <i class="glyphicon glyphicon-pencil"></i>
+            </button>
+          </div>
+          <div class="list-group-item-text" ng-show="!isEditable('branch')">
+            <ul class="list-group">
+              <li class="list-group-item">
+                <h5 class="list-group-item-heading"><strong>Name</strong></h5>
+                <p class="list-group-item-text">{{account.branch.name}}</p>
+              </li>
+              <li class="list-group-item">
+                <h5 class="list-group-item-heading"><strong>City</strong></h5>
+                <p class="list-group-item-text">{{account.branch.city}}</p>
+              </li>
+            </ul>
+          </div>
+          <form class="angular-form" name="form" ng-submit="saveEdit(form.$valid, 'branch')"
+            ng-show="isEditable('branch')">
+            <div class="input-group">
+              <select class="form-control" name="branch" ng-model="account.branch" ng-options="branch.name for branch in branches | orderBy:'name'"
+                required>
+              </select>
+              <span class="input-group-btn">
+                <button class="btn btn-success" type="submit">
+                  <i class="glyphicon glyphicon-ok"></i>
+                </button>
+                <button class="btn btn-danger" type="button" ng-click="cancelEdit('branch')">
+                  <i class="glyphicon glyphicon-remove"></i>
+                </button>
+              </span>
+            </div>
+            <div ng-show="form.$submitted && form.branch.$error.required">
+              Branch is required
+            </div>
+          </form>
+        </li>
+
+        <li class="list-group-item">
+          <div class="row">
+            <h4 class="list-group-item-heading col-xs-10">
+              Owners
+            </h4>
+            <button class="btn btn-success btn-xs" title="Add Owner" ng-click="">
+              <i class="glyphicon glyphicon-plus"></i>
+            </button>
+          </div>
+          <table class="table table-striped list-group-item-text" ng-show="hasOwners()" ng-controller="OrderCtrl"
+            ng-init="init('name')">
+            <theader>
+              <tr>
+                <th ng-click="order('name')">
+                  Name
+                  <i class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
+                    ng-show="isOrdered('name')"></i>
+                </th>
+                <th ng-click="order('city')">
+                  City
+                  <i class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
+                    ng-show="isOrdered('city')"></i>
+                </th>
+                <th ng-click="order('street')">
+                  Street
+                  <i class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
+                    ng-show="isOrdered('street')"></i>
+                </th>
+                <th></th>
+              </tr>
+            </theader>
+            <tbody>
+              <tr ng-repeat="owner in account.owners | orderBy:predicate:reverse">
+                <td>{{owner.name}}</td>
+                <td>{{owner.city}}</td>
+                <td>{{owner.street}}</td>
+                <td>
+                  <button class="btn btn-xs btn-info" title="Details"><i class="glyphicon glyphicon-plus-sign"></i></button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

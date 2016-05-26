@@ -23,6 +23,10 @@ var bankApp = angular.module('bankApp', ['ngRoute']);
           templateUrl: 'html/create-account.html',
           controller: 'CreateAccountCtrl'
         })
+        .when('/accounts/:accountId', {
+          templateUrl: 'html/account-details.html',
+          controller: 'AccountDetailsCtrl'
+        })
         .when('/loans/list', {
           templateUrl: 'html/loan-list.html',
           controller: 'LoanListCtrl'
@@ -31,6 +35,10 @@ var bankApp = angular.module('bankApp', ['ngRoute']);
           templateUrl: 'html/create-loan.html',
           controller: 'CreateLoanCtrl'
         })
+        .when('/loans/:loanId', {
+          templateUrl: 'html/loan-details.html',
+          controller: 'LoanDetailsCtrl'
+        })
         .when('/branches/list', {
           templateUrl: 'html/branch-list.html',
           controller: 'BranchListCtrl'
@@ -38,6 +46,10 @@ var bankApp = angular.module('bankApp', ['ngRoute']);
         .when('/branches/create', {
           templateUrl: 'html/create-branch.html',
           controller: 'CreateBranchCtrl'
+        })
+        .when('/branches/:branchId', {
+          templateUrl: 'html/branch-details.html',
+          controller: 'BranchDetailsCtrl'
         })
         .otherwise({
           redirectTo: '/customers/list'
