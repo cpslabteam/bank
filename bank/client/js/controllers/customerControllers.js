@@ -67,13 +67,13 @@
       function handleSuccessGetCustomerAccounts(response) {
         $timeout(function() {
           $scope.customer.accounts = response.data;
-        });
+        }, 100);
       };
 
       function handleSuccessGetCustomerLoans(response) {
         $timeout(function() {
           $scope.customer.loans = response.data;
-        });
+        }, 200);
       };
 
       $scope.hasAccounts = function() {

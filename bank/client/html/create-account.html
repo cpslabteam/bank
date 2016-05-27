@@ -2,41 +2,70 @@
   <div class="page-header">
     <h1>Create Account</h1>
   </div>
-  <div class="row">
-    <div class="col-xs-6">
-      <form novalidate class="angular-form" role="create account" name="form" ng-submit="create(form.$valid)">
-        <div class="form-group">
-          <label for="account_number">Account Number: </label>
-          <input type="text" class="form-control" ng-model="account.account_number" name="account_number"
-            required>
-          <div ng-show="form.$submitted && form.account_number.$error.required">
-            Account Number is required
-          </div>
+  <form novalidate class="angular-form form-horizontal" role="create account" name="form"
+    ng-submit="create(form.$valid)">
+    <div class="form-group row">
+      <div class="col-xs-6">
+        <label for="inputAccountNumber" class="form-control-label col-xs-2">Account Number</label>
+        <div class="col-xs-10">
+          <input type="text" class="form-control" ng-model="account.account_number" name="accountNumber"
+            placeholder="Account Number" id="inputAccountNumber" required>
         </div>
-        <div class="form-group">
-          <label for="balance">Balance: </label>
-          <input type="number" class="form-control" ng-model="account.balance" name="balance"
-            required>
-          <div ng-show="form.$submitted">
-            <div ng-show="form.balance.$error.required">
-              Balance is required
-            </div>
-            <div ng-show="form.balance.$error.number">
-              Balance must be a number
-            </div>
-          </div>
+      </div>
+      <div class="col-xs-6 text-danger">
+        <div ng-show="form.$submitted && form.accountNumber.$error.required">
+          Account Number is required
         </div>
-        <div class="form-group">
-          <label for="Branch">Branch: </label>
-          <select class="form-control" name="branch" ng-model="account.branch_id" required>
-            <option ng-repeat="branch in branches | orderBy:'name'" value="{{branch.id}}">{{branch.name}}</option>
-          </select>
-          <div ng-show="form.$submitted && form.branch.$error.required">
-            Branch is required
-          </div>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </form>
+      </div>
     </div>
-  </div>
+    <div class="form-group row">
+      <div class="col-xs-6">
+        <label for="inputBalance" class="form-control-label col-xs-2">Balance</label>
+        <div class="col-xs-10">
+          <div class="input-group">
+            <span class="input-group-addon">$</span>
+            <input type="number" min="0" class="form-control" ng-model="account.balance" name="balance"
+              placeholder="0.00" id="inputBalance" required>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-6 text-danger">
+        <div ng-show="form.$submitted">
+          <div ng-show="form.balance.$error.required">
+            Balance is required
+          </div>
+          <div ng-show="form.balance.$error.number">
+            Balance must be a number
+          </div>
+          <div ng-show="form.balance.$error.min">
+            Balance must be positive
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-xs-6">
+        <label for="inputBranch" class="form-control-label col-xs-2">Branch</label>
+        <div class="col-xs-10">
+          <select class="form-control" name="branch" ng-model="account.branch_id" id="inputBranch"
+            ng-options="branch.id as branch.name for branch in branches | orderBy:'name'"
+            required>
+            <option value="" disabled selected hidden>Branch</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-xs-6 text-danger">
+        <div ng-show="form.$submitted && form.branch.$error.required">
+          Branch is required
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-xs-6">
+        <div class="col-xs-offset-2 col-xs-10">
+          <button type="submit" class="btn btn-primary">Create</button>
+        </div>
+      </div>
+    </div>
+  </form>
 </div>

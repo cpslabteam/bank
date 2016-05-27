@@ -67,10 +67,10 @@
         $scope.originalValues = [];
         accountSrv.getAccount($routeParams.accountId)
           .then(handleSuccessGetAccount, utils.handleServerError);
-        accountSrv.getAccountOwners($routeParams.accountId)
-          .then(handleSuccessGetAccountOwners, utils.handleServerError);
         accountSrv.getAccountBranch($routeParams.accountId)
           .then(handleSuccessGetAccountBranch, utils.handleServerError);
+        accountSrv.getAccountOwners($routeParams.accountId)
+          .then(handleSuccessGetAccountOwners, utils.handleServerError);
       };
 
       function handleSuccessGetAccount(response) {
@@ -79,16 +79,16 @@
         });
       };
 
-      function handleSuccessGetAccountOwners(response) {
-        $timeout(function() {
-          $scope.account.owners = response.data;
-        });
-      };
-
       function handleSuccessGetAccountBranch(response) {
         $timeout(function() {
           $scope.account.branch = response.data;
-        });
+        }, 100);
+      };
+
+      function handleSuccessGetAccountOwners(response) {
+        $timeout(function() {
+          $scope.account.owners = response.data;
+        }, 200);
       };
 
       $scope.hasOwners = function() {

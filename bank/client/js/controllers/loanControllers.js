@@ -63,10 +63,10 @@
         $scope.originalValues = [];
         loanSrv.getLoan($routeParams.loanId)
           .then(handleSuccessGetLoan, utils.handleServerError);
-        loanSrv.getLoanOwners($routeParams.loanId)
-          .then(handleSuccessGetLoanOwners, utils.handleServerError);
         loanSrv.getLoanBranch($routeParams.loanId)
           .then(handleSuccessGetLoanBranch, utils.handleServerError);
+        loanSrv.getLoanOwners($routeParams.loanId)
+          .then(handleSuccessGetLoanOwners, utils.handleServerError);
       };
 
       function handleSuccessGetLoan(response) {
@@ -78,13 +78,13 @@
       function handleSuccessGetLoanOwners(response) {
         $timeout(function() {
           $scope.loan.owners = response.data;
-        });
+        }, 100);
       };
 
       function handleSuccessGetLoanBranch(response) {
         $timeout(function() {
           $scope.loan.branch = response.data;
-        });
+        }, 200);
       };
 
       $scope.hasOwners = function() {
