@@ -20,7 +20,7 @@
       };
 
       $scope.details = function(accountId) {
-        $location.path('accounts/' + accountId);
+        $location.path('/accounts/' + accountId);
       };
     }
   ]);

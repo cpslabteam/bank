@@ -39,8 +39,29 @@
     this.getListBranches = function() {
       return $http.get(serverDomain + "/branches");
     };
+
     this.createBranch = function(branch) {
       return $http.post(serverDomain + "/branches", branch);
+    };
+
+    this.getBranch = function(id) {
+      return $http.get(serverDomain + "/branches/" + id);
+    };
+
+    this.updateBranch = function(update, id) {
+      return $http.put(serverDomain + "/branches/" + id, update)
+    };
+
+    this.deleteBranch = function (id) {
+      return $http.delete(serverDomain + "/branches/" + id);
+    };
+
+    this.getBranchAccounts = function (id) {
+      return $http.get(serverDomain + "/branches/" + id + "/accounts");
+    };
+
+    this.getBranchLoans = function (id) {
+      return $http.get(serverDomain + "/branches/" + id + "/loans");
     };
   }]);
 

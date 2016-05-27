@@ -29,6 +29,7 @@
               <span class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
                 ng-show="isOrdered('assets')"></span>
             </th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -36,6 +37,9 @@
             <td>{{branch.name}}</td>
             <td>{{branch.city}}</td>
             <td>{{branch.assets | currency}}</td>
+            <td>
+              <button class="btn btn-info btn-xs" ng-click="details(branch.id)" title="Details"><i class="glyphicon glyphicon-plus-sign"></i></button>
+            </td>
           </tr>
         </tbody>
       </table>

@@ -12,11 +12,11 @@
       };
 
       $scope.details = function(customerId) {
-        $location.path('customers/' + customerId);
+        $location.path('/customers/' + customerId);
       };
 
       $scope.createCustomer = function() {
-        $location.path('customers/create');
+        $location.path('/customers/create');
       };
     }
   ]);

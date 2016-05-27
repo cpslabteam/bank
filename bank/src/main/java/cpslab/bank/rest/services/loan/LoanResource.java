@@ -32,14 +32,14 @@ public class LoanResource extends BaseResource
 
 	@Override
 	public String handlePut(JSONObject requestParams) throws Throwable {
-		String loanNumber = requestParams.getString("loan_number");
-		String amount = requestParams.getString("amount");
 		long transactionId = getRepository().openTransaction();
 		try {
 			LoanDAO loanDAO = (LoanDAO) getRepository().createDao(Loan.class, transactionId);
 			Loan loan = loanDAO.loadById(getIdAttribute("loan"));
-			loan.setLoanNumber(loanNumber);
-			loan.setAmount(new BigDecimal(amount));
+			if (requestParams.has("loan_number"))
+				loan.setLoanNumber(requestParams.getString("loan_number"));
+			if (requestParams.has("amount"))
+				loan.setAmount(new BigDecimal(requestParams.getString("amount")));
 			Loan updatedLoan = loanDAO.update(loan);
 			String response = EntityJsonSerializer.serialize(updatedLoan);
 			getRepository().closeTransaction(transactionId);

@@ -16,7 +16,7 @@
       };
 
       $scope.details = function(loanId) {
-        $location.path('loans/' + loanId);
+        $location.path('/loans/' + loanId);
       };
     }
   ]);

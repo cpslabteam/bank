@@ -33,17 +33,17 @@ public class BranchResource extends BaseResource
 
 	@Override
 	public String handlePut(JSONObject requestParams) throws Throwable {
-		String name = requestParams.getString("name");
-		String city = requestParams.getString("city");
-		String assets = requestParams.getString("assets");
 		long transactionId = getRepository().openTransaction();
 		try {
 			BranchDAO branchDAO =
 					(BranchDAO) getRepository().createDao(Branch.class, transactionId);
 			Branch branch = branchDAO.loadById(getIdAttribute("branch"));
-			branch.setName(name);
-			branch.setCity(city);
-			branch.setAssets(new BigDecimal(assets));
+			if (requestParams.has("name"))
+				branch.setName(requestParams.getString("name"));
+			if (requestParams.has("city"))
+				branch.setCity(requestParams.getString("city"));
+			if (requestParams.has("assets"))
+				branch.setAssets(new BigDecimal(requestParams.getString("assets")));
 			Branch updatedBranch = branchDAO.update(branch);
 			String response = EntityJsonSerializer.serialize(updatedBranch);
 			getRepository().closeTransaction(transactionId);
