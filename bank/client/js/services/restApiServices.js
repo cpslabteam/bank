@@ -19,18 +19,19 @@
     };
 
     this.updateAccountBranch = function(update, id) {
-      return $http.put(serverDomain + "/accounts/" + id + "/branch", update);
+      return $http.put(serverDomain + "/accounts/" + id + "/branch",
+        update);
     };
 
-    this.deleteAccount = function (id) {
+    this.deleteAccount = function(id) {
       return $http.delete(serverDomain + "/accounts/" + id);
     };
 
-    this.getAccountOwners = function (id) {
+    this.getAccountOwners = function(id) {
       return $http.get(serverDomain + "/accounts/" + id + "/owners");
     };
 
-    this.getAccountBranch = function (id) {
+    this.getAccountBranch = function(id) {
       return $http.get(serverDomain + "/accounts/" + id + "/branch");
     };
   }]);
@@ -52,15 +53,15 @@
       return $http.put(serverDomain + "/branches/" + id, update)
     };
 
-    this.deleteBranch = function (id) {
+    this.deleteBranch = function(id) {
       return $http.delete(serverDomain + "/branches/" + id);
     };
 
-    this.getBranchAccounts = function (id) {
+    this.getBranchAccounts = function(id) {
       return $http.get(serverDomain + "/branches/" + id + "/accounts");
     };
 
-    this.getBranchLoans = function (id) {
+    this.getBranchLoans = function(id) {
       return $http.get(serverDomain + "/branches/" + id + "/loans");
     };
   }]);
@@ -82,16 +83,52 @@
       return $http.put(serverDomain + "/customers/" + id, update)
     };
 
-    this.deleteCustomer = function (id) {
+    this.deleteCustomer = function(id) {
       return $http.delete(serverDomain + "/customers/" + id);
     };
 
-    this.getCustomerAccounts = function (id) {
-      return $http.get(serverDomain + "/customers/" + id + "/accounts");
+    this.getCustomerAccounts = function(id) {
+      return $http.get(serverDomain + "/customers/" + id +
+        "/accounts");
     };
 
-    this.getCustomerLoans = function (id) {
+    this.getCustomerLoans = function(id) {
       return $http.get(serverDomain + "/customers/" + id + "/loans");
+    };
+
+    this.getCustomerAccount = function(customerId, accountId) {
+      return $http.get(serverDomain + "/customers/" + customerId +
+        "/accounts/" + accountId);
+    };
+
+    this.getCustomerLoan = function(customerId, loanId) {
+      return $http.get(serverDomain + "/customers/" + customerId +
+        "/loans/" + loanId);
+    };
+
+    this.depositInAccount = function(amount, customerId, accountId) {
+      return $http.post(serverDomain + "/customers/" + customerId +
+        "/accounts/" + accountId + "/deposit", amount);
+    };
+
+    this.withdrawFromAccount = function(amount, customerId, accountId) {
+      return $http.post(serverDomain + "/customers/" + customerId +
+        "/accounts/" + accountId + "/withdraw", amount);
+    };
+
+    this.depositInLoan = function(amount, customerId, loanId) {
+      return $http.post(serverDomain + "/customers/" + customerId +
+        "/loans/" + loanId + "/deposit", amount);
+    };
+
+    this.removeAccount = function(customerId, accountId) {
+      return $http.delete(serverDomain + "/customers/" + customerId +
+        "/accounts/" + accountId);
+    };
+
+    this.removeLoan = function(customerId, loanId) {
+      return $http.delete(serverDomain + "/customers/" + customerId +
+        "/loans/" + loanId);
     };
   }]);
 
@@ -113,18 +150,19 @@
     };
 
     this.updateLoanBranch = function(update, id) {
-      return $http.put(serverDomain + "/loans/" + id + "/branch", update);
+      return $http.put(serverDomain + "/loans/" + id + "/branch",
+        update);
     };
 
-    this.deleteLoan = function (id) {
+    this.deleteLoan = function(id) {
       return $http.delete(serverDomain + "/loans/" + id);
     };
 
-    this.getLoanOwners = function (id) {
+    this.getLoanOwners = function(id) {
       return $http.get(serverDomain + "/loans/" + id + "/owners");
     };
 
-    this.getLoanBranch = function (id) {
+    this.getLoanBranch = function(id) {
       return $http.get(serverDomain + "/loans/" + id + "/branch");
     };
   }]);

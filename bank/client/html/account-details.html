@@ -22,7 +22,7 @@
             </button>
           </div>
           <p class="list-group-item-text" ng-show="!isEditable('accountNumber')">{{account.accountNumber}}</p>
-          <form class="angular-form" name="form" ng-submit="saveEdit(form.$valid, 'accountNumber')"
+          <form class="angular-form" name="accountNumberForm" ng-submit="saveEdit(accountNumberForm.$valid, 'accountNumber')"
             ng-show="isEditable('accountNumber')">
             <div class="input-group">
               <input type="text" class="form-control" placeholder="New account number" ng-model="account.accountNumber"
@@ -36,7 +36,7 @@
               </button>
             </span>
             </div>
-            <div ng-show="form.$submitted && form.accountNumber.$error.required">
+            <div ng-show="accountNumberForm.$submitted && accountNumberForm.accountNumber.$error.required">
               Account Number is required
             </div>
           </form>
@@ -53,9 +53,10 @@
             </button>
           </div>
           <p class="list-group-item-text" ng-show="!isEditable('balance')">{{account.balance | currency}}</p>
-          <form class="angular-form" name="form" ng-submit="saveEdit(form.$valid, 'balance')"
+          <form class="angular-form" name="balanceForm" ng-submit="saveEdit(balanceForm.$valid, 'balance')"
             ng-show="isEditable('balance')">
             <div class="input-group">
+              <span class="input-group-addon">$</span>
               <input type="number" class="form-control" placeholder="New balance" ng-model="account.balance"
                 name="balance" required>
               <span class="input-group-btn">
@@ -67,11 +68,11 @@
               </button>
             </span>
             </div>
-            <div ng-show="form.$submitted">
-              <div ng-show="form.balance.$error.required">
+            <div ng-show="balanceForm.$submitted" class="text-danger">
+              <div ng-show="balanceForm.balance.$error.required">
                 Balance is required
               </div>
-              <div ng-show="form.balance.$error.number">
+              <div ng-show="balanceForm.balance.$error.number">
                 Balance must be a number
               </div>
             </div>
@@ -100,7 +101,7 @@
               </li>
             </ul>
           </div>
-          <form class="angular-form" name="form" ng-submit="saveEdit(form.$valid, 'branch')"
+          <form class="angular-form" name="branchForm" ng-submit="saveEdit(branchForm.$valid, 'branch')"
             ng-show="isEditable('branch')">
             <div class="input-group">
               <select class="form-control" name="branch" ng-model="account.branch" ng-options="branch.name for branch in branches | orderBy:'name'"
@@ -115,7 +116,7 @@
                 </button>
               </span>
             </div>
-            <div ng-show="form.$submitted && form.branch.$error.required">
+            <div ng-show="branchForm.$submitted && branchForm.branch.$error.required">
               Branch is required
             </div>
           </form>

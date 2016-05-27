@@ -22,7 +22,7 @@
             </button>
           </div>
           <p class="list-group-item-text" ng-show="!isEditable('name')">{{branch.name}}</p>
-          <form class="angular-form" name="form" ng-submit="saveEdit(form.$valid, 'name')"
+          <form class="angular-form" name="nameForm" ng-submit="saveEdit(nameForm.$valid, 'name')"
             ng-show="isEditable('name')">
             <div class="input-group">
               <input type="text" class="form-control" placeholder="New name" ng-model="branch.name"
@@ -36,7 +36,7 @@
               </button>
             </span>
             </div>
-            <div ng-show="form.$submitted && form.name.$error.required">
+            <div ng-show="nameForm.$submitted && nameForm.name.$error.required">
               Name is required
             </div>
           </form>
@@ -53,7 +53,7 @@
             </button>
           </div>
           <p class="list-group-item-text" ng-show="!isEditable('city')">{{branch.city}}</p>
-          <form class="angular-form" name="form" ng-submit="saveEdit(form.$valid, 'city')"
+          <form class="angular-form" name="cityForm" ng-submit="saveEdit(cityForm.$valid, 'city')"
             ng-show="isEditable('city')">
             <div class="input-group">
               <input type="text" class="form-control" placeholder="New city" ng-model="branch.city"
@@ -67,7 +67,7 @@
               </button>
             </span>
             </div>
-            <div ng-show="form.$submitted && form.city.$error.required">
+            <div ng-show="cityForm.$submitted && cityForm.city.$error.required">
               City is required
             </div>
           </form>
@@ -84,7 +84,7 @@
             </button>
           </div>
           <p class="list-group-item-text" ng-show="!isEditable('assets')">{{branch.assets | currency}}</p>
-          <form class="angular-form" name="form" ng-submit="saveEdit(form.$valid, 'assets')"
+          <form class="angular-form" name="assetsForm" ng-submit="saveEdit(assetsForm.$valid, 'assets')"
             ng-show="isEditable('assets')">
             <div class="input-group">
               <span class="input-group-addon">$</span>
@@ -99,11 +99,11 @@
               </button>
             </span>
             </div>
-            <div ng-show="form.$submitted">
-              <div ng-show="form.assets.$error.required">
+            <div ng-show="assetsForm.$submitted" class="text-danger">
+              <div ng-show="assetsForm.assets.$error.required">
                 Assets is required
               </div>
-              <div ng-show="form.assets.$error.number">
+              <div ng-show="assetsForm.assets.$error.number">
                 Assets must be a number
               </div>
             </div>

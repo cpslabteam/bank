@@ -129,6 +129,127 @@
         $scope.customer = {};
         $location.path("/customers/list");
       };
+
+      $scope.accountDetails = function(accountId) {
+        $location.path("/customers/" + $routeParams.customerId +
+          "/accounts/" + accountId);
+      };
+
+      $scope.loanDetails = function(loanId) {
+        $location.path("/customers/" + $routeParams.customerId +
+          "/loans/" + loanId);
+      };
     }
   ]);
+
+  bankApp.controller('CustomerAccountCtrl', ['$scope', '$routeParams',
+    '$location', '$timeout', 'utils', 'customerSrv', 'accountSrv',
+    function($scope, $routeParams, $location, $timeout, utils,
+      customerSrv, accountSrv) {
+      init();
+
+      function init() {
+        $scope.account = {};
+        $scope.originalValues = {};
+        $scope.editable = {
+          deposit: false,
+          withdraw: false,
+          amount: undefined
+        };
+        customerSrv.getCustomerAccount($routeParams.customerId,
+            $routeParams.accountId)
+          .then(handleSuccessGetCustomerAccount, utils.handleServerError);
+        accountSrv.getAccountBranch($routeParams.accountId)
+          .then(handleSuccessGetAccountBranch, utils.handleServerError);
+        accountSrv.getAccountOwners($routeParams.accountId)
+          .then(handleSuccessGetAccountOwners, utils.handleServerError);
+      };
+
+      function handleSuccessGetCustomerAccount(response) {
+        $timeout(function() {
+          $scope.account = response.data;
+        });
+      };
+
+      function handleSuccessGetAccountBranch(response) {
+        $timeout(function() {
+          $scope.account.branch = response.data;
+        }, 100);
+      };
+
+      function handleSuccessGetAccountOwners(response) {
+        $timeout(function() {
+          $scope.account.owners = response.data;
+        }, 200);
+      };
+
+      $scope.hasOwners = function() {
+        return $scope.account.owners !== undefined && $scope.account.owners
+          .length > 0;
+      };
+
+      $scope.remove = function() {
+        customerSrv.removeAccount($routeParams.customerId, $routeParams
+            .accountId)
+          .then(handleSuccessRemoveAccount, utils.handleServerError);
+      };
+
+      function handleSuccessRemoveAccount(response) {
+        $scope.account = {};
+        $location.path("/customers/" + $routeParams.customerId +
+          "/accounts/" + $routeParams.accountId);
+      };
+
+      $scope.isEditable = function(property) {
+        return $scope.editable[property];
+      };
+
+      $scope.setEditable = function(property) {
+        resetEditable();
+        $scope.editable[property] = true;
+      };
+
+      function resetEditable() {
+        $scope.editable = {
+          deposit: false,
+          withdraw: false,
+          amount: undefined
+        };
+      };
+
+      $scope.saveEdit = function(valid, property) {
+        if (valid) {
+          var amount = { amount: $scope.editable.amount };
+          if (property === 'deposit') {
+            customerSrv.depositInAccount(amount,
+                $routeParams.customerId, $routeParams.accountId)
+              .then(handleSuccessDeposit, utils.handleServerError);
+          };
+          if (property === 'withdraw') {
+            customerSrv.withdrawFromAccount(amount,
+                $routeParams.customerId, $routeParams.accountId)
+              .then(handleSuccessDeposit, utils.handleServerError);
+          };
+        };
+      };
+
+      $scope.cancelEdit = function(property) {
+        resetEditable();
+      };
+
+      function handleSuccessDeposit(response) {
+        resetEditable();
+        $timeout(function() {
+          $scope.account.balance = response.data.balance;
+        });
+      };
+
+      function handleSuccessDeposit(response) {
+        resetEditable();
+        $timeout(function() {
+          $scope.account.balance = response.data.balance;
+        });
+      };
+    }
+  ])
 })(window, document);
