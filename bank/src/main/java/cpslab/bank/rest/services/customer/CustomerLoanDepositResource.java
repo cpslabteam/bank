@@ -20,7 +20,7 @@ public class CustomerLoanDepositResource extends BaseResource implements JsonPos
 			LoanDAO loanDAO = (LoanDAO) getRepository().createDao(Loan.class, transactionId);
 			Loan loan =
 					loanDAO.findCustomerLoan(getIdAttribute("customer"), getIdAttribute("loan"));
-			BigDecimal newAmount = loan.getAmount().add(new BigDecimal(amount));
+			BigDecimal newAmount = loan.getAmount().subtract(new BigDecimal(amount));
 			loan.setAmount(newAmount);
 			Loan updatedLoan = loanDAO.update(loan);
 			String response = EntityJsonSerializer.serialize(updatedLoan);

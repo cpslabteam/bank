@@ -19,6 +19,10 @@ var bankApp = angular.module('bankApp', ['ngRoute']);
           templateUrl: 'html/customer-account.html',
           controller: 'CustomerAccountCtrl'
         })
+        .when('/customers/:customerId/loans/:loanId', {
+          templateUrl: 'html/customer-loan.html',
+          controller: 'CustomerLoanCtrl'
+        })
         .when('/accounts/list', {
           templateUrl: 'html/account-list.html',
           controller: 'AccountListCtrl'

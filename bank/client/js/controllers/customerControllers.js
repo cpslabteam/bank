@@ -150,7 +150,6 @@
 
       function init() {
         $scope.account = {};
-        $scope.originalValues = {};
         $scope.editable = {
           deposit: false,
           withdraw: false,
@@ -228,7 +227,7 @@
           if (property === 'withdraw') {
             customerSrv.withdrawFromAccount(amount,
                 $routeParams.customerId, $routeParams.accountId)
-              .then(handleSuccessDeposit, utils.handleServerError);
+              .then(handleSuccessWithdraw, utils.handleServerError);
           };
         };
       };
@@ -244,12 +243,109 @@
         });
       };
 
-      function handleSuccessDeposit(response) {
+      function handleSuccessWithdraw(response) {
         resetEditable();
         $timeout(function() {
           $scope.account.balance = response.data.balance;
         });
       };
     }
-  ])
+  ]);
+
+  bankApp.controller('CustomerLoanCtrl', ['$scope', '$routeParams',
+    '$location', '$timeout', 'utils', 'customerSrv', 'loanSrv',
+    function($scope, $routeParams, $location, $timeout, utils,
+      customerSrv, loanSrv) {
+      init();
+
+      function init() {
+        $scope.loan = {};
+        $scope.editable = {
+          deposit: false,
+          amount: undefined
+        };
+        customerSrv.getCustomerLoan($routeParams.customerId,
+            $routeParams.loanId)
+          .then(handleSuccessGetCustomerLoan, utils.handleServerError);
+        loanSrv.getLoanBranch($routeParams.loanId)
+          .then(handleSuccessGetLoanBranch, utils.handleServerError);
+        loanSrv.getLoanOwners($routeParams.loanId)
+          .then(handleSuccessGetLoanOwners, utils.handleServerError);
+      };
+
+      function handleSuccessGetCustomerLoan(response) {
+        $timeout(function() {
+          $scope.loan = response.data;
+        });
+      };
+
+      function handleSuccessGetLoanBranch(response) {
+        $timeout(function() {
+          $scope.loan.branch = response.data;
+        }, 100);
+      };
+
+      function handleSuccessGetLoanOwners(response) {
+        $timeout(function() {
+          $scope.loan.owners = response.data;
+        }, 200);
+      };
+
+      $scope.hasOwners = function() {
+        return $scope.loan.owners !== undefined && $scope.loan.owners
+          .length > 0;
+      };
+
+      $scope.remove = function() {
+        customerSrv.removeLoan($routeParams.customerId, $routeParams
+            .loanId)
+          .then(handleSuccessRemoveLoan, utils.handleServerError);
+      };
+
+      function handleSuccessRemoveLoan(response) {
+        $scope.loan = {};
+        $location.path("/customers/" + $routeParams.customerId +
+          "/loans/" + $routeParams.loanId);
+      };
+
+      $scope.isEditable = function(property) {
+        return $scope.editable[property];
+      };
+
+      $scope.setEditable = function(property) {
+        resetEditable();
+        $scope.editable[property] = true;
+      };
+
+      function resetEditable() {
+        $scope.editable = {
+          deposit: false,
+          withdraw: false,
+          amount: undefined
+        };
+      };
+
+      $scope.saveEdit = function(valid, property) {
+        if (valid) {
+          var amount = { amount: $scope.editable.amount };
+          if (property === 'deposit') {
+            customerSrv.depositInLoan(amount,
+                $routeParams.customerId, $routeParams.loanId)
+              .then(handleSuccessDeposit, utils.handleServerError);
+          };
+        };
+      };
+
+      $scope.cancelEdit = function(property) {
+        resetEditable();
+      };
+
+      function handleSuccessDeposit(response) {
+        resetEditable();
+        $timeout(function() {
+          $scope.loan.amount = response.data.amount;
+        });
+      };
+    }
+  ]);
 })(window, document);
