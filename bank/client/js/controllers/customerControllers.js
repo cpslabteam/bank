@@ -139,6 +139,11 @@
         $location.path("/customers/" + $routeParams.customerId +
           "/loans/" + loanId);
       };
+
+      $scope.addAccount = function() {
+        $location.path("/customers/" + $routeParams.customerId +
+          "/accounts/add");
+      };
     }
   ]);
 
@@ -195,8 +200,7 @@
 
       function handleSuccessRemoveAccount(response) {
         $scope.account = {};
-        $location.path("/customers/" + $routeParams.customerId +
-          "/accounts/" + $routeParams.accountId);
+        $location.path("/customers/" + $routeParams.customerId);
       };
 
       $scope.isEditable = function(property) {
@@ -248,6 +252,84 @@
         $timeout(function() {
           $scope.account.balance = response.data.balance;
         });
+      };
+    }
+  ]);
+
+  bankApp.controller('AddCustomerAccountCtrl', ['$scope', '$location',
+    '$routeParams', '$timeout', 'utils', 'customerSrv', 'branchSrv',
+    'accountSrv',
+    function($scope, $location, $routeParams, $timeout, utils,
+      customerSrv,
+      branchSrv, accountSrv) {
+      init();
+
+      function init() {
+        $scope.accountType = "existing";
+        $scope.account = {};
+        $scope.accountList = [];
+        this.customerAccounts = [];
+        $scope.branches = [];
+        branchSrv.getListBranches()
+          .then(handleSuccessBranchList, utils.handleServerError);
+        customerSrv.getCustomerAccounts($routeParams.customerId)
+          .then(handleSuccessGetCustomerAccounts, utils.handleServerError);
+        accountSrv.getListAccounts()
+          .then(handleSuccessGetListAccounts, utils.handleServerError);
+      };
+
+      $scope.addNewAccount = function(valid) {
+        if (valid) {
+          customerSrv.addNewAccount($scope.account, $routeParams.customerId)
+            .then(handleSuccessAddAccount, utils.handleServerError);
+        }
+      };
+
+      $scope.addExistingAccount = function(valid) {
+        if (valid) {
+          customerSrv.addExistingAccount({ 'id': $scope.account.id },
+              $routeParams.customerId)
+            .then(handleSuccessAddAccount, utils.handleServerError);
+        }
+      };
+
+      $scope.isSelectedAccountType = function(accountType) {
+        return $scope.accountType === accountType;
+      };
+
+      $scope.resetAccount = function() {
+        $scope.account = {};
+      };
+
+      function handleSuccessAddAccount(response) {
+        $scope.account = {};
+        alert('Account added!');
+        $location.path("/customers/" + $routeParams.customerId);
+      };
+
+      function handleSuccessGetCustomerAccounts(response) {
+        this.customerAccounts = response.data;
+      };
+
+      function isOwner(account) {
+        for (var i = this.customerAccounts.length - 1; i >=
+          0; i--) {
+          if (this.customerAccounts[i].id === account.id)
+            return false;
+        };
+        return true;
+      };
+
+      function handleSuccessGetListAccounts(response) {
+        $timeout(function() {
+          $scope.accountList = response.data.filter(isOwner);
+        }, 100);
+      };
+
+      function handleSuccessBranchList(response) {
+        $timeout(function() {
+          $scope.branches = response.data;
+        }, 200);
       };
     }
   ]);

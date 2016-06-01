@@ -130,6 +130,16 @@
       return $http.delete(serverDomain + "/customers/" + customerId +
         "/loans/" + loanId);
     };
+
+    this.addNewAccount = function(account, customerId) {
+      return $http.post(serverDomain + "/customers/" + customerId +
+        "/accounts", account);
+    };
+
+    this.addExistingAccount = function(id, customerId) {
+      return $http.put(serverDomain + "/customers/" + customerId +
+        "/accounts", id);
+    };
   }]);
 
   bankApp.service('loanSrv', ['$http', 'utils', function($http, utils) {

@@ -37,7 +37,7 @@ public class CustomerAccountsResource extends BaseResource
 	}
 
 	@Override
-	public String handlePost(JSONObject requestParams) throws Throwable {
+	public String handlePut(JSONObject requestParams) throws Throwable {
 		long accountID = requestParams.getLong("id");
 		long transactionId = getRepository().openTransaction();
 		try {
@@ -58,7 +58,7 @@ public class CustomerAccountsResource extends BaseResource
 	}
 
 	@Override
-	public String handlePut(JSONObject requestParams) throws Throwable {
+	public String handlePost(JSONObject requestParams) throws Throwable {
 		String accountNumber = requestParams.getString("account_number");
 		String balance = requestParams.getString("balance");
 		long branchID = requestParams.getLong("branch_id");

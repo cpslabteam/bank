@@ -9,3 +9,11 @@
 .angular-form *.ng-valid {
   border-color: #78FA89;
 }
+
+.radio-group{
+  margin: 0px 0px 50px 15px;
+}
+
+.radio-group .radio label{
+  font-weight: 700
+}
