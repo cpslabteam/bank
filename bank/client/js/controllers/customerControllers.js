@@ -144,6 +144,11 @@
         $location.path("/customers/" + $routeParams.customerId +
           "/accounts/add");
       };
+
+      $scope.addLoan = function() {
+        $location.path("/customers/" + $routeParams.customerId +
+          "/loans/add");
+      };
     }
   ]);
 
@@ -427,6 +432,84 @@
         $timeout(function() {
           $scope.loan.amount = response.data.amount;
         });
+      };
+    }
+  ]);
+
+  bankApp.controller('AddCustomerLoanCtrl', ['$scope', '$location',
+    '$routeParams', '$timeout', 'utils', 'customerSrv', 'branchSrv',
+    'loanSrv',
+    function($scope, $location, $routeParams, $timeout, utils,
+      customerSrv,
+      branchSrv, loanSrv) {
+      init();
+
+      function init() {
+        $scope.loanType = "existing";
+        $scope.loan = {};
+        $scope.loanList = [];
+        this.customerLoans = [];
+        $scope.branches = [];
+        branchSrv.getListBranches()
+          .then(handleSuccessBranchList, utils.handleServerError);
+        customerSrv.getCustomerLoans($routeParams.customerId)
+          .then(handleSuccessGetCustomerLoans, utils.handleServerError);
+        loanSrv.getListLoans()
+          .then(handleSuccessGetListLoans, utils.handleServerError);
+      };
+
+      $scope.addNewLoan = function(valid) {
+        if (valid) {
+          customerSrv.addNewLoan($scope.loan, $routeParams.customerId)
+            .then(handleSuccessAddLoan, utils.handleServerError);
+        }
+      };
+
+      $scope.addExistingLoan = function(valid) {
+        if (valid) {
+          customerSrv.addExistingLoan({ 'id': $scope.loan.id },
+              $routeParams.customerId)
+            .then(handleSuccessAddLoan, utils.handleServerError);
+        }
+      };
+
+      $scope.isSelectedLoanType = function(loanType) {
+        return $scope.loanType === loanType;
+      };
+
+      $scope.resetLoan = function() {
+        $scope.loan = {};
+      };
+
+      function handleSuccessAddLoan(response) {
+        $scope.loan = {};
+        alert('Loan added!');
+        $location.path("/customers/" + $routeParams.customerId);
+      };
+
+      function handleSuccessGetCustomerLoans(response) {
+        this.customerLoans = response.data;
+      };
+
+      function isOwner(loan) {
+        for (var i = this.customerLoans.length - 1; i >=
+          0; i--) {
+          if (this.customerLoans[i].id === loan.id)
+            return false;
+        };
+        return true;
+      };
+
+      function handleSuccessGetListLoans(response) {
+        $timeout(function() {
+          $scope.loanList = response.data.filter(isOwner);
+        }, 100);
+      };
+
+      function handleSuccessBranchList(response) {
+        $timeout(function() {
+          $scope.branches = response.data;
+        }, 200);
       };
     }
   ]);

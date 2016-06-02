@@ -140,6 +140,16 @@
       return $http.put(serverDomain + "/customers/" + customerId +
         "/accounts", id);
     };
+
+    this.addNewLoan = function(loan, customerId) {
+      return $http.post(serverDomain + "/customers/" + customerId +
+        "/loans", loan);
+    };
+
+    this.addExistingLoan = function(id, customerId) {
+      return $http.put(serverDomain + "/customers/" + customerId +
+        "/loans", id);
+    };
   }]);
 
   bankApp.service('loanSrv', ['$http', 'utils', function($http, utils) {
