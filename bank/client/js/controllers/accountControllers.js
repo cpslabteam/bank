@@ -165,6 +165,39 @@
       function handleSuccessGetBranchList(response) {
         $scope.branches = response.data;
       };
+
+      $scope.ownerDetails = function(id) {
+        $location.path("/accounts/" + $routeParams.accountId +
+          "/owners/" + id);
+      };
+    }
+  ]);
+
+  bankApp.controller('AccountOwnerCtrl', ['$scope', '$routeParams',
+    '$location', '$timeout', 'utils', 'accountSrv',
+    function($scope, $routeParams, $location, $timeout, utils, accountSrv) {
+      init();
+
+      function init() {
+        $scope.owner = {};
+        accountSrv.getAccountOwner($routeParams.accountId, $routeParams.ownerId)
+          .then(handleSuccessGetAccountOwner, utils.handleServerError);
+      };
+
+      function handleSuccessGetAccountOwner(response) {
+        $scope.owner = response.data;
+      };
+
+      $scope.remove = function() {
+        accountSrv.removeAccountOwner($routeParams.accountId, $routeParams
+            .ownerId)
+          .then(handleSuccessRemoveAccountOwner, utils.handleServerError);
+      };
+
+      function handleSuccessRemoveAccountOwner(response) {
+        $scope.owner = {};
+        $location.path("/accounts/" + $routeParams.accountId);
+      };
     }
   ]);
 })(window, document);
