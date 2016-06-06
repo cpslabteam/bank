@@ -5,23 +5,23 @@
   <form novalidate class="angular-form form-horizontal" role="create loan" name="form"
     ng-submit="create(form.$valid)">
     <div class="form-group row">
-      <div class="col-xs-6">
-        <label for="inputLoanNumber" class="form-control-label col-xs-2">Loan Number</label>
-        <div class="col-xs-10">
+      <div class="col-md-6">
+        <label for="inputLoanNumber" class="form-control-label col-md-2">Loan Number</label>
+        <div class="col-md-10">
           <input type="text" class="form-control" ng-model="loan.loan_number" name="loanNumber"
             placeholder="Loan Number" id="inputLoanNumber" required>
         </div>
       </div>
-      <div class="col-xs-6 text-danger">
+      <div class="col-md-6 text-danger">
         <div ng-show="form.$submitted && form.loanNumber.$error.required">
           Loan Number is required
         </div>
       </div>
     </div>
     <div class="form-group row">
-      <div class="col-xs-6">
-        <label for="inputAmount" class="form-control-label col-xs-2">Amount</label>
-        <div class="col-xs-10">
+      <div class="col-md-6">
+        <label for="inputAmount" class="form-control-label col-md-2">Amount</label>
+        <div class="col-md-10">
           <div class="input-group">
             <span class="input-group-addon">$</span>
             <input type="number" min="0" class="form-control" ng-model="loan.amount" name="amount"
@@ -29,7 +29,7 @@
           </div>
         </div>
       </div>
-      <div class="col-xs-6 text-danger">
+      <div class="col-md-6 text-danger">
         <div ng-show="form.$submitted">
           <div ng-show="form.amount.$error.required">
             Amount is required
@@ -44,9 +44,9 @@
       </div>
     </div>
     <div class="form-group row">
-      <div class="col-xs-6">
-        <label for="inputBranch" class="form-control-label col-xs-2">Branch</label>
-        <div class="col-xs-10">
+      <div class="col-md-6">
+        <label for="inputBranch" class="form-control-label col-md-2">Branch</label>
+        <div class="col-md-10">
           <select class="form-control" name="branch" ng-model="loan.branch_id" id="inputBranch"
             ng-options="branch.id as branch.name for branch in branches | orderBy:'name'"
             required>
@@ -54,15 +54,15 @@
           </select>
         </div>
       </div>
-      <div class="col-xs-6 text-danger">
+      <div class="col-md-6 text-danger">
         <div ng-show="form.$submitted && form.branch.$error.required">
           Branch is required
         </div>
       </div>
     </div>
     <div class="form-group row">
-      <div class="col-xs-6">
-        <div class="col-xs-offset-2 col-xs-10">
+      <div class="col-md-6">
+        <div class="col-md-offset-2 col-md-10">
           <button type="submit" class="btn btn-primary">Create</button>
         </div>
       </div>

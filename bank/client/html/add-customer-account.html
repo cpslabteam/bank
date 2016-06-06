@@ -22,24 +22,24 @@
     name="existingAccountForm" ng-submit="addExistingAccount(existingAccountForm.$valid)"
     ng-show="isSelectedAccountType('existing')">
     <div class="form-group row">
-      <div class="col-xs-6">
-        <label for="selectAccountNumber" class="form-control-label col-xs-2">Account Number</label>
-        <div class="col-xs-10">
+      <div class="col-md-6">
+        <label for="selectAccountNumber" class="form-control-label col-md-2">Account Number</label>
+        <div class="col-md-10">
           <select name="accountNumber" id="selectAccountNumber" class="form-control" ng-options="account.id as account.accountNumber for account in accountList | orderBy:'accountNumber'"
             ng-model="account.id" required>
             <option value="" disabled selected hidden>Account Number</option>
           </select>
         </div>
       </div>
-      <div class="col-xs-6 text-danger">
+      <div class="col-md-6 text-danger">
         <div ng-show="existingAccountForm.$submitted && existingAccountForm.accountNumber.$error.required">
           Account Number is required
         </div>
       </div>
     </div>
     <div class="form-group row">
-      <div class="col-xs-6">
-        <div class="col-xs-offset-2 col-xs-10">
+      <div class="col-md-6">
+        <div class="col-md-offset-2 col-md-10">
           <button type="submit" class="btn btn-primary">Add Account</button>
         </div>
       </div>
@@ -49,23 +49,23 @@
   <form novalidate class="angular-form form-horizontal" role="create account" name="newAccountForm"
     ng-submit="addNewAccount(newAccountForm.$valid)" ng-show="isSelectedAccountType('new')">
     <div class="form-group row">
-      <div class="col-xs-6">
-        <label for="inputAccountNumber" class="form-control-label col-xs-2">Account Number</label>
-        <div class="col-xs-10">
+      <div class="col-md-6">
+        <label for="inputAccountNumber" class="form-control-label col-md-2">Account Number</label>
+        <div class="col-md-10">
           <input type="text" class="form-control" ng-model="account.account_number" name="accountNumber"
             placeholder="Account Number" id="inputAccountNumber" required>
         </div>
       </div>
-      <div class="col-xs-6 text-danger">
+      <div class="col-md-6 text-danger">
         <div ng-show="newAccountForm.$submitted && newAccountForm.accountNumber.$error.required">
           Account Number is required
         </div>
       </div>
     </div>
     <div class="form-group row">
-      <div class="col-xs-6">
-        <label for="inputBalance" class="form-control-label col-xs-2">Balance</label>
-        <div class="col-xs-10">
+      <div class="col-md-6">
+        <label for="inputBalance" class="form-control-label col-md-2">Balance</label>
+        <div class="col-md-10">
           <div class="input-group">
             <span class="input-group-addon">$</span>
             <input type="number" min="0" class="form-control" ng-model="account.balance" name="balance"
@@ -73,7 +73,7 @@
           </div>
         </div>
       </div>
-      <div class="col-xs-6 text-danger">
+      <div class="col-md-6 text-danger">
         <div ng-show="newAccountForm.$submitted">
           <div ng-show="newAccountForm.balance.$error.required">
             Balance is required
@@ -88,9 +88,9 @@
       </div>
     </div>
     <div class="form-group row">
-      <div class="col-xs-6">
-        <label for="inputBranch" class="form-control-label col-xs-2">Branch</label>
-        <div class="col-xs-10">
+      <div class="col-md-6">
+        <label for="inputBranch" class="form-control-label col-md-2">Branch</label>
+        <div class="col-md-10">
           <select class="form-control" name="branch" ng-model="account.branch_id" id="inputBranch"
             ng-options="branch.id as branch.name for branch in branches | orderBy:'name'"
             required>
@@ -98,15 +98,15 @@
           </select>
         </div>
       </div>
-      <div class="col-xs-6 text-danger">
+      <div class="col-md-6 text-danger">
         <div ng-show="newAccountForm.$submitted && newAccountForm.branch.$error.required">
           Branch is required
         </div>
       </div>
     </div>
     <div class="form-group row">
-      <div class="col-xs-6">
-        <div class="col-xs-offset-2 col-xs-10">
+      <div class="col-md-6">
+        <div class="col-md-offset-2 col-md-10">
           <button type="submit" class="btn btn-primary">Add Account</button>
         </div>
       </div>

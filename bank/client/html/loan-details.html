@@ -9,17 +9,19 @@
     </ul>
   </div>
   <div class="row">
-    <div class="col-xs-6">
+    <div class="col-md-6">
       <ul class="list-group">
         <li class="list-group-item">
           <div class="row">
-            <h4 class="list-group-item-heading col-xs-10">
+            <h4 class="list-group-item-heading col-md-10 col-sm-10 col-xs-10">
               Loan Number
             </h4>
-            <button class="btn btn-primary btn-xs" title="Edit" ng-show="!isEditable('loanNumber')"
-              ng-click="setEditable('loanNumber')">
-              <i class="glyphicon glyphicon-pencil"></i>
-            </button>
+            <div class="col-md-2 col-sm-2 col-xs-2">
+              <button class="btn btn-primary btn-xs" title="Edit" ng-show="!isEditable('loanNumber')"
+                ng-click="setEditable('loanNumber')">
+                <i class="glyphicon glyphicon-pencil"></i>
+              </button>
+            </div>
           </div>
           <p class="list-group-item-text" ng-show="!isEditable('loanNumber')">{{loan.loanNumber}}</p>
           <form class="angular-form" name="loanNumberForm" ng-submit="saveEdit(loanNumberForm.$valid, 'loanNumber')"
@@ -44,13 +46,15 @@
 
         <li class="list-group-item">
           <div class="row">
-            <h4 class="list-group-item-heading col-xs-10">
+            <h4 class="list-group-item-heading col-md-10 col-sm-10 col-xs-10">
               Amount
             </h4>
-            <button class="btn btn-primary btn-xs" title="Edit" ng-show="!isEditable('amount')"
-              ng-click="setEditable('amount')">
-              <i class="glyphicon glyphicon-pencil"></i>
-            </button>
+            <div class="col-md-2 col-sm-2 col-xs-2">
+              <button class="btn btn-primary btn-xs" title="Edit" ng-show="!isEditable('amount')"
+                ng-click="setEditable('amount')">
+                <i class="glyphicon glyphicon-pencil"></i>
+              </button>
+            </div>
           </div>
           <p class="list-group-item-text" ng-show="!isEditable('amount')">{{loan.amount | currency}}</p>
           <form class="angular-form" name="AmountForm" ng-submit="saveEdit(AmountForm.$valid, 'amount')"
@@ -84,13 +88,15 @@
 
         <li class="list-group-item">
           <div class="row">
-            <h4 class="list-group-item-heading col-xs-10">
+            <h4 class="list-group-item-heading col-md-10 col-sm-10 col-xs-10">
               Branch
             </h4>
-            <button class="btn btn-primary btn-xs" title="Edit" ng-show="!isEditable('branch')"
-              ng-click="setEditable('branch')">
-              <i class="glyphicon glyphicon-pencil"></i>
-            </button>
+            <div class="col-md-2 col-sm-2 col-xs-2">
+              <button class="btn btn-primary btn-xs" title="Edit" ng-show="!isEditable('branch')"
+                ng-click="setEditable('branch')">
+                <i class="glyphicon glyphicon-pencil"></i>
+              </button>
+            </div>
           </div>
           <div class="list-group-item-text" ng-show="!isEditable('branch')">
             <ul class="list-group">
@@ -127,12 +133,14 @@
 
         <li class="list-group-item">
           <div class="row">
-            <h4 class="list-group-item-heading col-xs-10">
+            <h4 class="list-group-item-heading col-md-10 col-sm-10 col-xs-10">
               Owners
             </h4>
-            <button class="btn btn-success btn-xs" title="Add Owner" ng-click="">
-              <i class="glyphicon glyphicon-plus"></i>
-            </button>
+            <div class="col-md-2 col-sm-2 col-xs-2">
+              <button class="btn btn-success btn-xs" title="Add Owner" ng-click="">
+                <i class="glyphicon glyphicon-plus"></i>
+              </button>
+            </div>
           </div>
           <table class="table table-striped list-group-item-text" ng-show="hasOwners()" ng-controller="OrderCtrl"
             ng-init="init('name')">

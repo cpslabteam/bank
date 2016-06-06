@@ -9,17 +9,19 @@
     </ul>
   </div>
   <div class="row">
-    <div class="col-xs-6">
+    <div class="col-md-6">
       <ul class="list-group">
         <li class="list-group-item">
           <div class="row">
-            <h4 class="list-group-item-heading col-xs-10">
+            <h4 class="list-group-item-heading col-md-10 col-sm-10 col-xs-10">
               Account Number
             </h4>
-            <button class="btn btn-primary btn-xs" title="Edit" ng-show="!isEditable('accountNumber')"
-              ng-click="setEditable('accountNumber')">
-              <i class="glyphicon glyphicon-pencil"></i>
-            </button>
+            <div class="col-md-2 col-sm-2 col-xs-2">
+              <button class="btn btn-primary btn-xs" title="Edit" ng-show="!isEditable('accountNumber')"
+                ng-click="setEditable('accountNumber')">
+                <i class="glyphicon glyphicon-pencil"></i>
+              </button>
+            </div>
           </div>
           <p class="list-group-item-text" ng-show="!isEditable('accountNumber')">{{account.accountNumber}}</p>
           <form class="angular-form" name="accountNumberForm" ng-submit="saveEdit(accountNumberForm.$valid, 'accountNumber')"
@@ -44,13 +46,15 @@
 
         <li class="list-group-item">
           <div class="row">
-            <h4 class="list-group-item-heading col-xs-10">
+            <h4 class="list-group-item-heading col-md-10 col-sm-10 col-xs-10">
               Balance
             </h4>
-            <button class="btn btn-primary btn-xs" title="Edit" ng-show="!isEditable('balance')"
-              ng-click="setEditable('balance')">
-              <i class="glyphicon glyphicon-pencil"></i>
-            </button>
+            <div class="col-md-2 col-sm-2 col-xs-2">
+              <button class="btn btn-primary btn-xs" title="Edit" ng-show="!isEditable('balance')"
+                ng-click="setEditable('balance')">
+                <i class="glyphicon glyphicon-pencil"></i>
+              </button>
+            </div>
           </div>
           <p class="list-group-item-text" ng-show="!isEditable('balance')">{{account.balance | currency}}</p>
           <form class="angular-form" name="balanceForm" ng-submit="saveEdit(balanceForm.$valid, 'balance')"

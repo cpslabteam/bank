@@ -9,17 +9,19 @@
     </ul>
   </div>
   <div class="row">
-    <div class="col-xs-6">
+    <div class="col-md-6">
       <ul class="list-group">
         <li class="list-group-item">
           <div class="row">
-            <h4 class="list-group-item-heading col-xs-10">
+            <h4 class="list-group-item-heading col-md-10 col-sm-10 col-xs-10">
               Name
             </h4>
-            <button class="btn btn-primary btn-xs" title="Edit" ng-show="!isEditable('name')"
-              ng-click="setEditable('name')">
-              <i class="glyphicon glyphicon-pencil"></i>
-            </button>
+            <div class="col-md-2 col-sm-2 col-xs-2">
+              <button class="btn btn-primary btn-xs" title="Edit" ng-show="!isEditable('name')"
+                ng-click="setEditable('name')">
+                <i class="glyphicon glyphicon-pencil"></i>
+              </button>
+            </div>
           </div>
           <p class="list-group-item-text" ng-show="!isEditable('name')">{{branch.name}}</p>
           <form class="angular-form" name="nameForm" ng-submit="saveEdit(nameForm.$valid, 'name')"
@@ -44,13 +46,15 @@
 
         <li class="list-group-item">
           <div class="row">
-            <h4 class="list-group-item-heading col-xs-10">
+            <h4 class="list-group-item-heading col-md-10 col-sm-10 col-xs-10">
               City
             </h4>
-            <button class="btn btn-primary btn-xs" title="Edit" ng-show="!isEditable('city')"
-              ng-click="setEditable('city')">
-              <i class="glyphicon glyphicon-pencil"></i>
-            </button>
+            <div class="col-md-2 col-sm-2 col-xs-2">
+              <button class="btn btn-primary btn-xs" title="Edit" ng-show="!isEditable('city')"
+                ng-click="setEditable('city')">
+                <i class="glyphicon glyphicon-pencil"></i>
+              </button>
+            </div>
           </div>
           <p class="list-group-item-text" ng-show="!isEditable('city')">{{branch.city}}</p>
           <form class="angular-form" name="cityForm" ng-submit="saveEdit(cityForm.$valid, 'city')"
@@ -75,13 +79,15 @@
 
         <li class="list-group-item">
           <div class="row">
-            <h4 class="list-group-item-heading col-xs-10">
+            <h4 class="list-group-item-heading col-md-10 col-sm-10 col-xs-10">
               Assets
             </h4>
-            <button class="btn btn-primary btn-xs" title="Edit" ng-show="!isEditable('assets')"
-              ng-click="setEditable('assets')">
-              <i class="glyphicon glyphicon-pencil"></i>
-            </button>
+            <div class="col-md-2 col-sm-2 col-xs-2">
+              <button class="btn btn-primary btn-xs" title="Edit" ng-show="!isEditable('assets')"
+                ng-click="setEditable('assets')">
+                <i class="glyphicon glyphicon-pencil"></i>
+              </button>
+            </div>
           </div>
           <p class="list-group-item-text" ng-show="!isEditable('assets')">{{branch.assets | currency}}</p>
           <form class="angular-form" name="assetsForm" ng-submit="saveEdit(assetsForm.$valid, 'assets')"
@@ -112,12 +118,14 @@
 
         <li class="list-group-item">
           <div class="row">
-            <h4 class="list-group-item-heading col-xs-10">
+            <h4 class="list-group-item-heading col-md-10 col-sm-10 col-xs-10">
               Accounts
             </h4>
-            <button class="btn btn-success btn-xs" title="Add Account" ng-click="addAccount()">
-              <i class="glyphicon glyphicon-plus"></i>
-            </button>
+            <div class="col-md-2 col-sm-2 col-xs-2">
+              <button class="btn btn-success btn-xs" title="Add Account" ng-click="addAccount()">
+                <i class="glyphicon glyphicon-plus"></i>
+              </button>
+            </div>
           </div>
           <table class="table table-striped list-group-item-text" ng-show="hasAccounts()" ng-controller="OrderCtrl"
             ng-init="init('accountNumber')">
@@ -150,12 +158,14 @@
 
         <li class="list-group-item">
           <div class="row">
-            <h4 class="list-group-item-heading col-xs-10">
+            <h4 class="list-group-item-heading col-md-10 col-sm-10 col-xs-10">
               Loans
             </h4>
-            <button class="btn btn-success btn-xs" title="Add Loan" ng-click="addLoan()">
-              <i class="glyphicon glyphicon-plus"></i>
-            </button>
+            <div class="col-md-2 col-sm-2 col-xs-2">
+              <button class="btn btn-success btn-xs" title="Add Loan" ng-click="addLoan()">
+                <i class="glyphicon glyphicon-plus"></i>
+              </button>
+            </div>
           </div>
           <table class="table table-striped list-group-item-text" ng-show="hasLoans()" ng-controller="OrderCtrl"
             ng-init="init('loanNumber')">
