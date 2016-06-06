@@ -89,6 +89,21 @@
       return $http.delete(serverDomain + "/branches/" + branchId +
         "/accounts/" + accountId);
     };
+
+    this.getBranchLoan = function(branchId, loanId) {
+      return $http.get(serverDomain + "/branches/" + branchId +
+        "/loans/" + loanId);
+    };
+
+    this.updateBranchLoan = function(update, branchId, loanId) {
+      return $http.put(serverDomain + "/branches/" + branchId +
+        "/loans/" + loanId, update);
+    };
+
+    this.deleteBranchLoan = function(branchId, loanId) {
+      return $http.delete(serverDomain + "/branches/" + branchId +
+        "/loans/" + loanId);
+    };
   }]);
 
   bankApp.service('customerSrv', ['$http', 'utils', function($http, utils) {

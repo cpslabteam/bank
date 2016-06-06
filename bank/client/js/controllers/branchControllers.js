@@ -134,6 +134,11 @@
         $location.path("/branches/" + $routeParams.branchId +
           "/accounts/" + accountId);
       };
+
+      $scope.loanDetails = function(loanId) {
+        $location.path("/branches/" + $routeParams.branchId +
+          "/loans/" + loanId);
+      };
     }
   ]);
 
@@ -212,6 +217,86 @@
 
       function handleSuccessDeleteBranchAccount(response) {
         $scope.account = {};
+        $location.path("/branches/list");
+      };
+    }
+  ]);
+
+  bankApp.controller('BranchLoanCtrl', ['$scope', '$routeParams',
+    '$location', '$timeout', 'utils', 'loanSrv', 'branchSrv',
+    function($scope, $routeParams, $location, $timeout, utils, loanSrv,
+      branchSrv) {
+      init();
+
+      function init() {
+        $scope.loan = {};
+        $scope.originalValues = [];
+        branchSrv.getBranchLoan($routeParams.branchId, $routeParams.loanId)
+          .then(handleSuccessGetBranchLoan, utils.handleServerError);
+        loanSrv.getLoanOwners($routeParams.loanId)
+          .then(handleSuccessGetLoanOwners, utils.handleServerError);
+      };
+
+      function handleSuccessGetBranchLoan(response) {
+        $timeout(function() {
+          $scope.loan = response.data;
+        });
+      };
+
+      function handleSuccessGetLoanOwners(response) {
+        $timeout(function() {
+          $scope.loan.owners = response.data;
+        }, 100);
+      };
+
+      $scope.hasOwners = function() {
+        return $scope.loan.owners !== undefined && $scope.loan
+          .owners.length > 0;
+      };
+
+      $scope.isEditable = function(property) {
+        return $scope.originalValues[property] !== undefined;
+      };
+
+      $scope.setEditable = function(property) {
+        $scope.originalValues[property] = $scope.loan[property];
+      };
+
+      $scope.saveEdit = function(valid, property) {
+        if (valid) {
+          var update = {};
+          update[property] = $scope.loan[property];
+          branchSrv.updateBranchLoan(update, $routeParams.branchId,
+              $routeParams.loanId)
+            .then(handleSuccessUpdateBranchLoan(property), utils.handleServerError);
+        };
+      };
+
+      $scope.cancelEdit = function(property) {
+        $scope.loan[property] = $scope.originalValues[property];
+        $scope.originalValues[property] = undefined;
+      };
+
+      $scope.deleteLoan = function() {
+        var del = confirm("Do you really want to delete this loan?");
+        if (del) {
+          branchSrv.deleteBranchLoan($routeParams.branchId,
+              $routeParams.loanId)
+            .then(handleSuccessDeleteBranchLoan, utils.handleServerError);
+        };
+      };
+
+      function handleSuccessUpdateBranchLoan(property) {
+        return function(response) {
+          $scope.originalValues[property] = undefined;
+          $timeout(function() {
+            $scope.loan[property] = response.data[property];
+          });
+        };
+      };
+
+      function handleSuccessDeleteBranchLoan(response) {
+        $scope.loan = {};
         $location.path("/branches/list");
       };
     }

@@ -79,6 +79,10 @@ var bankApp = angular.module('bankApp', ['ngRoute']);
           templateUrl: 'html/branch-account.html',
           controller: 'BranchAccountCtrl'
         })
+        .when('/branches/:branchId/loans/:loanId', {
+          templateUrl: 'html/branch-loan.html',
+          controller: 'BranchLoanCtrl'
+        })
         .otherwise({
           redirectTo: '/customers/list'
         });
