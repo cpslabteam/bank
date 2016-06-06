@@ -15,7 +15,7 @@
         $location.path("/branches/create");
       };
 
-       $scope.details = function(branchId) {
+      $scope.details = function(branchId) {
         $location.path('/branches/' + branchId);
       };
     }
@@ -128,6 +128,91 @@
       function handleSuccessDeleteBranch(response) {
         $scope.branch = {};
         $location.path("/branchs/list");
+      };
+
+      $scope.accountDetails = function(accountId) {
+        $location.path("/branches/" + $routeParams.branchId +
+          "/accounts/" + accountId);
+      };
+    }
+  ]);
+
+  bankApp.controller('BranchAccountCtrl', ['$scope', '$routeParams',
+    '$location', '$timeout', 'utils', 'accountSrv', 'branchSrv',
+    function($scope, $routeParams, $location, $timeout, utils, accountSrv,
+      branchSrv) {
+      init();
+
+      function init() {
+        $scope.account = {};
+        $scope.originalValues = [];
+        branchSrv.getBranchAccount($routeParams.branchId, $routeParams.accountId)
+          .then(handleSuccessGetBranchAccount, utils.handleServerError);
+        accountSrv.getAccountOwners($routeParams.accountId)
+          .then(handleSuccessGetAccountOwners, utils.handleServerError);
+      };
+
+      function handleSuccessGetBranchAccount(response) {
+        $timeout(function() {
+          $scope.account = response.data;
+        });
+      };
+
+      function handleSuccessGetAccountOwners(response) {
+        $timeout(function() {
+          $scope.account.owners = response.data;
+        }, 100);
+      };
+
+      $scope.hasOwners = function() {
+        return $scope.account.owners !== undefined && $scope.account
+          .owners.length > 0;
+      };
+
+      $scope.isEditable = function(property) {
+        return $scope.originalValues[property] !== undefined;
+      };
+
+      $scope.setEditable = function(property) {
+        $scope.originalValues[property] = $scope.account[property];
+      };
+
+      $scope.saveEdit = function(valid, property) {
+        if (valid) {
+          var update = {};
+          update[property] = $scope.account[property];
+          branchSrv.updateBranchAccount(update, $routeParams.branchId,
+              $routeParams.accountId)
+            .then(handleSuccessUpdateBranchAccount(property), utils.handleServerError);
+        };
+      };
+
+      $scope.cancelEdit = function(property) {
+        $scope.account[property] = $scope.originalValues[property];
+        $scope.originalValues[property] = undefined;
+      };
+
+      $scope.deleteAccount = function() {
+        var del = confirm("Do you really want to delete this account?");
+        if (del) {
+          branchSrv.deleteBranchAccount($routeParams.branchId,
+              $routeParams.accountId)
+            .then(handleSuccessDeleteBranchAccount, utils.handleServerError);
+        };
+      };
+
+      function handleSuccessUpdateBranchAccount(property) {
+        return function(response) {
+          $scope.originalValues[property] = undefined;
+          $timeout(function() {
+            $scope.account[property] = response.data[property];
+          });
+        };
+      };
+
+      function handleSuccessDeleteBranchAccount(response) {
+        $scope.account = {};
+        $location.path("/branches/list");
       };
     }
   ]);

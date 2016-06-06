@@ -34,16 +34,16 @@ public class BranchAccountResource extends BaseResource
 
 	@Override
 	public String handlePut(JSONObject requestParams) throws Throwable {
-		String accountNumber = requestParams.getString("account_number");
-		String balance = requestParams.getString("balance");
 		long transactionId = getRepository().openTransaction();
 		try {
 			AccountDAO accountDAO =
 					(AccountDAO) getRepository().createDao(Account.class, transactionId);
 			Account account = accountDAO.findBranchAccount(getIdAttribute("branch"),
 					getIdAttribute("account"));
-			account.setAccountNumber(accountNumber);
-			account.setBalance(new BigDecimal(balance));
+			if (requestParams.has("account_number"))
+				account.setAccountNumber(requestParams.getString("account_number"));
+			if (requestParams.has("balance"))
+				account.setBalance(new BigDecimal(requestParams.getString("balance")));
 			Account updatedAccount = accountDAO.update(account);
 			String response = EntityJsonSerializer.serialize(updatedAccount);
 			getRepository().closeTransaction(transactionId);

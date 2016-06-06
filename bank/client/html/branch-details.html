@@ -141,7 +141,7 @@
                 <td>{{account.accountNumber}}</td>
                 <td>{{account.balance | currency}}</td>
                 <td>
-                  <button class="btn btn-xs btn-info" title="Details"><i class="glyphicon glyphicon-plus-sign"></i></button>
+                  <button class="btn btn-xs btn-info" title="Details" ng-click="accountDetails(account.id)"><i class="glyphicon glyphicon-plus-sign"></i></button>
                 </td>
               </tr>
             </tbody>
@@ -179,7 +179,7 @@
                 <td>{{loan.loanNumber}}</td>
                 <td>{{loan.amount | currency}}</td>
                 <td>
-                  <button class="btn btn-xs btn-info" title="Details"><i class="glyphicon glyphicon-plus-sign"></i></button>
+                  <button class="btn btn-xs btn-info" title="Details"  ng-click="loanDetails(loan.id)"><i class="glyphicon glyphicon-plus-sign"></i></button>
                 </td>
               </tr>
             </tbody>

@@ -74,6 +74,21 @@
     this.getBranchLoans = function(id) {
       return $http.get(serverDomain + "/branches/" + id + "/loans");
     };
+
+    this.getBranchAccount = function(branchId, accountId) {
+      return $http.get(serverDomain + "/branches/" + branchId +
+        "/accounts/" + accountId);
+    };
+
+    this.updateBranchAccount = function(update, branchId, accountId) {
+      return $http.put(serverDomain + "/branches/" + branchId +
+        "/accounts/" + accountId, update);
+    };
+
+    this.deleteBranchAccount = function(branchId, accountId) {
+      return $http.delete(serverDomain + "/branches/" + branchId +
+        "/accounts/" + accountId);
+    };
   }]);
 
   bankApp.service('customerSrv', ['$http', 'utils', function($http, utils) {
