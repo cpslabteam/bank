@@ -161,6 +161,39 @@
       function handleSuccessGetBranchList(response) {
         $scope.branches = response.data;
       };
+
+      $scope.ownerDetails = function(id) {
+        $location.path("/loans/" + $routeParams.loanId +
+          "/owners/" + id);
+      };
+    }
+  ]);
+
+  bankApp.controller('LoanOwnerCtrl', ['$scope', '$routeParams',
+    '$location', '$timeout', 'utils', 'loanSrv',
+    function($scope, $routeParams, $location, $timeout, utils, loanSrv) {
+      init();
+
+      function init() {
+        $scope.owner = {};
+        loanSrv.getLoanOwner($routeParams.loanId, $routeParams.ownerId)
+          .then(handleSuccessGetLoanOwner, utils.handleServerError);
+      };
+
+      function handleSuccessGetLoanOwner(response) {
+        $scope.owner = response.data;
+      };
+
+      $scope.remove = function() {
+        loanSrv.removeLoanOwner($routeParams.loanId, $routeParams
+            .ownerId)
+          .then(handleSuccessRemoveLoanOwner, utils.handleServerError);
+      };
+
+      function handleSuccessRemoveLoanOwner(response) {
+        $scope.owner = {};
+        $location.path("/loans/" + $routeParams.loanId);
+      };
     }
   ]);
 })(window, document);
