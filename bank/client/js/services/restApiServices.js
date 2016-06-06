@@ -90,6 +90,11 @@
         "/accounts/" + accountId);
     };
 
+    this.addNewAccount = function(account, id) {
+      return $http.post(serverDomain + "/branches/" + id +
+        "/accounts", account);
+    };
+
     this.getBranchLoan = function(branchId, loanId) {
       return $http.get(serverDomain + "/branches/" + branchId +
         "/loans/" + loanId);
