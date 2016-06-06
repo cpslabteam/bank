@@ -109,6 +109,11 @@
       return $http.delete(serverDomain + "/branches/" + branchId +
         "/loans/" + loanId);
     };
+
+    this.addNewLoan = function(loan, id) {
+      return $http.post(serverDomain + "/branches/" + id +
+        "/loans", loan);
+    };
   }]);
 
   bankApp.service('customerSrv', ['$http', 'utils', function($http, utils) {

@@ -144,6 +144,11 @@
         $location.path("/branches/" + $routeParams.branchId +
           "/loans/" + loanId);
       };
+
+      $scope.addLoan = function() {
+        $location.path("/branches/" + $routeParams.branchId +
+          "/loans/add");
+      };
     }
   ]);
 
@@ -329,6 +334,31 @@
       function handleSuccessDeleteBranchLoan(response) {
         $scope.loan = {};
         $location.path("/branches/list");
+      };
+    }
+  ]);
+
+  bankApp.controller('AddBranchLoanCtrl', ['$scope', '$location',
+    '$routeParams', '$timeout', 'utils', 'branchSrv', 'loanSrv',
+    function($scope, $location, $routeParams, $timeout, utils,
+      branchSrv, loanSrv) {
+      init();
+
+      function init() {
+        $scope.loan = {};
+      };
+
+      $scope.addNewLoan = function(valid) {
+        if (valid) {
+          branchSrv.addNewLoan($scope.loan, $routeParams.branchId)
+            .then(handleSuccessAddLoan, utils.handleServerError);
+        }
+      };
+
+      function handleSuccessAddLoan(response) {
+        $scope.loan = {};
+        alert('Loan added!');
+        $location.path("/branches/" + $routeParams.branchId);
       };
     }
   ]);
