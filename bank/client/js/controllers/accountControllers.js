@@ -170,6 +170,11 @@
         $location.path("/accounts/" + $routeParams.accountId +
           "/owners/" + id);
       };
+
+      $scope.addOwner = function() {
+        $location.path("/accounts/" + $routeParams.accountId +
+          "/owners/add");
+      };
     }
   ]);
 
@@ -189,7 +194,8 @@
       };
 
       $scope.remove = function() {
-        accountSrv.removeAccountOwner($routeParams.accountId, $routeParams
+        accountSrv.removeAccountOwner($routeParams.accountId,
+            $routeParams
             .ownerId)
           .then(handleSuccessRemoveAccountOwner, utils.handleServerError);
       };
@@ -197,6 +203,57 @@
       function handleSuccessRemoveAccountOwner(response) {
         $scope.owner = {};
         $location.path("/accounts/" + $routeParams.accountId);
+      };
+    }
+  ]);
+
+  bankApp.controller('AddAccountOwnerCtrl', ['$scope', '$location',
+    '$routeParams', '$timeout', 'utils', 'customerSrv', 'accountSrv',
+    function($scope, $location, $routeParams, $timeout, utils,
+      customerSrv, accountSrv) {
+      init();
+
+      function init() {
+        $scope.customer = {};
+        $scope.customerList = [];
+        this.accountOwners = [];
+        accountSrv.getAccountOwners($routeParams.accountId)
+          .then(handleSuccessGetAccountOwners, utils.handleServerError);
+        customerSrv.getListCustomers()
+          .then(handleSuccessGetListCustomers, utils.handleServerError);
+      };
+
+      $scope.addOwner = function(valid) {
+        if (valid) {
+          accountSrv.addAccountOwner({ 'id': $scope.customer.id },
+              $routeParams.accountId)
+            .then(handleSuccessAddAccountOwner, utils.handleServerError);
+        }
+      };
+
+      function handleSuccessAddAccountOwner(response) {
+        $scope.customer = {};
+        alert('Owner added!');
+        $location.path("/accounts/" + $routeParams.accountId);
+      };
+
+      function handleSuccessGetAccountOwners(response) {
+        this.accountOwners = response.data;
+      };
+
+      function isOwner(customer) {
+        for (var i = this.accountOwners.length - 1; i >=
+          0; i--) {
+          if (this.accountOwners[i].id === customer.id)
+            return false;
+        };
+        return true;
+      };
+
+      function handleSuccessGetListCustomers(response) {
+        $timeout(function() {
+          $scope.customerList = response.data.filter(isOwner);
+        }, 100);
       };
     }
   ]);

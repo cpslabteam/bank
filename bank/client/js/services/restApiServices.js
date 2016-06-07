@@ -44,6 +44,11 @@
       return $http.delete(serverDomain + "/accounts/" + accountId +
         "/owners/" + ownerId);
     };
+
+    this.addAccountOwner = function(customer, accountId) {
+      return $http.put(serverDomain + "/accounts/" + accountId +
+        "/owners", customer);
+    };
   }]);
 
   bankApp.service('branchSrv', ['$http', 'utils', function($http, utils) {
