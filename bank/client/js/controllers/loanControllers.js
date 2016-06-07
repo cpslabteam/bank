@@ -166,6 +166,11 @@
         $location.path("/loans/" + $routeParams.loanId +
           "/owners/" + id);
       };
+
+      $scope.addOwner = function() {
+        $location.path("/loans/" + $routeParams.loanId +
+          "/owners/add");
+      };
     }
   ]);
 
@@ -193,6 +198,57 @@
       function handleSuccessRemoveLoanOwner(response) {
         $scope.owner = {};
         $location.path("/loans/" + $routeParams.loanId);
+      };
+    }
+  ]);
+
+  bankApp.controller('AddLoanOwnerCtrl', ['$scope', '$location',
+    '$routeParams', '$timeout', 'utils', 'customerSrv', 'loanSrv',
+    function($scope, $location, $routeParams, $timeout, utils,
+      customerSrv, loanSrv) {
+      init();
+
+      function init() {
+        $scope.customer = {};
+        $scope.customerList = [];
+        this.loanOwners = [];
+        loanSrv.getLoanOwners($routeParams.loanId)
+          .then(handleSuccessGetLoanOwners, utils.handleServerError);
+        customerSrv.getListCustomers()
+          .then(handleSuccessGetListCustomers, utils.handleServerError);
+      };
+
+      $scope.addOwner = function(valid) {
+        if (valid) {
+          loanSrv.addLoanOwner({ 'id': $scope.customer.id },
+              $routeParams.loanId)
+            .then(handleSuccessAddLoanOwner, utils.handleServerError);
+        }
+      };
+
+      function handleSuccessAddLoanOwner(response) {
+        $scope.customer = {};
+        alert('Owner added!');
+        $location.path("/loans/" + $routeParams.loanId);
+      };
+
+      function handleSuccessGetLoanOwners(response) {
+        this.loanOwners = response.data;
+      };
+
+      function isOwner(customer) {
+        for (var i = this.loanOwners.length - 1; i >=
+          0; i--) {
+          if (this.loanOwners[i].id === customer.id)
+            return false;
+        };
+        return true;
+      };
+
+      function handleSuccessGetListCustomers(response) {
+        $timeout(function() {
+          $scope.customerList = response.data.filter(isOwner);
+        }, 100);
       };
     }
   ]);

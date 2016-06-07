@@ -250,5 +250,10 @@
       return $http.delete(serverDomain + "/loans/" + loanId +
         "/owners/" + ownerId);
     };
+
+    this.addLoanOwner = function(customer, loanId) {
+      return $http.put(serverDomain + "/loans/" + loanId +
+        "/owners", customer);
+    };
   }]);
 })(window, document);
