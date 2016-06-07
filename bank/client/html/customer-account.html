@@ -126,9 +126,14 @@
               Owners
             </h4>
           <table class="table table-striped list-group-item-text" ng-show="hasOwners()" ng-controller="OrderCtrl"
-            ng-init="init('name')">
+            ng-init="init('customerNumber')">
             <theader>
               <tr>
+                <th ng-click="order('customerNumber')">
+                  Customer Number
+                  <i class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
+                    ng-show="isOrdered('customerNumber')"></i>
+                </th>
                 <th ng-click="order('name')">
                   Name
                   <i class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
@@ -139,18 +144,13 @@
                   <i class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
                     ng-show="isOrdered('city')"></i>
                 </th>
-                <th ng-click="order('street')">
-                  Street
-                  <i class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
-                    ng-show="isOrdered('street')"></i>
-                </th>
               </tr>
             </theader>
             <tbody>
               <tr ng-repeat="owner in account.owners | orderBy:predicate:reverse">
+                <td>{{owner.customerNumber}}</td>
                 <td>{{owner.name}}</td>
                 <td>{{owner.city}}</td>
-                <td>{{owner.street}}</td>
               </tr>
             </tbody>
           </table>

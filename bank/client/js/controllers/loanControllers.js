@@ -75,15 +75,15 @@
         });
       };
 
-      function handleSuccessGetLoanOwners(response) {
-        $timeout(function() {
-          $scope.loan.owners = response.data;
-        }, 100);
-      };
-
       function handleSuccessGetLoanBranch(response) {
         $timeout(function() {
           $scope.loan.branch = response.data;
+        }, 100);
+      };
+
+      function handleSuccessGetLoanOwners(response) {
+        $timeout(function() {
+          $scope.loan.owners = response.data;
         }, 200);
       };
 
