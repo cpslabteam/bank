@@ -33,7 +33,7 @@ public class BranchLoansResource extends BaseResource implements JsonGetService,
 
 	@Override
 	public String handlePost(JSONObject requestParams) throws Throwable {
-		String loanNumber = requestParams.getString("loan_number");
+		String loanNumber = requestParams.getString("loanNumber");
 		String amount = requestParams.getString("amount");
 		long transactionId = getRepository().openTransaction();
 		try {

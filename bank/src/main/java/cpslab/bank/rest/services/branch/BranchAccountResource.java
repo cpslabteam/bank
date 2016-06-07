@@ -40,8 +40,8 @@ public class BranchAccountResource extends BaseResource
 					(AccountDAO) getRepository().createDao(Account.class, transactionId);
 			Account account = accountDAO.findBranchAccount(getIdAttribute("branch"),
 					getIdAttribute("account"));
-			if (requestParams.has("account_number"))
-				account.setAccountNumber(requestParams.getString("account_number"));
+			if (requestParams.has("accountNumber"))
+				account.setAccountNumber(requestParams.getString("accountNumber"));
 			if (requestParams.has("balance"))
 				account.setBalance(new BigDecimal(requestParams.getString("balance")));
 			Account updatedAccount = accountDAO.update(account);

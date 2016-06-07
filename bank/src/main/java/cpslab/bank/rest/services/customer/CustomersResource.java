@@ -31,6 +31,7 @@ public class CustomersResource extends BaseResource implements JsonGetService, J
 
 	@Override
 	public String handlePost(JSONObject requestParams) throws Throwable {
+		String customerNumber = requestParams.getString("customerNumber");
 		String name = requestParams.getString("name");
 		String street = requestParams.getString("street");
 		String city = requestParams.getString("city");
@@ -38,7 +39,7 @@ public class CustomersResource extends BaseResource implements JsonGetService, J
 		try {
 			CustomerDAO customerDAO =
 					(CustomerDAO) getRepository().createDao((Customer.class), transactionId);
-			Customer customer = new Customer(name, street, city);
+			Customer customer = new Customer(customerNumber, name, street, city);
 			Customer createdCustomer = customerDAO.persist(customer);
 			String response = EntityJsonSerializer.serialize(createdCustomer);
 			getRepository().closeTransaction(transactionId);

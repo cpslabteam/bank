@@ -38,8 +38,8 @@ public class AccountResource extends BaseResource
 			AccountDAO accountDAO =
 					(AccountDAO) getRepository().createDao(Account.class, transactionId);
 			Account account = accountDAO.loadById(getIdAttribute("account"));
-			if (requestParams.has("account_number"))
-				account.setAccountNumber(requestParams.getString("account_number"));
+			if (requestParams.has("accountNumber"))
+				account.setAccountNumber(requestParams.getString("accountNumber"));
 			if (requestParams.has("balance"))
 				account.setBalance(new BigDecimal(requestParams.getString("balance")));
 			Account updatedAccount = accountDAO.update(account);

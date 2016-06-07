@@ -24,6 +24,7 @@ create table Branch (
 
 create table Customer (
   id int8 default nextval('hibernate_sequence') not null,
+  customer_number varchar(255) not null,
   name varchar(255) not null,
   street varchar(255) not null,
   city varchar(255) not null,
@@ -52,6 +53,9 @@ alter table Branch
 
 alter table Loan 
   add constraint UNIQUE_LOAN_NUMBER unique (loan_number);
+
+alter table Customer 
+  add constraint UNIQUE_CUSTOMER_NUMBER unique (customer_number);
 
 alter table Account 
   add constraint BRANCH_ID_FK 
@@ -88,5 +92,5 @@ alter table Account
   check( balance >= 0.00);
 
 alter table Loan
-  add constraint POSITIVE_AMMOUNT
+  add constraint POSITIVE_AMOUNT
   check( amount >= 0.00);

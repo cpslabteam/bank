@@ -59,7 +59,7 @@ public class CustomerAccountsResource extends BaseResource
 
 	@Override
 	public String handlePost(JSONObject requestParams) throws Throwable {
-		String accountNumber = requestParams.getString("account_number");
+		String accountNumber = requestParams.getString("accountNumber");
 		String balance = requestParams.getString("balance");
 		long branchID = requestParams.getLong("branch_id");
 		long transactionId = getRepository().openTransaction();

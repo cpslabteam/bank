@@ -36,8 +36,8 @@ public class BranchLoanResource extends BaseResource
 		try {
 			LoanDAO loanDAO = (LoanDAO) getRepository().createDao(Loan.class, transactionId);
 			Loan loan = loanDAO.findBranchLoan(getIdAttribute("branch"), getIdAttribute("loan"));
-			if (requestParams.has("loan_number"))
-				loan.setLoanNumber(requestParams.getString("loan_number"));
+			if (requestParams.has("loanNumber"))
+				loan.setLoanNumber(requestParams.getString("loanNumber"));
 			if (requestParams.has("amount"))
 				loan.setAmount(new BigDecimal(requestParams.getString("amount")));
 			Loan updatedLoan = loanDAO.update(loan);

@@ -36,6 +36,8 @@ public class CustomerResource extends BaseResource
 			CustomerDAO customerDAO =
 					(CustomerDAO) getRepository().createDao(Customer.class, transactionId);
 			Customer customer = customerDAO.loadById(getIdAttribute("customer"));
+			if (requestParams.has("customerNumber"))
+				customer.setCustomerNumber(requestParams.getString("customerNumber"));
 			if (requestParams.has("name"))
 				customer.setName(requestParams.getString("name"));
 			if (requestParams.has("street"))

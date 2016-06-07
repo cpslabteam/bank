@@ -21,6 +21,9 @@ import cpslab.util.db.spi.BaseDataEntity;
  */
 @Entity(name = "Customer")
 public class Customer extends BaseDataEntity {
+	
+	@Column(name = "customer_number", nullable = false)
+	private String customerNumber;
 
 	@Column(name = "name", nullable = false)
 	private String name;
@@ -45,8 +48,9 @@ public class Customer extends BaseDataEntity {
 		this.loans = new HashSet<>();
 	}
 
-	public Customer(String name, String street, String city) {
+	public Customer(String customerNumber, String name, String street, String city) {
 		super();
+		this.customerNumber = customerNumber;
 		this.name = name;
 		this.street = street;
 		this.city = city;
@@ -58,16 +62,8 @@ public class Customer extends BaseDataEntity {
 		return accounts.add(account);
 	}
 
-	public boolean removeAccount(Account account) {
-		return accounts.remove(account);
-	}
-
 	public boolean addLoan(Loan loan) {
 		return loans.add(loan);
-	}
-
-	public boolean removeLoan(Loan loan) {
-		return loans.remove(loan);
 	}
 
 	@Override
@@ -79,9 +75,7 @@ public class Customer extends BaseDataEntity {
 			return false;
 		}
 		Customer customer = (Customer) obj;
-		return Objects.equals(name, customer.getName())
-				&& Objects.equals(street, customer.getStreet())
-				&& Objects.equals(city, customer.getCity());
+		return Objects.equals(customerNumber, customer.getCustomerNumber());
 	}
 
 	public Set<Account> getAccounts() {
@@ -90,6 +84,10 @@ public class Customer extends BaseDataEntity {
 
 	public String getCity() {
 		return city;
+	}
+
+	public String getCustomerNumber() {
+		return customerNumber;
 	}
 
 	public Set<Loan> getLoans() {
@@ -106,11 +104,23 @@ public class Customer extends BaseDataEntity {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(name, street, city);
+		return Objects.hash(customerNumber);
+	}
+
+	public boolean removeAccount(Account account) {
+		return accounts.remove(account);
+	}
+
+	public boolean removeLoan(Loan loan) {
+		return loans.remove(loan);
 	}
 
 	public void setCity(String city) {
 		this.city = city;
+	}
+
+	public void setCustomerNumber(String customerNumber) {
+		this.customerNumber = customerNumber;
 	}
 
 	public void setName(String name) {
@@ -123,7 +133,7 @@ public class Customer extends BaseDataEntity {
 
 	@Override
 	public String toString() {
-		return "Customer [id=" + getId() + ", name=" + name + ", street=" + street + ", city="
+		return "Customer [id=" + getId() + ", customerNumber=" + customerNumber + ", name=" + name + ", street=" + street + ", city="
 				+ city + "]";
 	}
 
