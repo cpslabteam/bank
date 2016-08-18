@@ -1,7 +1,5 @@
 package cpslab.bank.rest.services.loan;
 
-import java.math.BigDecimal;
-
 import org.json.JSONObject;
 
 import cpslab.bank.api.dao.LoanDAO;
@@ -39,7 +37,7 @@ public class LoanResource extends BaseResource
 			if (requestParams.has("loanNumber"))
 				loan.setLoanNumber(requestParams.getString("loanNumber"));
 			if (requestParams.has("amount"))
-				loan.setAmount(new BigDecimal(requestParams.getString("amount")));
+				loan.setAmount(Double.valueOf(requestParams.getString("amount")));
 			Loan updatedLoan = loanDAO.update(loan);
 			String response = EntityJsonSerializer.serialize(updatedLoan);
 			getRepository().closeTransaction(transactionId);

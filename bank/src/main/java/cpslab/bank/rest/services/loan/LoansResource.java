@@ -1,6 +1,5 @@
 package cpslab.bank.rest.services.loan;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.json.JSONObject;
@@ -33,16 +32,24 @@ public class LoansResource extends BaseResource implements JsonGetService, JsonP
 
 	@Override
 	public String handlePost(JSONObject requestParams) throws Throwable {
-		String loanNumber = requestParams.getString("loanNumber");
-		String amount = requestParams.getString("amount");
-		long branchID = requestParams.getLong("branch_id");
 		long transactionId = getRepository().openTransaction();
 		try {
 			LoanDAO loanDAO = (LoanDAO) getRepository().createDao(Loan.class, transactionId);
 			BranchDAO branchDAO =
 					(BranchDAO) getRepository().createDao(Branch.class, transactionId);
-			Branch branch = branchDAO.loadById(branchID);
-			Loan loan = new Loan(loanNumber, branch, new BigDecimal(amount));
+			Loan loan = new Loan();
+			if(requestParams.has("branch_id")){
+				long branchID = requestParams.getLong("branch_id");
+				loan.setBranch(branchDAO.loadById(branchID));
+			}
+			if(requestParams.has("amount")){
+				String amount = requestParams.getString("amount");
+				loan.setAmount(Double.valueOf(amount));
+			}
+			if(requestParams.has("loanNumber")){
+				String loanNumber = requestParams.getString("loanNumber");
+				loan.setLoanNumber(loanNumber);
+			}
 			Loan createdLoan = loanDAO.persist(loan);
 			String response = EntityJsonSerializer.serialize(createdLoan);
 			getRepository().closeTransaction(transactionId);
