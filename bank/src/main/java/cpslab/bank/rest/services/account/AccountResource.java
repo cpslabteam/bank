@@ -1,7 +1,5 @@
 package cpslab.bank.rest.services.account;
 
-import java.math.BigDecimal;
-
 import org.json.JSONObject;
 
 import cpslab.bank.api.dao.AccountDAO;
@@ -41,7 +39,7 @@ public class AccountResource extends BaseResource
 			if (requestParams.has("accountNumber"))
 				account.setAccountNumber(requestParams.getString("accountNumber"));
 			if (requestParams.has("balance"))
-				account.setBalance(new BigDecimal(requestParams.getString("balance")));
+				account.setBalance(Double.parseDouble(requestParams.getString("balance")));
 			Account updatedAccount = accountDAO.update(account);
 			String response = EntityJsonSerializer.serialize(updatedAccount);
 			getRepository().closeTransaction(transactionId);

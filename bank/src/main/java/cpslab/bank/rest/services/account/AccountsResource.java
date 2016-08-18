@@ -1,6 +1,5 @@
 package cpslab.bank.rest.services.account;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.json.JSONObject;
@@ -34,17 +33,25 @@ public class AccountsResource extends BaseResource implements JsonGetService, Js
 
 	@Override
 	public String handlePost(JSONObject requestParams) throws Throwable {
-		String accountNumber = requestParams.getString("accountNumber");
-		String balance = requestParams.getString("balance");
-		long branchID = requestParams.getLong("branch_id");
 		long transactionId = getRepository().openTransaction();
 		try {
 			AccountDAO accountDAO =
 					(AccountDAO) getRepository().createDao(Account.class, transactionId);
 			BranchDAO branchDAO =
 					(BranchDAO) getRepository().createDao(Branch.class, transactionId);
-			Branch branch = branchDAO.loadById(branchID);
-			Account account = new Account(accountNumber, branch, new BigDecimal(balance));
+			Account account = new Account();
+			if(requestParams.has("branch_id")){
+				long branchID = requestParams.getLong("branch_id");
+				account.setBranch(branchDAO.loadById(branchID));
+			}
+			if(requestParams.has("balance")){
+				Double balance = requestParams.getDouble("balance");
+				account.setBalance(balance);
+			}
+			if(requestParams.has("accountNumber")){
+				String accountNumber = requestParams.getString("accountNumber");
+				account.setAccountNumber(accountNumber);
+			}
 			Account createdAccount = accountDAO.persist(account);
 			String response = EntityJsonSerializer.serialize(createdAccount);
 			getRepository().closeTransaction(transactionId);
