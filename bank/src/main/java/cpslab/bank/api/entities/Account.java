@@ -23,11 +23,11 @@ public class Account extends BaseDataEntity {
 
 	@JsonSerialize(as = BaseDataEntity.class)
 	@ManyToOne
-	@JoinColumn(name = "branch_id", nullable = false)
+	@JoinColumn(name = "branch_id")
 	private Branch branch;
 
-	@Column(name = "balance", nullable = false)
-	private BigDecimal balance;
+	@Column(name = "balance")
+	private Double balance;
 
 	@JsonSerialize(contentAs = BaseDataEntity.class)
 	@ManyToMany(mappedBy = "accounts")
@@ -37,7 +37,7 @@ public class Account extends BaseDataEntity {
 		owners = new HashSet<>();
 	}
 
-	public Account(String accountNumber, Branch branch, BigDecimal balance) {
+	public Account(String accountNumber, Branch branch, Double balance) {
 		this.accountNumber = accountNumber;
 		this.branch = branch;
 		this.balance = balance;
@@ -68,7 +68,7 @@ public class Account extends BaseDataEntity {
 		return accountNumber;
 	}
 
-	public BigDecimal getBalance() {
+	public Double getBalance() {
 		return balance;
 	}
 
@@ -89,7 +89,7 @@ public class Account extends BaseDataEntity {
 		this.accountNumber = accountNumber;
 	}
 
-	public void setBalance(BigDecimal balance) {
+	public void setBalance(Double balance) {
 		this.balance = balance;
 	}
 

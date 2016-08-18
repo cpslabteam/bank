@@ -1,6 +1,5 @@
 package cpslab.bank.api.entities;
 
-import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -23,11 +22,11 @@ public class Loan extends BaseDataEntity {
 
 	@JsonSerialize(as = BaseDataEntity.class)
 	@ManyToOne
-	@JoinColumn(name = "branch_id", nullable = false)
+	@JoinColumn(name = "branch_id")
 	private Branch branch;
 
-	@Column(name = "amount", nullable = false)
-	private BigDecimal amount;
+	@Column(name = "amount")
+	private Double amount;
 
 	@JsonSerialize(contentAs = BaseDataEntity.class)
 	@ManyToMany(mappedBy = "loans")
@@ -38,7 +37,7 @@ public class Loan extends BaseDataEntity {
 		owners = new HashSet<>();
 	}
 
-	public Loan(String loanNumber, Branch branch, BigDecimal amount) {
+	public Loan(String loanNumber, Branch branch, Double amount) {
 		super();
 		this.loanNumber = loanNumber;
 		this.branch = branch;
@@ -58,7 +57,7 @@ public class Loan extends BaseDataEntity {
 		return Objects.equals(loanNumber, loan.getLoanNumber());
 	}
 
-	public BigDecimal getAmount() {
+	public Double getAmount() {
 		return amount;
 	}
 
@@ -79,7 +78,7 @@ public class Loan extends BaseDataEntity {
 		return Objects.hash(loanNumber);
 	}
 
-	public void setAmount(BigDecimal amount) {
+	public void setAmount(Double amount) {
 		this.amount = amount;
 	}
 

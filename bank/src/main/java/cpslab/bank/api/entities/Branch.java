@@ -1,6 +1,5 @@
 package cpslab.bank.api.entities;
 
-import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,14 +15,14 @@ import cpslab.util.db.spi.BaseDataEntity;
 @Entity(name = "Branch")
 public class Branch extends BaseDataEntity {
 
-	@Column(name = "name", nullable = false)
+	@Column(name = "name")
 	private String name;
 
-	@Column(name = "city", nullable = false)
+	@Column(name = "city")
 	private String city;
 
-	@Column(name = "assets", nullable = false)
-	private BigDecimal assets;
+	@Column(name = "assets")
+	private Double assets;
 	
 	@JsonSerialize(contentAs = BaseDataEntity.class)
 	@OneToMany(mappedBy = "branch", cascade={ CascadeType.PERSIST, CascadeType.MERGE})
@@ -39,7 +38,7 @@ public class Branch extends BaseDataEntity {
 		loans = new HashSet<>();
 	}
 
-	public Branch(String name, String city, BigDecimal assets) {
+	public Branch(String name, String city, Double assets) {
 		super();
 		this.name = name;
 		this.city = city;
@@ -52,7 +51,7 @@ public class Branch extends BaseDataEntity {
 		return accounts;
 	}
 
-	public BigDecimal getAssets() {
+	public Double getAssets() {
 		return assets;
 	}
 
@@ -68,7 +67,7 @@ public class Branch extends BaseDataEntity {
 		return name;
 	}
 	
-	public void setAssets(BigDecimal assets) {
+	public void setAssets(Double assets) {
 		this.assets = assets;
 	}
 	

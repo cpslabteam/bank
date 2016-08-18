@@ -22,16 +22,16 @@ import cpslab.util.db.spi.BaseDataEntity;
 @Entity(name = "Customer")
 public class Customer extends BaseDataEntity {
 	
-	@Column(name = "customer_number", nullable = false)
+	@Column(name = "customer_number")
 	private String customerNumber;
 
-	@Column(name = "name", nullable = false)
+	@Column(name = "name")
 	private String name;
 
-	@Column(name = "street", nullable = false)
+	@Column(name = "street")
 	private String street;
 
-	@Column(name = "city", nullable = false)
+	@Column(name = "city")
 	private String city;
 
 	@JsonSerialize(contentAs = BaseDataEntity.class)
