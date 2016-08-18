@@ -31,15 +31,27 @@ public class CustomersResource extends BaseResource implements JsonGetService, J
 
 	@Override
 	public String handlePost(JSONObject requestParams) throws Throwable {
-		String customerNumber = requestParams.getString("customerNumber");
-		String name = requestParams.getString("name");
-		String street = requestParams.getString("street");
-		String city = requestParams.getString("city");
 		long transactionId = getRepository().openTransaction();
 		try {
 			CustomerDAO customerDAO =
 					(CustomerDAO) getRepository().createDao((Customer.class), transactionId);
-			Customer customer = new Customer(customerNumber, name, street, city);
+			Customer customer = new Customer();
+			if(requestParams.has("customerNumber")){
+				String customerNumber = requestParams.getString("customerNumber");
+				customer.setCustomerNumber(customerNumber);
+			}
+			if(requestParams.has("name")){
+				String name = requestParams.getString("name");
+				customer.setName(name);
+			}
+			if(requestParams.has("street")){
+				String street = requestParams.getString("street");
+				customer.setStreet(street);
+			}
+			if(requestParams.has("city")){
+				String city = requestParams.getString("city");
+				customer.setCity(city);
+			}
 			Customer createdCustomer = customerDAO.persist(customer);
 			String response = EntityJsonSerializer.serialize(createdCustomer);
 			getRepository().closeTransaction(transactionId);
