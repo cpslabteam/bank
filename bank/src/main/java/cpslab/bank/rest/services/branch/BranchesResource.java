@@ -1,6 +1,5 @@
 package cpslab.bank.rest.services.branch;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.json.JSONObject;
@@ -32,14 +31,17 @@ public class BranchesResource extends BaseResource implements JsonGetService, Js
 
 	@Override
 	public String handlePost(JSONObject requestParams) throws Throwable {
-		String branchName = requestParams.getString("name");
-		String branchCity = requestParams.getString("city");
-		String branchAssets = requestParams.getString("assets");
 		long transactionId = getRepository().openTransaction();
 		try {
 			BranchDAO branchDAO =
 					(BranchDAO) getRepository().createDao(Branch.class, transactionId);
-			Branch branch = new Branch(branchName, branchCity, new BigDecimal(branchAssets));
+			Branch branch = new Branch();
+			if (requestParams.has("name"))
+				branch.setName(requestParams.getString("name"));
+			if (requestParams.has("city"))
+				branch.setCity(requestParams.getString("city"));
+			if (requestParams.has("assets"))
+				branch.setAssets(Double.valueOf(requestParams.getString("assets")));
 			Branch createdBranch = branchDAO.persist(branch);
 			String response = EntityJsonSerializer.serialize(createdBranch);
 			getRepository().closeTransaction(transactionId);

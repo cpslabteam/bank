@@ -1,7 +1,5 @@
 package cpslab.bank.rest.services.branch;
 
-import java.math.BigDecimal;
-
 import org.json.JSONObject;
 
 import cpslab.bank.api.dao.BranchDAO;
@@ -43,7 +41,7 @@ public class BranchResource extends BaseResource
 			if (requestParams.has("city"))
 				branch.setCity(requestParams.getString("city"));
 			if (requestParams.has("assets"))
-				branch.setAssets(new BigDecimal(requestParams.getString("assets")));
+				branch.setAssets(Double.valueOf(requestParams.getString("assets")));
 			Branch updatedBranch = branchDAO.update(branch);
 			String response = EntityJsonSerializer.serialize(updatedBranch);
 			getRepository().closeTransaction(transactionId);
