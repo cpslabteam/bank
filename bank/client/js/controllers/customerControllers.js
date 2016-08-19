@@ -145,19 +145,33 @@
           .then(handleSuccessRemoveAccount, utils.handleServerError);
       };
 
-      function handleSuccessRemoveAccount(response) {
-        customerSrv.getCustomerAccounts($routeParams.customerId)
-          .then(handleSuccessGetCustomerAccounts, utils.handleServerError);
+      function handleSuccessRemoveAccount(accountId) {
+        return function(response) {
+          $timeout(function() {
+            $scope.customer.accounts = $scope.customer.accounts.filter(
+              function(
+                account) {
+                return account.id !== accountId;
+              });
+          }, 200);
+        }
       };
 
-      $scope.loamRemove = function(loanId) {
+      $scope.loanRemove = function(loanId) {
         customerSrv.removeLoan($routeParams.customerId, loanId)
-          .then(handleSuccessRemoveLoan, utils.handleServerError);
+          .then(handleSuccessRemoveLoan(loanId), utils.handleServerError);
       };
 
-      function handleSuccessRemoveLoan(response) {
-        customerSrv.getCustomerLoans($routeParams.customerId)
-          .then(handleSuccessGetCustomerLoans, utils.handleServerError);
+      function handleSuccessRemoveLoan(loanId) {
+        return function(response) {
+          $timeout(function() {
+            $scope.customer.loans = $scope.customer.loans.filter(
+              function(
+                loan) {
+                return loan.id !== loanId;
+              });
+          }, 200);
+        }
       };
     }
   ]);

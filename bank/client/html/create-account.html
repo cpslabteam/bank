@@ -9,12 +9,7 @@
         <label for="inputAccountNumber" class="form-control-label col-md-2">Account Number</label>
         <div class="col-md-10">
           <input type="text" class="form-control" ng-model="account.accountNumber" name="accountNumber"
-            placeholder="Account Number" id="inputAccountNumber" required>
-        </div>
-      </div>
-      <div class="col-md-6 text-danger">
-        <div ng-show="form.$submitted && form.accountNumber.$error.required">
-          Account Number is required
+            placeholder="Account Number" id="inputAccountNumber" >
         </div>
       </div>
     </div>
@@ -24,21 +19,8 @@
         <div class="col-md-10">
           <div class="input-group">
             <span class="input-group-addon">$</span>
-            <input type="number" min="0" class="form-control" ng-model="account.balance" name="balance"
-              placeholder="0.00" id="inputBalance" required>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6 text-danger">
-        <div ng-show="form.$submitted">
-          <div ng-show="form.balance.$error.required">
-            Balance is required
-          </div>
-          <div ng-show="form.balance.$error.number">
-            Balance must be a number
-          </div>
-          <div ng-show="form.balance.$error.min">
-            Balance must be positive
+            <input type="number" class="form-control" ng-model="account.balance" name="balance"
+              placeholder="0.00" id="inputBalance" >
           </div>
         </div>
       </div>
@@ -48,15 +30,9 @@
         <label for="inputBranch" class="form-control-label col-md-2">Branch</label>
         <div class="col-md-10">
           <select class="form-control" name="branch" ng-model="account.branch_id" id="inputBranch"
-            ng-options="branch.id as branch.name for branch in branches | orderBy:'name'"
-            required>
+            ng-options="branch.id as branch.name for branch in branches | orderBy:'name'">
             <option value="" disabled selected hidden>Branch</option>
           </select>
-        </div>
-      </div>
-      <div class="col-md-6 text-danger">
-        <div ng-show="form.$submitted && form.branch.$error.required">
-          Branch is required
         </div>
       </div>
     </div>

@@ -56,7 +56,7 @@
               </button>
             </div>
           </div>
-          <p class="list-group-item-text" ng-show="!isEditable('balance')">{{account.balance | currency}}</p>
+          <p class="list-group-item-text" ng-show="!isEditable('balance')">{{account.balance}}</p>
           <form class="angular-form" name="balanceForm" ng-submit="saveEdit(balanceForm.$valid, 'balance')"
             ng-show="isEditable('balance')">
             <div class="input-group">
@@ -95,18 +95,9 @@
               </button>
             </div>
           </div>
-          <div class="list-group-item-text" ng-show="!isEditable('branch')">
-            <ul class="list-group">
-              <li class="list-group-item">
-                <h5 class="list-group-item-heading"><strong>Name</strong></h5>
-                <p class="list-group-item-text">{{account.branch.name}}</p>
-              </li>
-              <li class="list-group-item">
-                <h5 class="list-group-item-heading"><strong>City</strong></h5>
-                <p class="list-group-item-text">{{account.branch.city}}</p>
-              </li>
-            </ul>
-          </div>
+          <p class="list-group-item-text" ng-show="!isEditable('branch')">
+            {{account.branch.name}}
+          </p>
           <form class="angular-form" name="branchForm" ng-submit="saveEdit(branchForm.$valid, 'branch')"
             ng-show="isEditable('branch')">
             <div class="input-group">
@@ -139,35 +130,20 @@
               </button>
             </div>
           </div>
-          <table class="table table-striped list-group-item-text" ng-show="hasOwners()" ng-controller="OrderCtrl"
-            ng-init="init('customerNumber')">
+          <table class="table table-striped list-group-item-text" ng-show="hasOwners()">
             <theader>
               <tr>
-                <th ng-click="order('customerNumber')">
+                <th>
                   Customer Number
-                  <i class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
-                    ng-show="isOrdered('customerNumber')"></i>
-                </th>
-                <th ng-click="order('name')">
-                  Name
-                  <i class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
-                    ng-show="isOrdered('name')"></i>
-                </th>
-                <th ng-click="order('city')">
-                  City
-                  <i class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
-                    ng-show="isOrdered('city')"></i>
                 </th>
                 <th></th>
               </tr>
             </theader>
             <tbody>
-              <tr ng-repeat="owner in account.owners | orderBy:predicate:reverse">
+              <tr ng-repeat="owner in account.owners">
                 <td>{{owner.customerNumber}}</td>
-                <td>{{owner.name}}</td>
-                <td>{{owner.city}}</td>
                 <td>
-                  <button class="btn btn-xs btn-info" title="Details" ng-click="ownerDetails(owner.id)"><i class="glyphicon glyphicon-plus-sign"></i></button>
+                  <button class="btn btn-xs btn-info" title="Remove" ng-click="ownerRemove(owner.id)"><i class="glyphicon glyphicon-minus-sign"></i></button>
                 </td>
               </tr>
             </tbody>

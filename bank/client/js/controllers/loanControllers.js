@@ -169,12 +169,19 @@
 
       $scope.remove = function(ownerId) {
         loanSrv.removeLoanOwner($routeParams.loanId, ownerId)
-          .then(handleSuccessRemoveLoanOwner, utils.handleServerError);
+          .then(handleSuccessRemoveLoanOwner(ownerId), utils.handleServerError);
       };
 
-      function handleSuccessRemoveLoanOwner(response) {
-        $scope.owner = {};
-        $location.path("/loans/" + $routeParams.loanId);
+      function handleSuccessRemoveLoanOwner(ownerId) {
+        return function(response) {
+          $timeout(function() {
+            $scope.account.owners = $scope.account.owners.filter(
+              function(
+                owner) {
+                return owner.id !== ownerId;
+              });
+          }, 200);
+        }
       };
     }
   ]);

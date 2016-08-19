@@ -166,43 +166,26 @@
         $scope.branches = response.data;
       };
 
-      $scope.ownerDetails = function(id) {
-        $location.path("/accounts/" + $routeParams.accountId +
-          "/owners/" + id);
-      };
-
       $scope.addOwner = function() {
         $location.path("/accounts/" + $routeParams.accountId +
           "/owners/add");
       };
-    }
-  ]);
 
-  bankApp.controller('AccountOwnerCtrl', ['$scope', '$routeParams',
-    '$location', '$timeout', 'utils', 'accountSrv',
-    function($scope, $routeParams, $location, $timeout, utils, accountSrv) {
-      init();
-
-      function init() {
-        $scope.owner = {};
-        accountSrv.getAccountOwner($routeParams.accountId, $routeParams.ownerId)
-          .then(handleSuccessGetAccountOwner, utils.handleServerError);
-      };
-
-      function handleSuccessGetAccountOwner(response) {
-        $scope.owner = response.data;
-      };
-
-      $scope.remove = function() {
-        accountSrv.removeAccountOwner($routeParams.accountId,
-            $routeParams
-            .ownerId)
+      $scope.remove = function(ownerId) {
+        accountSrv.removeAccountOwner($routeParams.accountId, ownerId)
           .then(handleSuccessRemoveAccountOwner, utils.handleServerError);
       };
 
-      function handleSuccessRemoveAccountOwner(response) {
-        $scope.owner = {};
-        $location.path("/accounts/" + $routeParams.accountId);
+      function handleSuccessRemoveAccountOwner(ownerId) {
+        return function(response) {
+          $timeout(function() {
+            $scope.account.owners = $scope.account.owners.filter(
+              function(
+                owner) {
+                return owner.id !== ownerId;
+              });
+          }, 200);
+        }
       };
     }
   ]);
