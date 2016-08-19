@@ -162,36 +162,13 @@
         $scope.branches = response.data;
       };
 
-      $scope.ownerDetails = function(id) {
-        $location.path("/loans/" + $routeParams.loanId +
-          "/owners/" + id);
-      };
-
       $scope.addOwner = function() {
         $location.path("/loans/" + $routeParams.loanId +
           "/owners/add");
       };
-    }
-  ]);
 
-  bankApp.controller('LoanOwnerCtrl', ['$scope', '$routeParams',
-    '$location', '$timeout', 'utils', 'loanSrv',
-    function($scope, $routeParams, $location, $timeout, utils, loanSrv) {
-      init();
-
-      function init() {
-        $scope.owner = {};
-        loanSrv.getLoanOwner($routeParams.loanId, $routeParams.ownerId)
-          .then(handleSuccessGetLoanOwner, utils.handleServerError);
-      };
-
-      function handleSuccessGetLoanOwner(response) {
-        $scope.owner = response.data;
-      };
-
-      $scope.remove = function() {
-        loanSrv.removeLoanOwner($routeParams.loanId, $routeParams
-            .ownerId)
+      $scope.remove = function(ownerId) {
+        loanSrv.removeLoanOwner($routeParams.loanId, ownerId)
           .then(handleSuccessRemoveLoanOwner, utils.handleServerError);
       };
 
