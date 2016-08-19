@@ -89,11 +89,10 @@
               </button>
             </div>
           </div>
-          <p class="list-group-item-text" ng-show="!isEditable('assets')">{{branch.assets | currency}}</p>
+          <p class="list-group-item-text" ng-show="!isEditable('assets')">{{branch.assets}}</p>
           <form class="angular-form" name="assetsForm" ng-submit="saveEdit(assetsForm.$valid, 'assets')"
             ng-show="isEditable('assets')">
             <div class="input-group">
-              <span class="input-group-addon">$</span>
               <input type="number" class="form-control" placeholder="New assets" ng-model="branch.assets"
                 name="assets" required>
               <span class="input-group-btn">
@@ -118,39 +117,21 @@
 
         <li class="list-group-item">
           <div class="row">
-            <h4 class="list-group-item-heading col-xs-10">
+            <h4 class="list-group-item-heading col-xs-12">
               Accounts
             </h4>
-            <div class="col-xs-2">
-              <button class="btn btn-success btn-xs" title="Add Account" ng-click="addAccount()">
-                <i class="glyphicon glyphicon-plus"></i>
-              </button>
-            </div>
           </div>
-          <table class="table table-striped list-group-item-text" ng-show="hasAccounts()" ng-controller="OrderCtrl"
-            ng-init="init('accountNumber')">
+          <table class="table table-striped list-group-item-text" ng-show="hasAccounts()">
             <theader>
               <tr>
-                <th ng-click="order('accountNumber')">
+                <th>
                   Account Number
-                  <i class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
-                    ng-show="isOrdered('accountNumber')"></i>
                 </th>
-                <th ng-click="order('balance')">
-                  Balance
-                  <i class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
-                    ng-show="isOrdered('balance')"></i>
-                </th>
-                <th></th>
               </tr>
             </theader>
             <tbody>
-              <tr ng-repeat="account in branch.accounts | orderBy:predicate:reverse">
+              <tr ng-repeat="account in branch.accounts">
                 <td>{{account.accountNumber}}</td>
-                <td>{{account.balance | currency}}</td>
-                <td>
-                  <button class="btn btn-xs btn-info" title="Details" ng-click="accountDetails(account.id)"><i class="glyphicon glyphicon-plus-sign"></i></button>
-                </td>
               </tr>
             </tbody>
           </table>
@@ -158,39 +139,21 @@
 
         <li class="list-group-item">
           <div class="row">
-            <h4 class="list-group-item-heading col-xs-10">
+            <h4 class="list-group-item-heading col-xs-12">
               Loans
             </h4>
-            <div class="col-xs-2">
-              <button class="btn btn-success btn-xs" title="Add Loan" ng-click="addLoan()">
-                <i class="glyphicon glyphicon-plus"></i>
-              </button>
-            </div>
           </div>
-          <table class="table table-striped list-group-item-text" ng-show="hasLoans()" ng-controller="OrderCtrl"
-            ng-init="init('loanNumber')">
+          <table class="table table-striped list-group-item-text" ng-show="hasLoans()">
             <theader>
               <tr>
-                <th ng-click="order('loanNumber')">
+                <th>
                   Loan Number
-                  <i class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
-                    ng-show="isOrdered('loanNumber')"></i>
                 </th>
-                <th ng-click="order('amount')">
-                  Amount
-                  <i class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
-                    ng-show="isOrdered('amount')"></i>
-                </th>
-                <th></th>
               </tr>
             </theader>
             <tbody>
-              <tr ng-repeat="loan in branch.loans | orderBy:predicate:reverse">
+              <tr ng-repeat="loan in branch.loans">
                 <td>{{loan.loanNumber}}</td>
-                <td>{{loan.amount | currency}}</td>
-                <td>
-                  <button class="btn btn-xs btn-info" title="Details"  ng-click="loanDetails(loan.id)"><i class="glyphicon glyphicon-plus-sign"></i></button>
-                </td>
               </tr>
             </tbody>
           </table>

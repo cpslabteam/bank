@@ -9,12 +9,7 @@
         <label for="inputName" class="form-control-label col-md-2">Name</label>
         <div class="col-md-10">
           <input type="text" class="form-control" ng-model="branch.name" name="name" id="inputName"
-            placeholder="Name" required>
-        </div>
-      </div>
-      <div class="col-md-6 text-danger">
-        <div ng-show="form.$submitted && form.name.$error.required">
-          Name is required
+            placeholder="Name">
         </div>
       </div>
     </div>
@@ -23,12 +18,7 @@
         <label for="inputCity" class="form-control-label col-md-2">City</label>
         <div class="col-md-10">
           <input type="text" class="form-control" ng-model="branch.city" name="city" id="inputCity"
-            placeholder="City" required>
-        </div>
-      </div>
-      <div class="col-md-6 text-danger">
-        <div ng-show="form.$submitted && form.city.$error.required">
-          City is required
+            placeholder="City">
         </div>
       </div>
     </div>
@@ -38,21 +28,8 @@
         <div class="col-md-10">
           <div class="input-group">
             <span class="input-group-addon">$</span>
-            <input type="number" min="0" class="form-control" ng-model="branch.assets" name="assets"
-              id="inputAssets" placeholder="0.00" required>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6 text-danger">
-        <div ng-show="form.$submitted">
-          <div ng-show="form.assets.$error.required">
-            Assets is required
-          </div>
-          <div ng-show="form.assets.$error.number">
-            Assets must be a number
-          </div>
-          <div ng-show="form.assets.$error.min">
-            Assets must be positive
+            <input type="number" class="form-control" ng-model="branch.assets" name="assets"
+              id="inputAssets" placeholder="0.00">
           </div>
         </div>
       </div>
