@@ -21,19 +21,89 @@
     }
   ]);
 
-  bankApp.controller('CreateCustomerCtrl', ['$scope', '$location', 'utils',
-    'customerSrv',
-    function($scope, $location, utils, customerSrv) {
-      $scope.customer = {};
+  bankApp.controller('CreateCustomerCtrl', ['$scope', '$location', '$timeout',
+    'utils',
+    'customerSrv', 'accountSrv', 'loanSrv',
+    function($scope, $location, $timeout, utils, customerSrv, accountSrv,
+      loanSrv) {
+      init();
+
+      function init() {
+        $scope.customer = {};
+        $scope.accountList = [];
+        $scope.loanList = [];
+        accountSrv.getListAccounts()
+          .then(handleSuccessGetListAccounts, utils.handleServerError);
+        loanSrv.getListLoans()
+          .then(handleSuccessGetListLoans, utils.handleServerError);
+      };
+
+      function handleSuccessGetListAccounts(response) {
+        $timeout(function() {
+          $scope.accountList = response.data;
+        }, 100);
+      };
+
+      function handleSuccessGetListLoans(response) {
+        $timeout(function() {
+          $scope.loanList = response.data;
+        }, 200);
+      };
+
+      $scope.hasAccounts = function() {
+        return $scope.customer.accounts !== undefined && $scope.customer
+          .accounts.length > 0;
+      };
+
+      $scope.hasLoans = function() {
+        return $scope.customer.loans !== undefined && $scope.customer
+          .loans.length > 0;
+      };
+
+      $scope.accountRemove = function(accountId) {
+        $timeout(function() {
+          for (i = $scope.customer.accounts.length - 1; i >= 0; i--) {
+            if ($scope.customer.accounts[i].id == accountId) {
+              $scope.customer.accounts.splice(i, 1);
+            }
+          }
+        }, 100);
+      };
+
+      $scope.loanRemove = function(loanId) {
+        $timeout(function() {
+          for (i = $scope.customer.loans.length - 1; i >= 0; i--) {
+            if ($scope.customer.loans[i].id == loanId) {
+              $scope.customer.loans.splice(i, 1);
+            }
+          }
+        }, 100);
+      };
+
+      $scope.addAccount = function() {
+        $timeout(function() {
+          if ($scope.customer.accounts === undefined)
+            $scope.customer.accounts = [];
+          $scope.customer.accounts.push($scope.accountToAdd);
+        }, 100);
+      };
+
+      $scope.addLoan = function() {
+        $timeout(function() {
+          if ($scope.customer.loans === undefined)
+            $scope.customer.loans = [];
+          $scope.customer.loans.push($scope.loanToAdd);
+        }, 100);
+      };
 
       $scope.create = function(valid) {
         if (valid) {
           customerSrv.createCustomer($scope.customer)
-            .then(handleSuccess, utils.handleServerError);
+            .then(handleSuccessCreateCustomer, utils.handleServerError);
         }
       };
 
-      function handleSuccess(response) {
+      function handleSuccessCreateCustomer(response) {
         $scope.customer = {};
         alert("Customer created!");
         $location.path("/customers");

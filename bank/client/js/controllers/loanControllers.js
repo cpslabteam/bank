@@ -21,16 +21,48 @@
     }
   ]);
 
-  bankApp.controller('CreateLoanCtrl', ['$scope', '$location', 'utils',
-    'loanSrv', 'branchSrv',
-    function($scope, $location, utils, loanSrv, branchSrv) {
+  bankApp.controller('CreateLoanCtrl', ['$scope', '$location', '$timeout','utils',
+    'loanSrv', 'branchSrv', 'customerSrv',
+    function($scope, $location, $timeout,utils, loanSrv, branchSrv, customerSrv) {
       init();
 
       function init() {
         $scope.loan = {};
         $scope.branches = [];
+        $scope.customerList = [];
         branchSrv.getListBranches()
           .then(handleSuccessBranchList, utils.handleServerError);
+          customerSrv.getListCustomers()
+          .then(handleSuccessGetListCustomers, utils.handleServerError);
+      };
+
+      function handleSuccessGetListCustomers(response) {
+        $timeout(function() {
+          $scope.customerList = response.data;
+        }, 100);
+      };
+
+      $scope.hasOwners = function() {
+        return $scope.loan.owners !== undefined && $scope.loan
+          .owners.length > 0;
+      };
+
+      $scope.ownerRemove = function(ownerId) {
+        $timeout(function() {
+          for (i = $scope.loan.owners.length - 1; i >= 0; i--) {
+            if ($scope.loan.owners[i].id == ownerId) {
+              $scope.loan.owners.splice(i, 1);
+            }
+          }
+        }, 100);
+      };
+
+      $scope.addOwner = function() {
+        $timeout(function() {
+          if ($scope.loan.owners === undefined)
+            $scope.loan.owners = [];
+          $scope.loan.owners.push($scope.ownerToAdd);
+        }, 100);
       };
 
       $scope.create = function(valid) {

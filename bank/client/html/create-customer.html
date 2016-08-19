@@ -40,6 +40,87 @@
         </div>
       </div>
     </div>
+
+    <div class="form-group">
+      <div class="col-md-6">
+        <label for="selectAccountNumber" class="form-control-label col-md-2">Add Account</label>
+        <div class="col-md-10">
+          <select name="accountNumber" id="selectAccountNumber" class="form-control" ng-options="account.accountNumber for account in accountList | orderBy:'accountNumber'"
+            ng-model="accountToAdd" ng-change="addAccount()">
+            <option value="" disabled selected hidden>Account Number</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-md-6">
+        <div ng-show="hasAccounts()">
+          <h4 class="list-group-item-heading col-xs-12">
+              Accounts
+            </h4>
+        </div>
+        <table class="table table-striped list-group-item-text" ng-show="hasAccounts()">
+          <theader>
+            <tr>
+              <th>
+                Account Number
+              </th>
+              <th></th>
+            </tr>
+          </theader>
+          <tbody>
+            <tr ng-repeat="account in customer.accounts">
+              <td>{{account.accountNumber}}</td>
+              <td>
+                <a class="btn btn-xs btn-danger" title="Remove" ng-click="accountRemove(account.id)"><i class="glyphicon glyphicon-minus-sign"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-md-6">
+        <label for="selectLoanNumber" class="form-control-label col-md-2">Add Loan</label>
+        <div class="col-md-10">
+          <select name="loanNumber" id="selectLoanNumber" class="form-control" ng-options="loan.loanNumber for loan in loanList | orderBy:'loanNumber'"
+            ng-model="loanToAdd" ng-change="addLoan()">
+            <option value="" disabled selected hidden>Loan Number</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-md-6">
+        <div class="row" ng-show="hasLoans()">
+          <h4 class="list-group-item-heading  col-xs-12">
+              Loans
+            </h4>
+        </div>
+        <table class="table table-striped list-group-item-text" ng-show="hasLoans()">
+          <theader>
+            <tr>
+              <th>
+                Loan Number
+              </th>
+              <th></th>
+            </tr>
+          </theader>
+          <tbody>
+            <tr ng-repeat="loan in customer.loans">
+              <td>{{loan.loanNumber}}</td>
+              <td>
+                <a class="btn btn-xs btn-danger" title="Remove" ng-click="loanRemove(loan.id)"><i class="glyphicon glyphicon-minus-sign"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
     <div class="form-group">
       <div class="col-md-6">
         <div class="col-md-offset-2 col-md-10">
