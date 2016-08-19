@@ -4,7 +4,7 @@ create table Account (
   id int8 default nextval('hibernate_sequence') not null,
   account_number varchar(255),
   branch_id int8,
-  balance double_precision,
+  balance double precision,
   primary key (id)
 );
 
@@ -18,7 +18,7 @@ create table Branch (
   id int8 default nextval('hibernate_sequence') not null,
   name varchar(255),
   city varchar(255),
-  assets double_precision,
+  assets double precision,
   primary key (id)
 );
 
@@ -41,7 +41,7 @@ create table Loan (
   id int8 default nextval('hibernate_sequence') not null,
   loan_number varchar(255),
   branch_id int8,
-  amount double_precision,
+  amount double precision,
   primary key (id)
 );
 

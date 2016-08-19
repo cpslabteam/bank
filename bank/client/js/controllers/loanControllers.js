@@ -167,7 +167,7 @@
           "/owners/add");
       };
 
-      $scope.remove = function(ownerId) {
+      $scope.ownerRemove = function(ownerId) {
         loanSrv.removeLoanOwner($routeParams.loanId, ownerId)
           .then(handleSuccessRemoveLoanOwner(ownerId), utils.handleServerError);
       };
@@ -175,7 +175,7 @@
       function handleSuccessRemoveLoanOwner(ownerId) {
         return function(response) {
           $timeout(function() {
-            $scope.account.owners = $scope.account.owners.filter(
+            $scope.loan.owners = $scope.loan.owners.filter(
               function(
                 owner) {
                 return owner.id !== ownerId;

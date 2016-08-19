@@ -171,9 +171,9 @@
           "/owners/add");
       };
 
-      $scope.remove = function(ownerId) {
+      $scope.ownerRemove = function(ownerId) {
         accountSrv.removeAccountOwner($routeParams.accountId, ownerId)
-          .then(handleSuccessRemoveAccountOwner, utils.handleServerError);
+          .then(handleSuccessRemoveAccountOwner(ownerId), utils.handleServerError);
       };
 
       function handleSuccessRemoveAccountOwner(ownerId) {

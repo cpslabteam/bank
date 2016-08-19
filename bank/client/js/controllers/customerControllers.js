@@ -142,7 +142,7 @@
 
       $scope.accountRemove = function(accountId) {
         customerSrv.removeAccount($routeParams.customerId, accountId)
-          .then(handleSuccessRemoveAccount, utils.handleServerError);
+          .then(handleSuccessRemoveAccount(accountId), utils.handleServerError);
       };
 
       function handleSuccessRemoveAccount(accountId) {

@@ -167,7 +167,7 @@
               <tr ng-repeat="account in customer.accounts">
                 <td>{{account.accountNumber}}</td>
                 <td>
-                  <button class="btn btn-xs btn-danger" title="Remove"><i class="glyphicon glyphicon-minus-sign" ng-click="accountRemove(account.id)"></i></button>
+                  <button class="btn btn-xs btn-danger" title="Remove" ng-click="accountRemove(account.id)"><i class="glyphicon glyphicon-minus-sign"></i></button>
                 </td>
               </tr>
             </tbody>
@@ -197,7 +197,7 @@
               <tr ng-repeat="loan in customer.loans">
                 <td>{{loan.loanNumber}}</td>
                 <td>
-                  <button class="btn btn-xs btn-danger" title="Remove"><i class="glyphicon glyphicon-minus-sign" ng-click="loanRemove(loan.id)"></i></button>
+                  <button class="btn btn-xs btn-danger" title="Remove" ng-click="loanRemove(loan.id)"><i class="glyphicon glyphicon-minus-sign"></i></button>
                 </td>
               </tr>
             </tbody>

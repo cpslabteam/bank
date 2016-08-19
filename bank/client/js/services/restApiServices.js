@@ -79,46 +79,6 @@
     this.getBranchLoans = function(id) {
       return $http.get(serverDomain + "/branches/" + id + "/loans");
     };
-
-    this.getBranchAccount = function(branchId, accountId) {
-      return $http.get(serverDomain + "/branches/" + branchId +
-        "/accounts/" + accountId);
-    };
-
-    this.updateBranchAccount = function(update, branchId, accountId) {
-      return $http.put(serverDomain + "/branches/" + branchId +
-        "/accounts/" + accountId, update);
-    };
-
-    this.deleteBranchAccount = function(branchId, accountId) {
-      return $http.delete(serverDomain + "/branches/" + branchId +
-        "/accounts/" + accountId);
-    };
-
-    this.addNewAccount = function(account, id) {
-      return $http.post(serverDomain + "/branches/" + id +
-        "/accounts", account);
-    };
-
-    this.getBranchLoan = function(branchId, loanId) {
-      return $http.get(serverDomain + "/branches/" + branchId +
-        "/loans/" + loanId);
-    };
-
-    this.updateBranchLoan = function(update, branchId, loanId) {
-      return $http.put(serverDomain + "/branches/" + branchId +
-        "/loans/" + loanId, update);
-    };
-
-    this.deleteBranchLoan = function(branchId, loanId) {
-      return $http.delete(serverDomain + "/branches/" + branchId +
-        "/loans/" + loanId);
-    };
-
-    this.addNewLoan = function(loan, id) {
-      return $http.post(serverDomain + "/branches/" + id +
-        "/loans", loan);
-    };
   }]);
 
   bankApp.service('customerSrv', ['$http', 'utils', function($http, utils) {
@@ -159,21 +119,6 @@
     this.getCustomerLoan = function(customerId, loanId) {
       return $http.get(serverDomain + "/customers/" + customerId +
         "/loans/" + loanId);
-    };
-
-    this.depositInAccount = function(amount, customerId, accountId) {
-      return $http.post(serverDomain + "/customers/" + customerId +
-        "/accounts/" + accountId + "/deposit", amount);
-    };
-
-    this.withdrawFromAccount = function(amount, customerId, accountId) {
-      return $http.post(serverDomain + "/customers/" + customerId +
-        "/accounts/" + accountId + "/withdraw", amount);
-    };
-
-    this.depositInLoan = function(amount, customerId, loanId) {
-      return $http.post(serverDomain + "/customers/" + customerId +
-        "/loans/" + loanId + "/deposit", amount);
     };
 
     this.removeAccount = function(customerId, accountId) {

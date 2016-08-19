@@ -19,17 +19,9 @@ var bankApp = angular.module('bankApp', ['ngRoute']);
           templateUrl: 'html/add-customer-account.html',
           controller: 'AddCustomerAccountCtrl'
         })
-        .when('/customers/:customerId/accounts/:accountId', {
-          templateUrl: 'html/customer-account.html',
-          controller: 'CustomerAccountCtrl'
-        })
         .when('/customers/:customerId/loans/add', {
           templateUrl: 'html/add-customer-loan.html',
           controller: 'AddCustomerLoanCtrl'
-        })
-        .when('/customers/:customerId/loans/:loanId', {
-          templateUrl: 'html/customer-loan.html',
-          controller: 'CustomerLoanCtrl'
         })
         .when('/accounts/list', {
           templateUrl: 'html/account-list.html',
@@ -47,10 +39,6 @@ var bankApp = angular.module('bankApp', ['ngRoute']);
           templateUrl: 'html/add-account-owner.html',
           controller: 'AddAccountOwnerCtrl'
         })
-        .when('/accounts/:accountId/owners/:ownerId', {
-          templateUrl: 'html/account-owner.html',
-          controller: 'AccountOwnerCtrl'
-        })
         .when('/loans/list', {
           templateUrl: 'html/loan-list.html',
           controller: 'LoanListCtrl'
@@ -67,10 +55,6 @@ var bankApp = angular.module('bankApp', ['ngRoute']);
           templateUrl: 'html/add-loan-owner.html',
           controller: 'AddLoanOwnerCtrl'
         })
-        .when('/loans/:loanId/owners/:ownerId', {
-          templateUrl: 'html/loan-owner.html',
-          controller: 'LoanOwnerCtrl'
-        })
         .when('/branches/list', {
           templateUrl: 'html/branch-list.html',
           controller: 'BranchListCtrl'
@@ -82,22 +66,6 @@ var bankApp = angular.module('bankApp', ['ngRoute']);
         .when('/branches/:branchId', {
           templateUrl: 'html/branch-details.html',
           controller: 'BranchDetailsCtrl'
-        })
-        .when('/branches/:branchId/accounts/add', {
-          templateUrl: 'html/add-branch-account.html',
-          controller: 'AddBranchAccountCtrl'
-        })
-        .when('/branches/:branchId/accounts/:accountId', {
-          templateUrl: 'html/branch-account.html',
-          controller: 'BranchAccountCtrl'
-        })
-        .when('/branches/:branchId/loans/add', {
-          templateUrl: 'html/add-branch-loan.html',
-          controller: 'AddBranchLoanCtrl'
-        })
-        .when('/branches/:branchId/loans/:loanId', {
-          templateUrl: 'html/branch-loan.html',
-          controller: 'BranchLoanCtrl'
         })
         .otherwise({
           redirectTo: '/customers/list'
