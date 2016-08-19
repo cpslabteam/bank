@@ -130,16 +130,6 @@
         $location.path("/customers/list");
       };
 
-      $scope.accountDetails = function(accountId) {
-        $location.path("/customers/" + $routeParams.customerId +
-          "/accounts/" + accountId);
-      };
-
-      $scope.loanDetails = function(loanId) {
-        $location.path("/customers/" + $routeParams.customerId +
-          "/loans/" + loanId);
-      };
-
       $scope.addAccount = function() {
         $location.path("/customers/" + $routeParams.customerId +
           "/accounts/add");
@@ -149,145 +139,44 @@
         $location.path("/customers/" + $routeParams.customerId +
           "/loans/add");
       };
-    }
-  ]);
 
-  bankApp.controller('CustomerAccountCtrl', ['$scope', '$routeParams',
-    '$location', '$timeout', 'utils', 'customerSrv', 'accountSrv',
-    function($scope, $routeParams, $location, $timeout, utils,
-      customerSrv, accountSrv) {
-      init();
-
-      function init() {
-        $scope.account = {};
-        $scope.editable = {
-          deposit: false,
-          withdraw: false,
-          amount: undefined
-        };
-        customerSrv.getCustomerAccount($routeParams.customerId,
-            $routeParams.accountId)
-          .then(handleSuccessGetCustomerAccount, utils.handleServerError);
-        accountSrv.getAccountBranch($routeParams.accountId)
-          .then(handleSuccessGetAccountBranch, utils.handleServerError);
-        accountSrv.getAccountOwners($routeParams.accountId)
-          .then(handleSuccessGetAccountOwners, utils.handleServerError);
-      };
-
-      function handleSuccessGetCustomerAccount(response) {
-        $timeout(function() {
-          $scope.account = response.data;
-        });
-      };
-
-      function handleSuccessGetAccountBranch(response) {
-        $timeout(function() {
-          $scope.account.branch = response.data;
-        }, 100);
-      };
-
-      function handleSuccessGetAccountOwners(response) {
-        $timeout(function() {
-          $scope.account.owners = response.data;
-        }, 200);
-      };
-
-      $scope.hasOwners = function() {
-        return $scope.account.owners !== undefined && $scope.account.owners
-          .length > 0;
-      };
-
-      $scope.remove = function() {
-        customerSrv.removeAccount($routeParams.customerId, $routeParams
-            .accountId)
+      $scope.accountRemove = function(accountId) {
+        customerSrv.removeAccount($routeParams.customerId, accountId)
           .then(handleSuccessRemoveAccount, utils.handleServerError);
       };
 
       function handleSuccessRemoveAccount(response) {
-        $scope.account = {};
-        $location.path("/customers/" + $routeParams.customerId);
+        customerSrv.getCustomerAccounts($routeParams.customerId)
+          .then(handleSuccessGetCustomerAccounts, utils.handleServerError);
       };
 
-      $scope.isEditable = function(property) {
-        return $scope.editable[property];
+      $scope.loamRemove = function(loanId) {
+        customerSrv.removeLoan($routeParams.customerId, loanId)
+          .then(handleSuccessRemoveLoan, utils.handleServerError);
       };
 
-      $scope.setEditable = function(property) {
-        resetEditable();
-        $scope.editable[property] = true;
-      };
-
-      function resetEditable() {
-        $scope.editable = {
-          deposit: false,
-          withdraw: false,
-          amount: undefined
-        };
-      };
-
-      $scope.saveEdit = function(valid, property) {
-        if (valid) {
-          var amount = { amount: $scope.editable.amount };
-          if (property === 'deposit') {
-            customerSrv.depositInAccount(amount,
-                $routeParams.customerId, $routeParams.accountId)
-              .then(handleSuccessDeposit, utils.handleServerError);
-          };
-          if (property === 'withdraw') {
-            customerSrv.withdrawFromAccount(amount,
-                $routeParams.customerId, $routeParams.accountId)
-              .then(handleSuccessWithdraw, utils.handleServerError);
-          };
-        };
-      };
-
-      $scope.cancelEdit = function(property) {
-        resetEditable();
-      };
-
-      function handleSuccessDeposit(response) {
-        resetEditable();
-        $timeout(function() {
-          $scope.account.balance = response.data.balance;
-        });
-      };
-
-      function handleSuccessWithdraw(response) {
-        resetEditable();
-        $timeout(function() {
-          $scope.account.balance = response.data.balance;
-        });
+      function handleSuccessRemoveLoan(response) {
+        customerSrv.getCustomerLoans($routeParams.customerId)
+          .then(handleSuccessGetCustomerLoans, utils.handleServerError);
       };
     }
   ]);
 
   bankApp.controller('AddCustomerAccountCtrl', ['$scope', '$location',
-    '$routeParams', '$timeout', 'utils', 'customerSrv', 'branchSrv',
+    '$routeParams', '$timeout', 'utils', 'customerSrv',
     'accountSrv',
     function($scope, $location, $routeParams, $timeout, utils,
-      customerSrv,
-      branchSrv, accountSrv) {
+      customerSrv, accountSrv) {
       init();
 
       function init() {
-        $scope.accountType = "existing";
         $scope.account = {};
         $scope.accountList = [];
         this.customerAccounts = [];
-        $scope.branches = [];
-        branchSrv.getListBranches()
-          .then(handleSuccessBranchList, utils.handleServerError);
         customerSrv.getCustomerAccounts($routeParams.customerId)
           .then(handleSuccessGetCustomerAccounts, utils.handleServerError);
         accountSrv.getListAccounts()
           .then(handleSuccessGetListAccounts, utils.handleServerError);
-      };
-
-      $scope.addNewAccount = function(valid) {
-        if (valid) {
-          customerSrv.addNewAccount($scope.account, $routeParams.customerId)
-            .then(handleSuccessAddAccount, utils.handleServerError);
-        }
       };
 
       $scope.addExistingAccount = function(valid) {
@@ -296,14 +185,6 @@
               $routeParams.customerId)
             .then(handleSuccessAddAccount, utils.handleServerError);
         }
-      };
-
-      $scope.isSelectedAccountType = function(accountType) {
-        return $scope.accountType === accountType;
-      };
-
-      $scope.resetAccount = function() {
-        $scope.account = {};
       };
 
       function handleSuccessAddAccount(response) {
@@ -330,139 +211,24 @@
           $scope.accountList = response.data.filter(isOwner);
         }, 100);
       };
-
-      function handleSuccessBranchList(response) {
-        $timeout(function() {
-          $scope.branches = response.data;
-        }, 200);
-      };
     }
   ]);
 
-  bankApp.controller('CustomerLoanCtrl', ['$scope', '$routeParams',
-    '$location', '$timeout', 'utils', 'customerSrv', 'loanSrv',
-    function($scope, $routeParams, $location, $timeout, utils,
+  bankApp.controller('AddCustomerLoanCtrl', ['$scope', '$location',
+    '$routeParams', '$timeout', 'utils', 'customerSrv',
+    'loanSrv',
+    function($scope, $location, $routeParams, $timeout, utils,
       customerSrv, loanSrv) {
       init();
 
       function init() {
         $scope.loan = {};
-        $scope.editable = {
-          deposit: false,
-          amount: undefined
-        };
-        customerSrv.getCustomerLoan($routeParams.customerId,
-            $routeParams.loanId)
-          .then(handleSuccessGetCustomerLoan, utils.handleServerError);
-        loanSrv.getLoanBranch($routeParams.loanId)
-          .then(handleSuccessGetLoanBranch, utils.handleServerError);
-        loanSrv.getLoanOwners($routeParams.loanId)
-          .then(handleSuccessGetLoanOwners, utils.handleServerError);
-      };
-
-      function handleSuccessGetCustomerLoan(response) {
-        $timeout(function() {
-          $scope.loan = response.data;
-        });
-      };
-
-      function handleSuccessGetLoanBranch(response) {
-        $timeout(function() {
-          $scope.loan.branch = response.data;
-        }, 100);
-      };
-
-      function handleSuccessGetLoanOwners(response) {
-        $timeout(function() {
-          $scope.loan.owners = response.data;
-        }, 200);
-      };
-
-      $scope.hasOwners = function() {
-        return $scope.loan.owners !== undefined && $scope.loan.owners
-          .length > 0;
-      };
-
-      $scope.remove = function() {
-        customerSrv.removeLoan($routeParams.customerId, $routeParams
-            .loanId)
-          .then(handleSuccessRemoveLoan, utils.handleServerError);
-      };
-
-      function handleSuccessRemoveLoan(response) {
-        $scope.loan = {};
-        $location.path("/customers/" + $routeParams.customerId +
-          "/loans/" + $routeParams.loanId);
-      };
-
-      $scope.isEditable = function(property) {
-        return $scope.editable[property];
-      };
-
-      $scope.setEditable = function(property) {
-        resetEditable();
-        $scope.editable[property] = true;
-      };
-
-      function resetEditable() {
-        $scope.editable = {
-          deposit: false,
-          withdraw: false,
-          amount: undefined
-        };
-      };
-
-      $scope.saveEdit = function(valid, property) {
-        if (valid) {
-          var amount = { amount: $scope.editable.amount };
-          if (property === 'deposit') {
-            customerSrv.depositInLoan(amount,
-                $routeParams.customerId, $routeParams.loanId)
-              .then(handleSuccessDeposit, utils.handleServerError);
-          };
-        };
-      };
-
-      $scope.cancelEdit = function(property) {
-        resetEditable();
-      };
-
-      function handleSuccessDeposit(response) {
-        resetEditable();
-        $timeout(function() {
-          $scope.loan.amount = response.data.amount;
-        });
-      };
-    }
-  ]);
-
-  bankApp.controller('AddCustomerLoanCtrl', ['$scope', '$location',
-    '$routeParams', '$timeout', 'utils', 'customerSrv', 'branchSrv',
-    'loanSrv',
-    function($scope, $location, $routeParams, $timeout, utils,
-      customerSrv,
-      branchSrv, loanSrv) {
-      init();
-
-      function init() {
-        $scope.loanType = "existing";
-        $scope.loan = {};
         $scope.loanList = [];
         this.customerLoans = [];
-        $scope.branches = [];
-        branchSrv.getListBranches()
-          .then(handleSuccessBranchList, utils.handleServerError);
         customerSrv.getCustomerLoans($routeParams.customerId)
           .then(handleSuccessGetCustomerLoans, utils.handleServerError);
         loanSrv.getListLoans()
           .then(handleSuccessGetListLoans, utils.handleServerError);
-      };
-
-      $scope.addNewLoan = function(valid) {
-        if (valid) {
-          customerSrv.addNewLoan($scope.loan, $routeParams.customerId)
-            .then(handleSuccessAddLoan, utils.handleServerError);
-        }
       };
 
       $scope.addExistingLoan = function(valid) {
@@ -471,14 +237,6 @@
               $routeParams.customerId)
             .then(handleSuccessAddLoan, utils.handleServerError);
         }
-      };
-
-      $scope.isSelectedLoanType = function(loanType) {
-        return $scope.loanType === loanType;
-      };
-
-      $scope.resetLoan = function() {
-        $scope.loan = {};
       };
 
       function handleSuccessAddLoan(response) {
@@ -504,12 +262,6 @@
         $timeout(function() {
           $scope.loanList = response.data.filter(isOwner);
         }, 100);
-      };
-
-      function handleSuccessBranchList(response) {
-        $timeout(function() {
-          $scope.branches = response.data;
-        }, 200);
       };
     }
   ]);

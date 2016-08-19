@@ -3,24 +3,8 @@
     <h1>Add Customer Loan</h1>
   </div>
 
-  <div class="radio-group">
-    <div class="radio">
-      <label for="radioExistingLoan">
-        <input type="radio" name="loanType" id="radioExistingLoan" ng-model="loanType"
-          value="existing" ng-change="resetLoan()">Existing loan
-      </label>
-    </div>
-    <div class="radio">
-      <label for="radioNewLoan">
-        <input type="radio" name="loanType" id="radioNewLoan" ng-model="loanType"
-          value="new" ng-change="resetLoan()">New loan
-      </label>
-    </div>
-  </div>
-
   <form novalidate class="angular-form form-horizontal" role="add existing loan"
-    name="existingLoanForm" ng-submit="addExistingLoan(existingLoanForm.$valid)"
-    ng-show="isSelectedLoanType('existing')">
+    name="existingLoanForm" ng-submit="addExistingLoan(existingLoanForm.$valid)">
     <div class="form-group row">
       <div class="col-md-6">
         <label for="selectLoanNumber" class="form-control-label col-md-2">Loan Number</label>
@@ -34,73 +18,6 @@
       <div class="col-md-6 text-danger">
         <div ng-show="existingLoanForm.$submitted && existingLoanForm.loanNumber.$error.required">
           Loan Number is required
-        </div>
-      </div>
-    </div>
-    <div class="form-group row">
-      <div class="col-md-6">
-        <div class="col-md-offset-2 col-md-10">
-          <button type="submit" class="btn btn-primary">Add Loan</button>
-        </div>
-      </div>
-    </div>
-  </form>
-
-  <form novalidate class="angular-form form-horizontal" role="create loan" name="newLoanForm"
-    ng-submit="addLoan(newLoanForm.$valid)" ng-show="isSelectedLoanType('new')">
-    <div class="form-group row">
-      <div class="col-md-6">
-        <label for="inputLoanNumber" class="form-control-label col-md-2">Loan Number</label>
-        <div class="col-md-10">
-          <input type="text" class="form-control" ng-model="loan.loanNumber" name="loanNumber"
-            placeholder="Loan Number" id="inputLoanNumber" required>
-        </div>
-      </div>
-      <div class="col-md-6 text-danger">
-        <div ng-show="newLoanForm.$submitted && newLoanForm.loanNumber.$error.required">
-          Loan Number is required
-        </div>
-      </div>
-    </div>
-    <div class="form-group row">
-      <div class="col-md-6">
-        <label for="inputAmount" class="form-control-label col-md-2">Amount</label>
-        <div class="col-md-10">
-          <div class="input-group">
-            <span class="input-group-addon">$</span>
-            <input type="number" min="0" class="form-control" ng-model="loan.amount" name="amount"
-              placeholder="0.00" id="inputAmount" required>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6 text-danger">
-        <div ng-show="newLoanForm.$submitted">
-          <div ng-show="newLoanForm.amount.$error.required">
-            Amount is required
-          </div>
-          <div ng-show="newLoanForm.amount.$error.number">
-            Amount must be a number
-          </div>
-          <div ng-show="newLoanForm.amount.$error.min">
-            Amount must be positive
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="form-group row">
-      <div class="col-md-6">
-        <label for="inputBranch" class="form-control-label col-md-2">Branch</label>
-        <div class="col-md-10">
-          <select class="form-control" name="branch" ng-model="loan.branch_id" id="inputBranch"
-            ng-options="branch.id as branch.name for branch in branches | orderBy:'name'"
-            required>
-            <option value="" disabled selected hidden>Branch</option>
-          </select>
-        </div>
-      </div>
-      <div class="col-md-6 text-danger">
-        <div ng-show="newLoanForm.$submitted && newLoanForm.branch.$error.required">
-          Branch is required
         </div>
       </div>
     </div>

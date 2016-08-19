@@ -10,26 +10,22 @@
   </div>
   <div class="row">
     <div class="col-md-6">
-      <table class="table table-striped" ng-controller="OrderCtrl" ng-init="init('accountNumber')">
+      <table class="table table-striped">
         <thead>
           <tr>
-            <th ng-click="order('accountNumber')">
+            <th>
               Account Number
-              <span class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
-                ng-show="isOrdered('accountNumber')"></span>
             </th>
-            <th ng-click="order('balance')">
+            <th>
               Balance
-              <span class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
-                ng-show="isOrdered('balance')"></span>
             </th>
             <th></th>
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="account in accounts | orderBy:predicate:reverse">
+          <tr ng-repeat="account in accounts">
             <td>{{account.accountNumber}}</td>
-            <td>{{account.balance | currency}}</td>
+            <td>{{account.balance}}</td>
             <td>
               <button class="btn btn-info btn-xs" ng-click="details(account.id)" title="Details"><i class="glyphicon glyphicon-plus-sign"></i></button>
             </td>

@@ -10,29 +10,23 @@
   </div>
   <div class="row">
     <div class="col-md-6">
-      <table class="table table-striped" ng-controller="OrderCtrl" ng-init="init('customerNumber')">
+      <table class="table table-striped">
         <thead>
           <tr>
-            <th ng-click="order('customerNumber')">
+            <th>
               Customer Number
-              <i class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
-                ng-show="isOrdered('customerNumber')"></i>
             </th>
-            <th ng-click="order('name')">
+            <th>
               Name
-              <i class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
-                ng-show="isOrdered('name')"></i>
             </th>
-            <th ng-click="order('city')">
+            <th>
               City
-              <i class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
-                ng-show="isOrdered('city')"></i>
             </th>
             <th></th>
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="customer in customers | orderBy:predicate:reverse">
+          <tr ng-repeat="customer in customers">
             <td>{{customer.customerNumber}}</td>
             <td>{{customer.name}}</td>
             <td>{{customer.city}}</td>

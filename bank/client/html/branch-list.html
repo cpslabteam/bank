@@ -11,32 +11,26 @@
   </div>
   <div class="row">
     <div class="col-md-6">
-      <table class="table table-striped" ng-controller="OrderCtrl" ng-init="init('name')">
+      <table class="table table-striped">
         <thead>
           <tr>
-            <th ng-click="order('name')">
+            <th>
               Name
-              <span class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
-                ng-show="isOrdered('name')"></span>
             </th>
-            <th ng-click="order('city')">
+            <th>
               City
-              <span class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
-                ng-show="isOrdered('city')"></span>
             </th>
-            <th ng-click="order('assets')">
+            <th>
               Assets
-              <span class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
-                ng-show="isOrdered('assets')"></span>
             </th>
             <th></th>
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="branch in branches | orderBy:predicate:reverse">
+          <tr ng-repeat="branch in branches">
             <td>{{branch.name}}</td>
             <td>{{branch.city}}</td>
-            <td>{{branch.assets | currency}}</td>
+            <td>{{branch.assets}}</td>
             <td>
               <button class="btn btn-info btn-xs" ng-click="details(branch.id)" title="Details"><i class="glyphicon glyphicon-plus-sign"></i></button>
             </td>

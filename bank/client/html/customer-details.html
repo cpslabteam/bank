@@ -154,29 +154,20 @@
               </button>
             </div>
           </div>
-          <table class="table table-striped list-group-item-text" ng-show="hasAccounts()" ng-controller="OrderCtrl"
-            ng-init="init('accountNumber')">
+          <table class="table table-striped list-group-item-text" ng-show="hasAccounts()">
             <theader>
               <tr>
-                <th ng-click="order('accountNumber')">
+                <th>
                   Account Number
-                  <i class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
-                    ng-show="isOrdered('accountNumber')"></i>
-                </th>
-                <th ng-click="order('balance')">
-                  Balance
-                  <i class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
-                    ng-show="isOrdered('balance')"></i>
                 </th>
                 <th></th>
               </tr>
             </theader>
             <tbody>
-              <tr ng-repeat="account in customer.accounts | orderBy:predicate:reverse">
+              <tr ng-repeat="account in customer.accounts">
                 <td>{{account.accountNumber}}</td>
-                <td>{{account.balance | currency}}</td>
                 <td>
-                  <button class="btn btn-xs btn-info" title="Details"><i class="glyphicon glyphicon-plus-sign" ng-click="accountDetails(account.id)"></i></button>
+                  <button class="btn btn-xs btn-danger" title="Remove"><i class="glyphicon glyphicon-minus-sign" ng-click="accountRemove(account.id)"></i></button>
                 </td>
               </tr>
             </tbody>
@@ -193,29 +184,20 @@
               </button>
             </div>
           </div>
-          <table class="table table-striped list-group-item-text" ng-show="hasLoans()" ng-controller="OrderCtrl"
-            ng-init="init('loanNumber')">
+          <table class="table table-striped list-group-item-text" ng-show="hasLoans()">
             <theader>
               <tr>
-                <th ng-click="order('loanNumber')">
+                <th>
                   Loan Number
-                  <i class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
-                    ng-show="isOrdered('loanNumber')"></i>
-                </th>
-                <th ng-click="order('amount')">
-                  Amount
-                  <i class="glyphicon" ng-class="{'glyphicon-triangle-bottom':reverse, 'glyphicon-triangle-top':!reverse}"
-                    ng-show="isOrdered('amount')"></i>
                 </th>
                 <th></th>
               </tr>
             </theader>
             <tbody>
-              <tr ng-repeat="loan in customer.loans | orderBy:predicate:reverse">
+              <tr ng-repeat="loan in customer.loans">
                 <td>{{loan.loanNumber}}</td>
-                <td>{{loan.amount | currency}}</td>
                 <td>
-                  <button class="btn btn-xs btn-info" title="Details"><i class="glyphicon glyphicon-plus-sign" ng-click="loanDetails(loan.id)"></i></button>
+                  <button class="btn btn-xs btn-danger" title="Remove"><i class="glyphicon glyphicon-minus-sign" ng-click="loanRemove(loan.id)"></i></button>
                 </td>
               </tr>
             </tbody>
