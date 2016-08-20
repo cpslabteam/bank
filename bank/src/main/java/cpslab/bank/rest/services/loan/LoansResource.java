@@ -51,6 +51,9 @@ public class LoansResource extends BaseResource implements JsonGetService, JsonP
 			}
 			if(requestParams.has("loanNumber")){
 				String loanNumber = requestParams.getString("loanNumber");
+				List<Loan> loans = loanDAO.findByLoanNumber(loanNumber);
+				if(!loans.isEmpty())
+					throw new IllegalArgumentException("Loan Number must be unique");
 				loan.setLoanNumber(loanNumber);
 			}
 			Loan createdLoan = loanDAO.persist(loan);

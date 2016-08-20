@@ -7,10 +7,6 @@ import cpslab.util.db.Dao;
 
 public interface CustomerDAO extends Dao<Customer> {
 
-	public List<Customer> findDepositors();
-	
-	public List<Customer> findBorrowers();
-	
 	public List<Customer> findAccountOwners(Long accountID);
 	
 	public List<Customer> findLoanOwners(Long loanID);
@@ -18,4 +14,6 @@ public interface CustomerDAO extends Dao<Customer> {
 	public Customer findAccountOwner(Long accountID, Long ownerID);
 	
 	public Customer findLoanOwner(Long loanID, Long ownerID);
+	
+	public List<Customer> findByCustomerNumber(String customerNumber);
 }

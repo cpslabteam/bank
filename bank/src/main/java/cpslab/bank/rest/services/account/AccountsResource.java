@@ -53,6 +53,9 @@ public class AccountsResource extends BaseResource implements JsonGetService, Js
 			}
 			if(requestParams.has("accountNumber")){
 				String accountNumber = requestParams.getString("accountNumber");
+				List<Account> accounts = accountDAO.findByAccountNumber(accountNumber);
+				if(!accounts.isEmpty())
+					throw new IllegalArgumentException("Account Number must be unique");
 				account.setAccountNumber(accountNumber);
 			}
 			Account createdAccount = accountDAO.persist(account);

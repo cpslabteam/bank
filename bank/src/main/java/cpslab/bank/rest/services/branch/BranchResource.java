@@ -1,5 +1,7 @@
 package cpslab.bank.rest.services.branch;
 
+import java.util.List;
+
 import org.json.JSONObject;
 
 import cpslab.bank.api.dao.BranchDAO;
@@ -36,8 +38,13 @@ public class BranchResource extends BaseResource
 			BranchDAO branchDAO =
 					(BranchDAO) getRepository().createDao(Branch.class, transactionId);
 			Branch branch = branchDAO.loadById(getIdAttribute("branch"));
-			if (requestParams.has("name"))
-				branch.setName(requestParams.getString("name"));
+			if (requestParams.has("name")){
+				String name = requestParams.getString("name");
+				List<Branch> branches = branchDAO.findByName(name);
+				if(!branches.isEmpty())
+					throw new IllegalArgumentException("Name must be unique");
+				branch.setName(name);
+			}
 			if (requestParams.has("city"))
 				branch.setCity(requestParams.getString("city"));
 			if (requestParams.has("assets"))

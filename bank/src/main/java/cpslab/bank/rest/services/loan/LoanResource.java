@@ -1,5 +1,7 @@
 package cpslab.bank.rest.services.loan;
 
+import java.util.List;
+
 import org.json.JSONObject;
 
 import cpslab.bank.api.dao.LoanDAO;
@@ -34,8 +36,13 @@ public class LoanResource extends BaseResource
 		try {
 			LoanDAO loanDAO = (LoanDAO) getRepository().createDao(Loan.class, transactionId);
 			Loan loan = loanDAO.loadById(getIdAttribute("loan"));
-			if (requestParams.has("loanNumber"))
-				loan.setLoanNumber(requestParams.getString("loanNumber"));
+			if(requestParams.has("loanNumber")){
+				String loanNumber = requestParams.getString("loanNumber");
+				List<Loan> loans = loanDAO.findByLoanNumber(loanNumber);
+				if(!loans.isEmpty())
+					throw new IllegalArgumentException("Loan Number must be unique");
+				loan.setLoanNumber(loanNumber);
+			}
 			if (requestParams.has("amount"))
 				loan.setAmount(Double.valueOf(requestParams.getString("amount")));
 			Loan updatedLoan = loanDAO.update(loan);

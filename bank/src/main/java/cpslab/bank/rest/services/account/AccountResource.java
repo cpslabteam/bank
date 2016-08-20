@@ -1,5 +1,7 @@
 package cpslab.bank.rest.services.account;
 
+import java.util.List;
+
 import org.json.JSONObject;
 
 import cpslab.bank.api.dao.AccountDAO;
@@ -36,8 +38,13 @@ public class AccountResource extends BaseResource
 			AccountDAO accountDAO =
 					(AccountDAO) getRepository().createDao(Account.class, transactionId);
 			Account account = accountDAO.loadById(getIdAttribute("account"));
-			if (requestParams.has("accountNumber"))
-				account.setAccountNumber(requestParams.getString("accountNumber"));
+			if(requestParams.has("accountNumber")){
+				String accountNumber = requestParams.getString("accountNumber");
+				List<Account> accounts = accountDAO.findByAccountNumber(accountNumber);
+				if(!accounts.isEmpty())
+					throw new IllegalArgumentException("Account Number must be unique");
+				account.setAccountNumber(accountNumber);
+			}
 			if (requestParams.has("balance"))
 				account.setBalance(Double.parseDouble(requestParams.getString("balance")));
 			Account updatedAccount = accountDAO.update(account);

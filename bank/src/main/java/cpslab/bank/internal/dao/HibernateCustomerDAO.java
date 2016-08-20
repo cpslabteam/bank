@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Query;
-import org.hibernate.criterion.Restrictions;
 
 import cpslab.bank.api.dao.CustomerDAO;
 import cpslab.bank.api.entities.Customer;
@@ -12,20 +11,16 @@ import cpslab.util.db.hibernate.HibernateDao;
 
 public class HibernateCustomerDAO extends HibernateDao<Customer>implements CustomerDAO {
 
-	private final static String ACCOUNT_OWNERS_QUERY = "SELECT c FROM Account ac JOIN ac.owners c WHERE ac.id = :id";
-	private final static String LOAN_OWNERS_QUERY = "SELECT c FROM Loan l JOIN l.owners c WHERE l.id = :id";
-	private final static String ACCOUNT_OWNER_QUERY = "SELECT c FROM Account ac JOIN ac.owners c WHERE ac.id = :account_id AND c.id = :owner_id";
-	private final static String LOAN_OWNER_QUERY = "SELECT c FROM Loan l JOIN l.owners c WHERE l.id = :loan_id AND c.id = :owner_id";
-
-	@Override
-	public List<Customer> findDepositors() {
-		return findByCriteria(Restrictions.isNotEmpty("accounts"));
-	}
-
-	@Override
-	public List<Customer> findBorrowers() {
-		return findByCriteria(Restrictions.isNotEmpty("loans"));
-	}
+	private final static String ACCOUNT_OWNERS_QUERY =
+			"SELECT c FROM Account ac JOIN ac.owners c WHERE ac.id = :id";
+	private final static String LOAN_OWNERS_QUERY =
+			"SELECT c FROM Loan l JOIN l.owners c WHERE l.id = :id";
+	private final static String ACCOUNT_OWNER_QUERY =
+			"SELECT c FROM Account ac JOIN ac.owners c WHERE ac.id = :account_id AND c.id = :owner_id";
+	private final static String LOAN_OWNER_QUERY =
+			"SELECT c FROM Loan l JOIN l.owners c WHERE l.id = :loan_id AND c.id = :owner_id";
+	private final static String CUSTOMERNUMBER_QUERY =
+			"SELECT c FROM Customer c WHERE customer_number = :customer_number";
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -69,4 +64,11 @@ public class HibernateCustomerDAO extends HibernateDao<Customer>implements Custo
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Customer> findByCustomerNumber(String customerNumber) {
+		Query query = getSession().createQuery(CUSTOMERNUMBER_QUERY);
+		query.setString("customer_number", customerNumber);
+		return query.list();
+	}
 }

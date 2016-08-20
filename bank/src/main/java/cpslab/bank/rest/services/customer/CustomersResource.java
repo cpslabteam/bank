@@ -43,6 +43,9 @@ public class CustomersResource extends BaseResource implements JsonGetService, J
 			Customer customer = new Customer();
 			if(requestParams.has("customerNumber")){
 				String customerNumber = requestParams.getString("customerNumber");
+				List<Customer> customers = customerDAO.findByCustomerNumber(customerNumber);
+				if(!customers.isEmpty())
+					throw new IllegalArgumentException("Customer Number must be unique");
 				customer.setCustomerNumber(customerNumber);
 			}
 			if(requestParams.has("name")){

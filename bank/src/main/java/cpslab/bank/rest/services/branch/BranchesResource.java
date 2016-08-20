@@ -36,8 +36,13 @@ public class BranchesResource extends BaseResource implements JsonGetService, Js
 			BranchDAO branchDAO =
 					(BranchDAO) getRepository().createDao(Branch.class, transactionId);
 			Branch branch = new Branch();
-			if (requestParams.has("name"))
-				branch.setName(requestParams.getString("name"));
+			if (requestParams.has("name")){
+				String name = requestParams.getString("name");
+				List<Branch> branches = branchDAO.findByName(name);
+				if(!branches.isEmpty())
+					throw new IllegalArgumentException("Name must be unique");
+				branch.setName(name);
+			}
 			if (requestParams.has("city"))
 				branch.setCity(requestParams.getString("city"));
 			if (requestParams.has("assets"))

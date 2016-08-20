@@ -15,5 +15,8 @@ public interface LoanDAO
     List<Loan> findCustomerLoans(Long customerID);
 
     Loan findCustomerLoan(Long customerID, Long loanID);
+    
+	public List<Loan> findByLoanNumber(String loanNumber);
+
 
 }

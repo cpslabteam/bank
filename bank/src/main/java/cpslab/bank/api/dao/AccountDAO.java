@@ -14,4 +14,7 @@ public interface AccountDAO extends Dao<Account> {
 	public Account findCustomerAccount(Long customerID, Long accountID);
 	
 	public Account findBranchAccount(Long branchID, Long accountID);
+	
+	public List<Account> findByAccountNumber(String accountNumber);
+
 }

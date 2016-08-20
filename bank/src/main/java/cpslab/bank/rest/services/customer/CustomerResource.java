@@ -1,5 +1,7 @@
 package cpslab.bank.rest.services.customer;
 
+import java.util.List;
+
 import org.json.JSONObject;
 
 import cpslab.bank.api.dao.CustomerDAO;
@@ -36,8 +38,13 @@ public class CustomerResource extends BaseResource
 			CustomerDAO customerDAO =
 					(CustomerDAO) getRepository().createDao(Customer.class, transactionId);
 			Customer customer = customerDAO.loadById(getIdAttribute("customer"));
-			if (requestParams.has("customerNumber"))
-				customer.setCustomerNumber(requestParams.getString("customerNumber"));
+			if (requestParams.has("customerNumber")) {
+				String customerNumber = requestParams.getString("customerNumber");
+				List<Customer> customers = customerDAO.findByCustomerNumber(customerNumber);
+				if (!customers.isEmpty())
+					throw new IllegalArgumentException("Customer Number must be unique");
+				customer.setCustomerNumber(customerNumber);
+			}
 			if (requestParams.has("name"))
 				customer.setName(requestParams.getString("name"));
 			if (requestParams.has("street"))

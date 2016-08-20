@@ -22,6 +22,8 @@ public class HibernateAccountDAO extends HibernateDao<Account>implements Account
 
 	private final static String BRANCH_ACCOUNT_QUERY =
 			"SELECT ac FROM Branch b JOIN b.accounts ac WHERE b.id = :branch_id AND ac.id = :account_id";
+	
+	private final static String ACCOUNTNUMBER_QUERY = "SELECT a FROM Account a WHERE account_number = :account_number";
 
 	/**
 	 * Make sure it can be instantiated thorugh reflection.
@@ -70,6 +72,14 @@ public class HibernateAccountDAO extends HibernateDao<Account>implements Account
 		} else {
 			throw new ObjectNotFoundException(accountID, getPersistentClass().getSimpleName());
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Account> findByAccountNumber(String accountNumber) {
+		Query query = getSession().createQuery(ACCOUNTNUMBER_QUERY);
+		query.setString("account_number", accountNumber);
+		return query.list();
 	}
 
 }

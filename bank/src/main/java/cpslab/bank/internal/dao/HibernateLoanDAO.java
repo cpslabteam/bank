@@ -21,6 +21,7 @@ public class HibernateLoanDAO extends
         "SELECT l FROM Customer c JOIN c.loans l WHERE c.id = :id";
     private final static String CUSTOMER_LOAN_QUERY =
         "SELECT l FROM Customer c JOIN c.loans l WHERE c.id = :customer_id AND l.id = :loan_id";
+    private final static String LOANNUMBER_QUERY = "SELECT l FROM Loan l WHERE loan_number = :loan_number";
 
     @SuppressWarnings("unchecked")
     @Override
@@ -63,5 +64,13 @@ public class HibernateLoanDAO extends
             throw new ObjectNotFoundException(loanID, getPersistentClass().getSimpleName());
         }
     }
+    
+    @SuppressWarnings("unchecked")
+	@Override
+	public List<Loan> findByLoanNumber(String loanNumber) {
+		Query query = getSession().createQuery(LOANNUMBER_QUERY);
+		query.setString("loan_number", loanNumber);
+		return query.list();
+	}
 
 }
