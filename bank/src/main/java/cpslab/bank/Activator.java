@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cpslab.bank.rest.api.BankRestServerActivator;
+import cpslab.bank.rest.api.NewRestActivator;
 import cpslab.bank.webserver.BankWebServerActivator;
 
 public class Activator {
@@ -11,7 +12,7 @@ public class Activator {
 	private static Logger logger = LoggerFactory.getLogger(Activator.class);
 
 	public static void main(String[] args) throws Exception {
-		BankRestServerActivator.getInstance().open();
+		NewRestActivator.getInstance().open();
 		BankWebServerActivator.open();
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {

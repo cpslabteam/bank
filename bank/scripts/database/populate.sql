@@ -66,4 +66,6 @@ insert into customer_account (owners_id, accounts_id) values (9, 25);
 insert into customer_account (owners_id, accounts_id) values (9, 29);
 insert into customer_account (owners_id, accounts_id) values (14, 32);
 
-select setval('hibernate_sequence', 42);
+insert into useraccount (id, username, password) values (42, 'admin', 'testAdmin');
+
+select setval('hibernate_sequence', 43);

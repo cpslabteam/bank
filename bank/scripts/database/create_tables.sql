@@ -45,6 +45,13 @@ create table Loan (
   primary key (id)
 );
 
+create table UserAccount (
+  id int8 default nextval('hibernate_sequence') not null,
+  username varchar(255),
+  password varchar(255),
+  primary key(id)
+);
+
 alter table Account 
   add constraint BRANCH_ID_FK 
   foreign key (branch_id) 

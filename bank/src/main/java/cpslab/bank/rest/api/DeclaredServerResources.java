@@ -3,6 +3,7 @@ package cpslab.bank.rest.api;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import cpslab.bank.rest.services.LoginResource;
 import cpslab.bank.rest.services.account.AccountBranchResource;
 import cpslab.bank.rest.services.account.AccountOwnerResource;
 import cpslab.bank.rest.services.account.AccountOwnersResource;
@@ -58,6 +59,8 @@ public final class DeclaredServerResources {
 		serverResources.put("/customers/{customer}/accounts/{account}", CustomerAccountResource.class);
 		serverResources.put("/customers/{customer}/loans", CustomerLoansResource.class);
 		serverResources.put("/customers/{customer}/loans/{loan}", CustomerLoanResource.class);
+		
+		serverResources.put("/login", LoginResource.class);
 	}
 
 	public static Map<String, Class<? extends RestService>> getDeclaredServerResources() {

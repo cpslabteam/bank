@@ -1,9 +1,17 @@
-var bankApp = angular.module('bankApp', ['ngRoute']);
+var bankApp = angular.module('bankApp', ['ngRoute', 'ngCookies']);
 (function(window, document, undefined) {
   bankApp.config(['$routeProvider',
     function($routeProvider) {
       $routeProvider.
-      when('/customers/list', {
+      when('/login', {
+          templateUrl: 'html/login.html',
+          controller: 'LoginController'
+        })
+        .when('/', {
+          templateUrl: 'html/customer-list.html',
+          controller: 'CustomerListCtrl'
+        })
+        .when('/customers/list', {
           templateUrl: 'html/customer-list.html',
           controller: 'CustomerListCtrl'
         })
@@ -68,8 +76,23 @@ var bankApp = angular.module('bankApp', ['ngRoute']);
           controller: 'BranchDetailsCtrl'
         })
         .otherwise({
-          redirectTo: '/customers/list'
+          redirectTo: '/login'
         });
     }
-  ]);
+  ])
+  .run(['$rootScope', '$location', '$cookieStore', '$http',
+    function ($rootScope, $location, $cookieStore, $http) {
+        // keep user logged in after page refresh
+        $rootScope.globals = $cookieStore.get('globals') || {};
+        if ($rootScope.globals.currentUser) {
+            $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.authdata;
+        }
+  
+        $rootScope.$on('$locationChangeStart', function (event, next, current) {
+            // redirect to login page if not logged in
+            if ($location.path() !== '/login' && !$rootScope.globals.currentUser) {
+                $location.path('/login');
+            }
+        });
+    }]);
 })(window, document);
