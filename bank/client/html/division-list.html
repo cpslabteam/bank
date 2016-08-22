@@ -1,0 +1,34 @@
+<div class="container">
+  <div class="page-header">
+    <ul class="list-inline">
+      <li>
+        <h1>Division List</h1>
+      </li>
+      <li>
+        <button class="btn btn-success" ng-click="createDivision()">New Division</button>
+      </li>
+    </ul>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>
+              Name
+            </th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="division in divisions">
+            <td>{{division.name}}</td>
+            <td>
+              <button class="btn btn-info btn-xs" ng-click="details(division.id)" title="Details"><i class="glyphicon glyphicon-plus-sign"></i></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

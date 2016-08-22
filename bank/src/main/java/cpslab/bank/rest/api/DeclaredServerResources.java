@@ -10,6 +10,7 @@ import cpslab.bank.rest.services.account.AccountOwnersResource;
 import cpslab.bank.rest.services.account.AccountResource;
 import cpslab.bank.rest.services.account.AccountsResource;
 import cpslab.bank.rest.services.branch.BranchAccountsResource;
+import cpslab.bank.rest.services.branch.BranchDivisionResource;
 import cpslab.bank.rest.services.branch.BranchLoansResource;
 import cpslab.bank.rest.services.branch.BranchResource;
 import cpslab.bank.rest.services.branch.BranchesResource;
@@ -19,6 +20,9 @@ import cpslab.bank.rest.services.customer.CustomerLoanResource;
 import cpslab.bank.rest.services.customer.CustomerLoansResource;
 import cpslab.bank.rest.services.customer.CustomerResource;
 import cpslab.bank.rest.services.customer.CustomersResource;
+import cpslab.bank.rest.services.division.DivisionBranchesResource;
+import cpslab.bank.rest.services.division.DivisionResource;
+import cpslab.bank.rest.services.division.DivisionsResource;
 import cpslab.bank.rest.services.loan.LoanBranchResource;
 import cpslab.bank.rest.services.loan.LoanOwnerResource;
 import cpslab.bank.rest.services.loan.LoanOwnersResource;
@@ -40,6 +44,7 @@ public final class DeclaredServerResources {
 		serverResources.put("/branches/{branch}", BranchResource.class);
 		serverResources.put("/branches/{branch}/accounts", BranchAccountsResource.class);
 		serverResources.put("/branches/{branch}/loans", BranchLoansResource.class);
+		serverResources.put("/branches/{branch}/division", BranchDivisionResource.class);
 
 		serverResources.put("/accounts", AccountsResource.class);
 		serverResources.put("/accounts/{account}", AccountResource.class);
@@ -59,6 +64,10 @@ public final class DeclaredServerResources {
 		serverResources.put("/customers/{customer}/accounts/{account}", CustomerAccountResource.class);
 		serverResources.put("/customers/{customer}/loans", CustomerLoansResource.class);
 		serverResources.put("/customers/{customer}/loans/{loan}", CustomerLoanResource.class);
+		
+		serverResources.put("/divisions", DivisionsResource.class);
+		serverResources.put("/divisions/{division}", DivisionResource.class);
+		serverResources.put("/divisions/{division}/branches", DivisionBranchesResource.class);
 		
 		serverResources.put("/login", LoginResource.class);
 	}

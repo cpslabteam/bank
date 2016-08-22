@@ -5,7 +5,9 @@ import java.util.List;
 import org.json.JSONObject;
 
 import cpslab.bank.api.dao.BranchDAO;
+import cpslab.bank.api.dao.DivisionDAO;
 import cpslab.bank.api.entities.Branch;
+import cpslab.bank.api.entities.Division;
 import cpslab.bank.jsonserialization.EntityJsonSerializer;
 import cpslab.bank.rest.services.BaseResource;
 import cpslab.util.rest.services.JsonGetService;
@@ -47,6 +49,11 @@ public class BranchesResource extends BaseResource implements JsonGetService, Js
 				branch.setCity(requestParams.getString("city"));
 			if (requestParams.has("assets"))
 				branch.setAssets(Double.valueOf(requestParams.getString("assets")));
+			if (requestParams.has("division_id")){
+				DivisionDAO divisionDAO = (DivisionDAO) getRepository().createDao(Division.class, transactionId);
+				Division division = divisionDAO.findById(requestParams.getLong("division_id"));
+				branch.setDivision(division);
+			}
 			Branch createdBranch = branchDAO.persist(branch);
 			String response = EntityJsonSerializer.serialize(createdBranch);
 			getRepository().closeTransaction(transactionId);
