@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cpslab.bank.rest.api.BankRestServerActivator;
-import cpslab.bank.rest.api.NewRestActivator;
 import cpslab.bank.webserver.BankWebServerActivator;
 
 public class Activator {
@@ -12,7 +11,7 @@ public class Activator {
 	private static Logger logger = LoggerFactory.getLogger(Activator.class);
 
 	public static void main(String[] args) throws Exception {
-		NewRestActivator.getInstance().open();
+		BankRestServerActivator.open();
 		BankWebServerActivator.open();
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -20,7 +19,7 @@ public class Activator {
 			@Override
 			public void run() {
 				try {
-					BankRestServerActivator.getInstance().close();
+					BankRestServerActivator.close();
 				} catch (Exception e) {
 					logger.error("Exception shuting down rest API", e);
 				}
