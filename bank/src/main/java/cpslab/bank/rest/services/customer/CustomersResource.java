@@ -1,6 +1,7 @@
 package cpslab.bank.rest.services.customer;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -13,6 +14,7 @@ import cpslab.bank.api.entities.Customer;
 import cpslab.bank.api.entities.Loan;
 import cpslab.bank.jsonserialization.EntityJsonSerializer;
 import cpslab.bank.rest.services.BaseResource;
+import cpslab.util.db.Dao.PatternMatchMode;
 import cpslab.util.rest.services.JsonGetService;
 import cpslab.util.rest.services.JsonPostService;
 
@@ -24,7 +26,14 @@ public class CustomersResource extends BaseResource implements JsonGetService, J
 		try {
 			CustomerDAO customerDAO =
 					(CustomerDAO) getRepository().createDao(Customer.class, transactionId);
-			List<Customer> customers = customerDAO.findAll();
+			List<Customer> customers;
+			String customerNumberQuery = getQueryValue("customerNumber");
+			if (Objects.isNull(customerNumberQuery)) {
+				customers = customerDAO.findAll();
+			} else {
+				customers = customerDAO.findByProperty("customerNumber", customerNumberQuery,
+						PatternMatchMode.EXACT);
+			}
 			String response = EntityJsonSerializer.serialize(customers);
 			getRepository().closeTransaction(transactionId);
 			return response;
@@ -41,27 +50,27 @@ public class CustomersResource extends BaseResource implements JsonGetService, J
 			CustomerDAO customerDAO =
 					(CustomerDAO) getRepository().createDao((Customer.class), transactionId);
 			Customer customer = new Customer();
-			if(requestParams.has("customerNumber")){
+			if (requestParams.has("customerNumber")) {
 				String customerNumber = requestParams.getString("customerNumber");
 				List<Customer> customers = customerDAO.findByCustomerNumber(customerNumber);
-				if(!customers.isEmpty())
+				if (!customers.isEmpty())
 					throw new IllegalArgumentException("Customer Number must be unique");
 				customer.setCustomerNumber(customerNumber);
 			}
-			if(requestParams.has("name")){
+			if (requestParams.has("name")) {
 				String name = requestParams.getString("name");
 				customer.setName(name);
 			}
-			if(requestParams.has("street")){
+			if (requestParams.has("street")) {
 				String street = requestParams.getString("street");
 				customer.setStreet(street);
 			}
-			if(requestParams.has("city")){
+			if (requestParams.has("city")) {
 				String city = requestParams.getString("city");
 				customer.setCity(city);
 			}
 			Customer createdCustomer = customerDAO.persist(customer);
-			if(requestParams.has("accounts")){
+			if (requestParams.has("accounts")) {
 				AccountDAO accountDAO =
 						(AccountDAO) getRepository().createDao(Account.class, transactionId);
 				JSONArray accounts = requestParams.getJSONArray("accounts");
@@ -71,9 +80,8 @@ public class CustomersResource extends BaseResource implements JsonGetService, J
 					customer.addAccount(account);
 				}
 			}
-			if(requestParams.has("loans")){
-				LoanDAO loanDAO =
-						(LoanDAO) getRepository().createDao(Loan.class, transactionId);
+			if (requestParams.has("loans")) {
+				LoanDAO loanDAO = (LoanDAO) getRepository().createDao(Loan.class, transactionId);
 				JSONArray loans = requestParams.getJSONArray("loans");
 				for (int i = 0; i < loans.length(); i++) {
 					long loanId = loans.getJSONObject(i).getLong("id");
