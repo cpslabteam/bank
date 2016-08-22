@@ -43,8 +43,12 @@ public class LoanResource extends BaseResource
 					throw new IllegalArgumentException("Loan Number must be unique");
 				loan.setLoanNumber(loanNumber);
 			}
-			if (requestParams.has("amount"))
-				loan.setAmount(Double.valueOf(requestParams.getString("amount")));
+			if(requestParams.has("amount")){
+				Double amount = Double.valueOf(requestParams.getString("amount"));
+				if(amount < 0)
+					throw new IllegalArgumentException("Amount must be greater than or equal to 0");
+				loan.setAmount(amount);
+			}
 			Loan updatedLoan = loanDAO.update(loan);
 			String response = EntityJsonSerializer.serialize(updatedLoan);
 			getRepository().closeTransaction(transactionId);

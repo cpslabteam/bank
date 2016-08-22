@@ -46,8 +46,10 @@ public class LoansResource extends BaseResource implements JsonGetService, JsonP
 				loan.setBranch(branchDAO.loadById(branchID));
 			}
 			if(requestParams.has("amount")){
-				String amount = requestParams.getString("amount");
-				loan.setAmount(Double.valueOf(amount));
+				Double amount = Double.valueOf(requestParams.getString("amount"));
+				if(amount < 0)
+					throw new IllegalArgumentException("Amount must be greater than or equal to 0");
+				loan.setAmount(amount);
 			}
 			if(requestParams.has("loanNumber")){
 				String loanNumber = requestParams.getString("loanNumber");
