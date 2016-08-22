@@ -75,6 +75,18 @@ var bankApp = angular.module('bankApp', ['ngRoute', 'ngCookies']);
           templateUrl: 'html/branch-details.html',
           controller: 'BranchDetailsCtrl'
         })
+        .when('/divisions/list', {
+          templateUrl: 'html/division-list.html',
+          controller: 'DivisionListCtrl'
+        })
+        .when('/divisions/create', {
+          templateUrl: 'html/create-division.html',
+          controller: 'CreateDivisionCtrl'
+        })
+        .when('/divisions/:divisionId', {
+          templateUrl: 'html/division-details.html',
+          controller: 'DivisionDetailsCtrl'
+        })
         .otherwise({
           redirectTo: '/login'
         });

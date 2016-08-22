@@ -181,4 +181,30 @@
         "/owners", customer);
     };
   }]);
+
+  bankApp.service('divisionSrv', ['$http', 'utils', function($http, utils) {
+    this.getListDivisions = function() {
+      return $http.get(serverDomain + "/divisions");
+    };
+
+    this.createDivision = function(division) {
+      return $http.post(serverDomain + "/divisions", division);
+    };
+
+    this.getDivision = function(id) {
+      return $http.get(serverDomain + "/divisions/" + id);
+    };
+
+    this.updateDivision = function(update, id) {
+      return $http.put(serverDomain + "/divisions/" + id, update)
+    };
+
+    this.deleteDivision = function(id) {
+      return $http.delete(serverDomain + "/divisions/" + id);
+    };
+
+    this.getDivisionBranches = function(id) {
+      return $http.get(serverDomain + "/divisions/" + id + "/branches");
+    };
+  }]);
 })(window, document);

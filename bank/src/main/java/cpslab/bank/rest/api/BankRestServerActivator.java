@@ -21,11 +21,13 @@ import org.slf4j.LoggerFactory;
 import cpslab.bank.api.entities.Account;
 import cpslab.bank.api.entities.Branch;
 import cpslab.bank.api.entities.Customer;
+import cpslab.bank.api.entities.Division;
 import cpslab.bank.api.entities.Loan;
 import cpslab.bank.api.entities.UserAccount;
 import cpslab.bank.internal.dao.HibernateAccountDAO;
 import cpslab.bank.internal.dao.HibernateBranchDAO;
 import cpslab.bank.internal.dao.HibernateCustomerDAO;
+import cpslab.bank.internal.dao.HibernateDivisionDAO;
 import cpslab.bank.internal.dao.HibernateLoanDAO;
 import cpslab.bank.internal.dao.HibernateUserAccountDAO;
 import cpslab.bank.rest.handlers.business.IllegalArgumentExceptionHandler;
@@ -164,6 +166,7 @@ public class BankRestServerActivator extends Application {
 		r.registerDao(Loan.class, HibernateLoanDAO.class);
 		r.registerDao(Branch.class, HibernateBranchDAO.class);
 		r.registerDao(Customer.class, HibernateCustomerDAO.class);
+		r.registerDao(Division.class, HibernateDivisionDAO.class);
 		r.registerDao(UserAccount.class, HibernateUserAccountDAO.class);
 	}
 

@@ -14,15 +14,20 @@ insert into customer (id, customer_number, name, street, city) values (13, 'C-85
 insert into customer (id, customer_number, name, street, city) values (14, 'C-934', 'Majeris', 'First', 'Rye');
 insert into customer (id, customer_number, name, street, city) values (15, 'C-993', 'McBride', 'Safety', 'Rye');
 
-insert into branch (id, name, city, assets) values (16, 'Downtown', 'Brooklyn', 900000);
-insert into branch (id, name, city, assets) values (17, 'Redwood', 'Palo Alto', 2100000);
-insert into branch (id, name, city, assets) values (18, 'Perryridge', 'Horseneck', 1700000);
-insert into branch (id, name, city, assets) values (19, 'Mianus', 'Horseneck', 400200);
-insert into branch (id, name, city, assets) values (20, 'Round Hill', 'Horseneck', 8000000);
-insert into branch (id, name, city, assets) values (21, 'Pownal', 'Bennington', 400000);
-insert into branch (id, name, city, assets) values (22, 'North Town', 'Rye', 3700000);
-insert into branch (id, name, city, assets) values (23, 'Brighton', 'Brooklyn', 7000000);
-insert into branch (id, name, city, assets) values (24, 'Central', 'Rye',  400280);
+
+insert into division (id, name) values (43, 'North');
+insert into division (id, name) values (44, 'SouthWest');
+insert into division (id, name) values (45, 'Center');
+
+insert into branch (id, name, city, assets, division_id) values (16, 'Downtown', 'Brooklyn', 900000, 43);
+insert into branch (id, name, city, assets, division_id) values (17, 'Redwood', 'Palo Alto', 2100000, 44);
+insert into branch (id, name, city, assets, division_id) values (18, 'Perryridge', 'Horseneck', 1700000, 44);
+insert into branch (id, name, city, assets, division_id) values (19, 'Mianus', 'Horseneck', 400200, 45);
+insert into branch (id, name, city, assets, division_id) values (20, 'Round Hill', 'Horseneck', 8000000, 44);
+insert into branch (id, name, city, assets, division_id) values (21, 'Pownal', 'Bennington', 400000, 43);
+insert into branch (id, name, city, assets, division_id) values (22, 'North Town', 'Rye', 3700000, 43);
+insert into branch (id, name, city, assets, division_id) values (23, 'Brighton', 'Brooklyn', 7000000, 45);
+insert into branch (id, name, city, assets, division_id) values (24, 'Central', 'Rye',  400280, 45);
 
 insert into account (id, account_number, branch_id, balance) values (25, 'A-101', 16, 500);
 insert into account (id, account_number, branch_id, balance) values (26, 'A-215',  19, 700);
@@ -43,10 +48,6 @@ insert into loan (id, loan_number, branch_id, amount) values (39, 'L-11',  20, 9
 insert into loan (id, loan_number, branch_id, amount) values (40, 'L-16',  18, 1300);
 insert into loan (id, loan_number, branch_id, amount) values (41, 'L-20',  22, 7500);
 insert into loan (id, loan_number, branch_id, amount) values (42, 'L-21',  24, 570);
-
-insert into division (id, name) values (43, 'North');
-insert into division (id, name) values (44, 'SouthWest');
-insert into division (id, name) values (45, 'Center');
 
 insert into customer_loan (owners_id, loans_id) values (1, 34);
 insert into customer_loan (owners_id, loans_id) values (2, 35);

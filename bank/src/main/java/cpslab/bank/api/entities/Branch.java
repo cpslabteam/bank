@@ -6,6 +6,8 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -24,7 +26,9 @@ public class Branch extends BaseDataEntity {
 	@Column(name = "assets")
 	private Double assets;
 	
-	@Column(name = "division")
+	@JsonSerialize(as = BaseDataEntity.class)
+	@ManyToOne
+	@JoinColumn(name = "division_id")
 	private Division division;
 	
 	@JsonSerialize(contentAs = BaseDataEntity.class)
