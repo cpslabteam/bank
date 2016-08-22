@@ -24,6 +24,9 @@ public class Branch extends BaseDataEntity {
 	@Column(name = "assets")
 	private Double assets;
 	
+	@Column(name = "division")
+	private Division division;
+	
 	@JsonSerialize(contentAs = BaseDataEntity.class)
 	@OneToMany(mappedBy = "branch", cascade={ CascadeType.PERSIST, CascadeType.MERGE})
 	private Set<Account> accounts;
@@ -38,11 +41,12 @@ public class Branch extends BaseDataEntity {
 		loans = new HashSet<>();
 	}
 
-	public Branch(String name, String city, Double assets) {
+	public Branch(String name, String city, Double assets, Division division) {
 		super();
 		this.name = name;
 		this.city = city;
 		this.assets = assets;
+		this.division = division;
 		accounts = new HashSet<>();
 		loans = new HashSet<>();
 	}
@@ -59,6 +63,10 @@ public class Branch extends BaseDataEntity {
 		return city;
 	}
 
+	public Division getDivision() {
+		return division;
+	}
+
 	public Set<Loan> getLoans() {
 		return loans;
 	}
@@ -66,13 +74,17 @@ public class Branch extends BaseDataEntity {
 	public String getName() {
 		return name;
 	}
-	
+
 	public void setAssets(Double assets) {
 		this.assets = assets;
 	}
 	
 	public void setCity(String city) {
 		this.city = city;
+	}
+	
+	public void setDivision(Division division) {
+		this.division = division;
 	}
 	
 	public void setName(String name) {

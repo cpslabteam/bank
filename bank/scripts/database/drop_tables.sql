@@ -1,4 +1,5 @@
 drop table customer cascade;
+drop table division cascade;
 drop table branch cascade;
 drop table account cascade;
 drop table loan cascade;

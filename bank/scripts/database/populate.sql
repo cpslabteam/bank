@@ -44,6 +44,10 @@ insert into loan (id, loan_number, branch_id, amount) values (40, 'L-16',  18, 1
 insert into loan (id, loan_number, branch_id, amount) values (41, 'L-20',  22, 7500);
 insert into loan (id, loan_number, branch_id, amount) values (42, 'L-21',  24, 570);
 
+insert into division (id, name) values (43, 'North');
+insert into division (id, name) values (44, 'SouthWest');
+insert into division (id, name) values (45, 'Center');
+
 insert into customer_loan (owners_id, loans_id) values (1, 34);
 insert into customer_loan (owners_id, loans_id) values (2, 35);
 insert into customer_loan (owners_id, loans_id) values (2, 39);
@@ -66,6 +70,6 @@ insert into customer_account (owners_id, accounts_id) values (9, 25);
 insert into customer_account (owners_id, accounts_id) values (9, 29);
 insert into customer_account (owners_id, accounts_id) values (14, 32);
 
-insert into useraccount (id, username, password) values (42, 'admin', 'testAdmin');
+insert into useraccount (id, username, password) values (46, 'admin', 'testAdmin');
 
-select setval('hibernate_sequence', 43);
+select setval('hibernate_sequence', 47);

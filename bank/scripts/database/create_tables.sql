@@ -19,6 +19,7 @@ create table Branch (
   name varchar(255),
   city varchar(255),
   assets double precision,
+  division_id int8,
   primary key (id)
 );
 
@@ -42,6 +43,12 @@ create table Loan (
   loan_number varchar(255),
   branch_id int8,
   amount double precision,
+  primary key (id)
+);
+
+create table Division (
+  id int8 default nextval('hibernate_sequence') not null,
+  name varchar(255),
   primary key (id)
 );
 
@@ -81,3 +88,8 @@ alter table Loan
   add constraint BRANCH_ID_FK 
   foreign key (branch_id) 
   references Branch;
+
+alter table Branch 
+  add constraint DIVISION_ID_FK 
+  foreign key (division_id) 
+  references Division;
