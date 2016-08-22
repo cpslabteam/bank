@@ -10,6 +10,25 @@
   </div>
   <div class="row">
     <div class="col-md-6">
+    
+      <form class="angular-form" name="customerNumberSearchForm" ng-submit="search(customerNumberSearchForm.$valid)">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Customer Number" ng-model="customerNumberToSearch"
+            name="customerNumber" required>
+          <span class="input-group-btn">
+              <button class="btn btn-info" type="submit">
+                <i class="glyphicon glyphicon-search"></i>
+              </button>
+              <button class="btn btn-danger" type="button" ng-click="cancelSearch()">
+                <i class="glyphicon glyphicon-remove"></i>
+              </button>
+            </span>
+        </div>
+        <div ng-show="customerNumberSearchForm.$submitted && customerNumberSearchForm.customerNumber.$error.required">
+          CustomerNumber is required
+        </div>
+      </form>
+
       <table class="table table-striped">
         <thead>
           <tr>

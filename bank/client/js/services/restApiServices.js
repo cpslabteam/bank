@@ -77,10 +77,13 @@
   }]);
 
   bankApp.service('customerSrv', ['$http', 'utils', function($http, utils) {
-    this.getListCustomers = function() {
-      return $http.get(serverDomain + "/customers");
+    this.getListCustomers = function(params) {
+      if(params)
+        return $http.get(serverDomain + "/customers", params);
+      else
+        return $http.get(serverDomain + "/customers");
     };
-
+    
     this.createCustomer = function(customer) {
       return $http.post(serverDomain + "/customers", customer);
     };

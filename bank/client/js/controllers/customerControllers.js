@@ -1,14 +1,18 @@
 (function(window, document, undefined) {
-  bankApp.controller('CustomerListCtrl', ['$scope', '$location', 'utils',
+  bankApp.controller('CustomerListCtrl', ['$scope', '$location', '$timeout',
+    'utils',
     'customerSrv',
     function(
-      $scope, $location, utils, customerSrv) {
+      $scope, $location, $timeout, utils, customerSrv) {
       $scope.customers = [];
       customerSrv.getListCustomers()
         .then(handleSuccess, utils.handleServerError);
 
       function handleSuccess(response) {
-        $scope.customers = response.data;
+        $timeout(function() {
+          console.log(response.data);
+          $scope.customers = response.data;
+        }, 100);
       };
 
       $scope.details = function(customerId) {
@@ -17,6 +21,26 @@
 
       $scope.createCustomer = function() {
         $location.path('/customers/create');
+      };
+
+      $scope.search = function(valid) {
+        var params = {
+          'params': {
+            'customerNumber': $scope.customerNumberToSearch
+          }
+        }
+        customerSrv.getListCustomers(params)
+          .then(handleSuccess, utils.handleServerError);
+      };
+
+      function handleSuccessSearchCustomers(response) {
+        $scope.customers = response.data;
+      };
+
+      $scope.cancelSearch = function() {
+        $scope.customerNumberToSearch = undefined;
+        customerSrv.getListCustomers()
+          .then(handleSuccess, utils.handleServerError);
       };
     }
   ]);
