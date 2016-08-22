@@ -28,6 +28,7 @@ import cpslab.bank.internal.dao.HibernateBranchDAO;
 import cpslab.bank.internal.dao.HibernateCustomerDAO;
 import cpslab.bank.internal.dao.HibernateLoanDAO;
 import cpslab.bank.internal.dao.HibernateUserAccountDAO;
+import cpslab.bank.rest.handlers.business.IllegalArgumentExceptionHandler;
 import cpslab.bank.rest.handlers.hibernate.ConstraintViolationExceptionHandler;
 import cpslab.bank.rest.handlers.hibernate.ObjectNotFoundExceptionHandler;
 import cpslab.bank.rest.handlers.json.JSONExceptionHandler;
@@ -145,7 +146,7 @@ public class BankRestServerActivator extends Application {
 		guard.setNext(router);
 		return guard;
 	}
-	
+
 	private void registerServiceExceptionHandlers() {
 		ServiceExceptionHandlerManager.registerHandler(ConstraintViolationException.class,
 				ConstraintViolationExceptionHandler.class);
@@ -153,8 +154,10 @@ public class BankRestServerActivator extends Application {
 				ObjectNotFoundExceptionHandler.class);
 		ServiceExceptionHandlerManager.registerHandler(JSONException.class,
 				JSONExceptionHandler.class);
+		ServiceExceptionHandlerManager.registerHandler(IllegalArgumentException.class,
+				IllegalArgumentExceptionHandler.class);
 	}
-	
+
 	private void registerDaos() {
 		Repository r = RepositoryService.getInstance();
 		r.registerDao(Account.class, HibernateAccountDAO.class);
