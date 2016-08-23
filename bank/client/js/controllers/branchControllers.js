@@ -21,10 +21,24 @@
     }
   ]);
 
-  bankApp.controller('CreateBranchCtrl', ['$scope', '$location', 'utils',
-    'branchSrv',
-    function($scope, $location, utils, branchSrv) {
-      $scope.branch = {};
+  bankApp.controller('CreateBranchCtrl', ['$scope', '$location', '$timeout',
+    'utils',
+    'branchSrv', 'divisionSrv',
+    function($scope, $location, $timeout, utils, branchSrv, divisionSrv) {
+      init();
+
+      function init() {
+        $scope.branch = {};
+        $scope.divisions = [];
+        divisionSrv.getListDivisions()
+          .then(handleSuccessGetListDivisions, utils.handleServerError);
+      }
+
+      function handleSuccessGetListDivisions(response) {
+        $timeout(function() {
+          $scope.divisions = response.data;
+        }, 100);
+      };
 
       $scope.create = function(valid) {
         if (valid) {
@@ -42,9 +56,9 @@
   ]);
 
   bankApp.controller('BranchDetailsCtrl', ['$scope', '$routeParams',
-    '$location', '$timeout', 'utils', 'branchSrv',
+    '$location', '$timeout', 'utils', 'branchSrv', 'divisionSrv',
     function($scope, $routeParams, $location, $timeout, utils,
-      branchSrv) {
+      branchSrv, divisionSrv) {
       init();
 
       function init() {
@@ -52,6 +66,8 @@
         $scope.originalValues = [];
         branchSrv.getBranch($routeParams.branchId)
           .then(handleSuccessGetBranch, utils.handleServerError);
+        branchSrv.getBranchDivision($routeParams.branchId)
+          .then(handleSuccessGetBranchDivision, utils.handleServerError);
         branchSrv.getBranchAccounts($routeParams.branchId)
           .then(handleSuccessGetBranchAccounts, utils.handleServerError);
         branchSrv.getBranchLoans($routeParams.branchId)
@@ -64,16 +80,22 @@
         });
       };
 
+      function handleSuccessGetBranchDivision(response) {
+        $timeout(function() {
+          $scope.branch.division = response.data;
+        }, 100);
+      };
+
       function handleSuccessGetBranchAccounts(response) {
         $timeout(function() {
           $scope.branch.accounts = response.data;
-        }, 100);
+        }, 200);
       };
 
       function handleSuccessGetBranchLoans(response) {
         $timeout(function() {
           $scope.branch.loans = response.data;
-        }, 200);
+        }, 300);
       };
 
       $scope.hasAccounts = function() {
@@ -91,25 +113,39 @@
       };
 
       $scope.setEditable = function(property) {
-        $scope.originalValues[property] = $scope.branch[property];
+        if (property === 'division') {
+          $scope.originalValues[property] = $scope.branch.division;
+          divisionSrv.getListDivisions()
+            .then(handleSuccessGetDivisionList, utils.handleServerError);
+        } else
+          $scope.originalValues[property] = $scope.branch[property];
       };
 
       $scope.saveEdit = function(valid, property) {
         if (valid) {
           var update = {};
-          update[property] = $scope.branch[property];
-          branchSrv.updateBranch(update, $scope.branch.id)
-            .then(handleSuccessUpdateBranch(property), utils.handleServerError);
+          if (property === 'division') {
+            update['id'] = $scope.branch.division.id;
+            branchSrv.updateBranchDivision(update, $scope.branch.id)
+              .then(handleSuccessUpdateBranchDivision, utils.handleServerError);
+          } else {
+            update[property] = $scope.branch[property];
+            branchSrv.updateBranch(update, $scope.branch.id)
+              .then(handleSuccessUpdateBranch(property), utils.handleServerError);
+          };
         };
       };
 
       $scope.cancelEdit = function(property) {
-        $scope.branch[property] = $scope.originalValues[property];
+        if (property === 'division') {
+          $scope.branch.division = $scope.originalValues[property];
+        } else
+          $scope.branch[property] = $scope.originalValues[property];
         $scope.originalValues[property] = undefined;
       };
 
       $scope.deleteBranch = function() {
-        var del = confirm("Do you really want to delete this user?");
+        var del = confirm("Do you really want to delete this branch?");
         if (del) {
           branchSrv.deleteBranch($scope.branch.id)
             .then(handleSuccessDeleteBranch, utils.handleServerError);
@@ -128,6 +164,17 @@
       function handleSuccessDeleteBranch(response) {
         $scope.branch = {};
         $location.path("/branchs/list");
+      };
+
+      function handleSuccessUpdateBranchDivision(response) {
+        $scope.originalValues['division'] = undefined;
+        $timeout(function() {
+          $scope.branch.division = response.data;
+        }, 100);
+      };
+
+      function handleSuccessGetDivisionList(response) {
+        $scope.divisions = response.data;
       };
     }
   ]);

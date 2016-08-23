@@ -74,6 +74,15 @@
     this.getBranchLoans = function(id) {
       return $http.get(serverDomain + "/branches/" + id + "/loans");
     };
+
+    this.getBranchDivision = function (id) {
+      return $http.get(serverDomain + "/branches/" + id + "/division");
+    };
+
+    this.updateBranchDivision = function(update, id) {
+      return $http.put(serverDomain + "/branches/" + id + "/division",
+        update);
+    };
   }]);
 
   bankApp.service('customerSrv', ['$http', 'utils', function($http, utils) {

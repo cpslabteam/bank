@@ -25,9 +25,11 @@
     }
   ]);
 
-  bankApp.controller('CreateAccountCtrl', ['$scope', '$location', '$timeout','utils',
+  bankApp.controller('CreateAccountCtrl', ['$scope', '$location', '$timeout',
+    'utils',
     'accountSrv', 'branchSrv', 'customerSrv',
-    function($scope, $location, $timeout,utils, accountSrv, branchSrv, customerSrv) {
+    function($scope, $location, $timeout, utils, accountSrv, branchSrv,
+      customerSrv) {
       init();
 
       function init() {
@@ -36,7 +38,7 @@
         $scope.customerList = [];
         branchSrv.getListBranches()
           .then(handleSuccessBranchList, utils.handleServerError);
-          customerSrv.getListCustomers()
+        customerSrv.getListCustomers()
           .then(handleSuccessGetListCustomers, utils.handleServerError);
       };
 
